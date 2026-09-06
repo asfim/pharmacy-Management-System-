@@ -57,10 +57,13 @@ class Customer extends Model
 		'email',
 		'address',
 		'dob',
+		'date_of_birth',
 		'gender',
 		'customer_type',
 		'opening_due',
+		'opening_balance',
 		'credit_limit',
+		'notes',
 		'status'
 	];
 
@@ -89,6 +92,11 @@ class Customer extends Model
 		return $this->hasMany(OnlineOrder::class);
 	}
 
+	public function onlineOrders()
+	{
+		return $this->hasMany(OnlineOrder::class);
+	}
+
 	public function prescriptions()
 	{
 		return $this->hasMany(Prescription::class);
@@ -99,9 +107,9 @@ class Customer extends Model
 		return $this->hasMany(ProductReview::class);
 	}
 
-	public function returns()
+	public function customerReturns()
 	{
-		return $this->hasMany(Return::class);
+		return $this->hasMany(SaleReturn::class);
 	}
 
 	public function sales()
@@ -109,9 +117,14 @@ class Customer extends Model
 		return $this->hasMany(Sale::class);
 	}
 
-	public function sales_returns()
+	public function salesReturns()
 	{
-		return $this->hasMany(SalesReturn::class);
+		return $this->hasMany(SaleReturn::class);
+	}
+
+	public function customerPayments()
+	{
+		return $this->hasMany(CustomerPayment::class);
 	}
 
 	public function wishlists()

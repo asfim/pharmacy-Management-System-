@@ -28,7 +28,7 @@ class ExpenseController extends Controller
         $request->validate([
             'category'       => 'required|string',
             'amount'         => 'required|numeric|min:0',
-            'date'           => 'required|date',
+            'expense_date'   => 'required|date',
             'payment_method' => 'required|string',
             'description'    => 'nullable|string',
         ]);
