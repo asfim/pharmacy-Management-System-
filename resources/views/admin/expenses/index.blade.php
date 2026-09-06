@@ -17,11 +17,11 @@
     </div>
     <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
         <p class="text-xs font-semibold text-slate-500 uppercase mb-1">This Month</p>
-        <p class="text-2xl font-bold text-slate-800">৳{{ number_format(\App\Models\Expense::where('date', '>=', now()->startOfMonth())->sum('amount'), 2) }}</p>
+        <p class="text-2xl font-bold text-slate-800">৳{{ number_format(\App\Models\Expense::where('expense_date', '>=', now()->startOfMonth())->sum('amount'), 2) }}</p>
     </div>
     <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
         <p class="text-xs font-semibold text-slate-500 uppercase mb-1">Today</p>
-        <p class="text-2xl font-bold text-slate-800">৳{{ number_format(\App\Models\Expense::whereDate('date', today())->sum('amount'), 2) }}</p>
+        <p class="text-2xl font-bold text-slate-800">৳{{ number_format(\App\Models\Expense::whereDate('expense_date', today())->sum('amount'), 2) }}</p>
     </div>
 </div>
 
@@ -42,11 +42,11 @@
                 @forelse($expenses as $e)
                 <tr class="hover:bg-slate-50 transition">
                     <td class="px-5 py-3.5">
-                        <span class="px-2.5 py-1 bg-orange-100 text-orange-700 rounded-full text-xs font-semibold">{{ $e->category }}</span>
+                        <span class="px-2.5 py-1 bg-orange-100 text-orange-700 rounded-full text-xs font-semibold">{{ $e->expense_category->name ?? '-' }}</span>
                     </td>
                     <td class="px-5 py-3.5 text-slate-600">{{ Str::limit($e->description, 40) ?? '-' }}</td>
-                    <td class="px-5 py-3.5 text-slate-500">{{ \Carbon\Carbon::parse($e->date)->format('d M Y') }}</td>
-                    <td class="px-5 py-3.5 text-slate-600 capitalize">{{ $e->payment_method }}</td>
+                    <td class="px-5 py-3.5 text-slate-500">{{ \Carbon\Carbon::parse($e->expense_date)->format('d M Y') }}</td>
+                    <td class="px-5 py-3.5 text-slate-600 capitalize">{{ $e->account->name ?? '-' }}</td>
                     <td class="px-5 py-3.5 text-right font-bold text-red-600">৳{{ number_format($e->amount, 2) }}</td>
                     <td class="px-5 py-3.5 text-right">
                         <div class="flex justify-end gap-1">

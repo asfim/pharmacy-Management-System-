@@ -4,11 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Expense;
+use App\Models\ExpenseCategory;
+use App\Models\Account;
 use Illuminate\Http\Request;
 
 class ExpenseController extends Controller
 {
-    protected $categories = ['Shop Rent','Electricity','Internet','Salary','Transport','Delivery','Maintenance','Marketing','Others'];
 
     public function index()
     {
@@ -19,17 +20,18 @@ class ExpenseController extends Controller
 
     public function create()
     {
-        $categories = $this->categories;
-        return view('admin.expenses.create', compact('categories'));
+        $categories = ExpenseCategory::where('status', 'active')->get();
+        $accounts = Account::where('status', 'active')->get();
+        return view('admin.expenses.create', compact('categories', 'accounts'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'category'       => 'required|string',
+            'category_id'    => 'required|exists:expense_categories,id',
+            'account_id'     => 'required|exists:accounts,id',
             'amount'         => 'required|numeric|min:0',
             'expense_date'   => 'required|date',
-            'payment_method' => 'required|string',
             'description'    => 'nullable|string',
         ]);
         Expense::create($request->all());
@@ -38,12 +40,20 @@ class ExpenseController extends Controller
 
     public function edit(Expense $expense)
     {
-        $categories = $this->categories;
-        return view('admin.expenses.edit', compact('expense', 'categories'));
+        $categories = ExpenseCategory::where('status', 'active')->get();
+        $accounts = Account::where('status', 'active')->get();
+        return view('admin.expenses.edit', compact('expense', 'categories', 'accounts'));
     }
 
     public function update(Request $request, Expense $expense)
     {
+        $request->validate([
+            'category_id'    => 'required|exists:expense_categories,id',
+            'account_id'     => 'required|exists:accounts,id',
+            'amount'         => 'required|numeric|min:0',
+            'expense_date'   => 'required|date',
+            'description'    => 'nullable|string',
+        ]);
         $expense->update($request->all());
         return redirect()->route('admin.expenses.index')->with('success', 'Expense updated.');
     }
