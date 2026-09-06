@@ -10,9 +10,9 @@
         @csrf @method('PUT')
         <div>
             <label class="block text-sm font-semibold text-slate-700 mb-1.5">Category *</label>
-            <select name="category" required class="w-full px-4 py-2.5 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-teal-500">
+            <select name="category_id" required class="w-full px-4 py-2.5 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-teal-500">
                 @foreach($categories as $cat)
-                <option value="{{ $cat }}" {{ old('category', $expense->category) === $cat ? 'selected' : '' }}>{{ $cat }}</option>
+                <option value="{{ $cat->id }}" {{ old('category_id', $expense->category_id) == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
                 @endforeach
             </select>
         </div>
@@ -22,13 +22,13 @@
         </div>
         <div>
             <label class="block text-sm font-semibold text-slate-700 mb-1.5">Date *</label>
-            <input type="date" name="date" value="{{ old('date', $expense->date) }}" required class="w-full px-4 py-2.5 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-teal-500">
+            <input type="date" name="expense_date" value="{{ old('expense_date', \Carbon\Carbon::parse($expense->expense_date)->format('Y-m-d')) }}" required class="w-full px-4 py-2.5 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-teal-500">
         </div>
         <div>
-            <label class="block text-sm font-semibold text-slate-700 mb-1.5">Payment Method</label>
-            <select name="payment_method" class="w-full px-4 py-2.5 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-teal-500">
-                @foreach(['cash','bkash','nagad','bank'] as $pm)
-                <option value="{{ $pm }}" {{ old('payment_method', $expense->payment_method)===$pm?'selected':'' }}>{{ ucfirst($pm) }}</option>
+            <label class="block text-sm font-semibold text-slate-700 mb-1.5">Account *</label>
+            <select name="account_id" class="w-full px-4 py-2.5 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-teal-500">
+                @foreach($accounts as $acc)
+                <option value="{{ $acc->id }}" {{ old('account_id', $expense->account_id) == $acc->id ? 'selected' : '' }}>{{ $acc->name }} ({{ $acc->type }})</option>
                 @endforeach
             </select>
         </div>

@@ -52,7 +52,7 @@ class ReportController extends Controller
 
         $totalSales    = Sale::whereBetween('created_at', [$from, $to])->sum('total');
         $totalPurchase = PurchaseInvoice::whereBetween('created_at', [$from, $to])->sum('total');
-        $totalExpense  = Expense::whereBetween('date', [$from->format('Y-m-d'), $to->format('Y-m-d')])->sum('amount');
+        $totalExpense  = Expense::whereBetween('expense_date', [$from->format('Y-m-d'), $to->format('Y-m-d')])->sum('amount');
         $grossProfit   = $totalSales - $totalPurchase;
         $netProfit     = $grossProfit - $totalExpense;
 
@@ -61,7 +61,7 @@ class ReportController extends Controller
         $monthlyData = $months->map(function ($m) {
             $s = Sale::whereYear('created_at', $m->year)->whereMonth('created_at', $m->month)->sum('total');
             $p = PurchaseInvoice::whereYear('created_at', $m->year)->whereMonth('created_at', $m->month)->sum('total');
-            $e = Expense::whereYear('date', $m->year)->whereMonth('date', $m->month)->sum('amount');
+            $e = Expense::whereYear('expense_date', $m->year)->whereMonth('expense_date', $m->month)->sum('amount');
             return ['month' => $m->format('M Y'), 'profit' => $s - $p - $e];
         });
 
@@ -100,11 +100,12 @@ class ReportController extends Controller
 
         $totalSales    = Sale::whereBetween('created_at', [$from, $to])->sum('total');
         $totalPurchase = PurchaseInvoice::whereBetween('created_at', [$from, $to])->sum('total');
-        $totalExpense  = Expense::whereBetween('date', [$from->format('Y-m-d'), $to->format('Y-m-d')])->sum('amount');
+        $totalExpense  = Expense::whereBetween('expense_date', [$from->format('Y-m-d'), $to->format('Y-m-d')])->sum('amount');
 
-        $expenseByCategory = Expense::whereBetween('date', [$from->format('Y-m-d'), $to->format('Y-m-d')])
-            ->select('category', DB::raw('SUM(amount) as total'))
-            ->groupBy('category')
+        $expenseByCategory = Expense::whereBetween('expense_date', [$from->format('Y-m-d'), $to->format('Y-m-d')])
+            ->join('expense_categories', 'expenses.category_id', '=', 'expense_categories.id')
+            ->select('expense_categories.name as category', DB::raw('SUM(amount) as total'))
+            ->groupBy('expense_categories.name')
             ->get();
 
         return view('admin.reports.financial', compact('totalSales', 'totalPurchase', 'totalExpense', 'expenseByCategory', 'from', 'to'));
