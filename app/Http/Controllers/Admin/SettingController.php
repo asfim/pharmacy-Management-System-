@@ -7,5 +7,23 @@ use Illuminate\Http\Request;
 
 class SettingController extends Controller
 {
-    //
+    public function index()
+    {
+        return view('admin.settings.index');
+    }
+
+    public function update(Request $request)
+    {
+        return redirect()->route('admin.settings.index')->with('success', 'Settings updated successfully.');
+    }
+
+    public function invoice()
+    {
+        return view('admin.settings.index');
+    }
+
+    public function pos()
+    {
+        return view('admin.settings.index');
+    }
 }
