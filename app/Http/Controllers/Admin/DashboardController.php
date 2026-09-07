@@ -38,7 +38,7 @@ class DashboardController extends Controller
         // Due amounts
         $customerDue    = Customer::sum('opening_balance') ?? 0;
         $supplierDue    = Supplier::where('opening_balance', '<', 0)->sum('opening_balance') ?? 0;
-        $todayExpense   = Expense::whereDate('date', $today)->sum('amount') ?? 0;
+        $todayExpense   = Expense::whereDate('expense_date', $today)->sum('amount') ?? 0;
 
         // Inventory alerts
         $lowStockCount  = Product::whereColumn('min_stock', '>', DB::raw('(SELECT COALESCE(SUM(quantity), 0) FROM batches WHERE batches.product_id = products.id)'))->count();

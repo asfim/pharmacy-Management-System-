@@ -20,7 +20,7 @@ return new class extends Migration
             $table->date('dob')->nullable();
             $table->string('gender')->nullable();
             $table->string('customer_type')->default('regular');
-            $table->decimal('opening_due', 18, 2)->default(0);
+            $table->decimal('opening_balance', 18, 2)->default(0);
             $table->decimal('credit_limit', 18, 2)->default(0);
             $table->string('status')->default('active');
             $table->timestamps();

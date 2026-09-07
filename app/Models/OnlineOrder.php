@@ -140,6 +140,6 @@ class OnlineOrder extends Model
 
 	public function returns()
 	{
-		return $this->hasMany(Return::class, 'order_id');
+		return $this->hasMany('App\Models\Return', 'order_id');
 	}
 }

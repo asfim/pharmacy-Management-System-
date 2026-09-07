@@ -47,7 +47,7 @@ class Customer extends Model
 
 	protected $casts = [
 		'dob' => 'datetime',
-		'opening_due' => 'float',
+		'opening_balance' => 'float',
 		'credit_limit' => 'float'
 	];
 
@@ -60,7 +60,6 @@ class Customer extends Model
 		'date_of_birth',
 		'gender',
 		'customer_type',
-		'opening_due',
 		'opening_balance',
 		'credit_limit',
 		'notes',
