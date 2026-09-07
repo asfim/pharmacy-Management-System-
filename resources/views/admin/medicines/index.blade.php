@@ -86,14 +86,14 @@
 
     <!-- Medicine Table -->
     <div class="overflow-x-auto relative">
-        <table class="w-full text-left">
+        <table id="medicinesDataTable" class="w-full text-left" style="width:100%">
             <thead class="bg-slate-100 border-b border-slate-200 text-slate-600 text-xs uppercase tracking-wider font-semibold">
                 <tr>
-                    <th class="px-4 py-3.5 w-10">
+                    <th class="px-4 py-3.5 w-10 no-sort">
                         <input type="checkbox" id="selectAllCheckbox" onclick="toggleSelectAllMedicines(this)" class="w-4 h-4 rounded text-teal-600 border-slate-300 focus:ring-teal-500 cursor-pointer" title="Select All">
                     </th>
                     <th class="px-4 py-3.5">SL</th>
-                    <th class="px-4 py-3.5">Image</th>
+                    <th class="px-4 py-3.5 no-sort">Image</th>
                     <th class="px-4 py-3.5">Name</th>
                     <th class="px-4 py-3.5">Generic</th>
                     <th class="px-4 py-3.5">Manufacturer</th>
@@ -101,7 +101,7 @@
                     <th class="px-4 py-3.5">Sale Price</th>
                     <th class="px-4 py-3.5">Rx</th>
                     <th class="px-4 py-3.5">Status</th>
-                    <th class="px-4 py-3.5 text-right">Actions</th>
+                    <th class="px-4 py-3.5 no-sort">Actions</th>
                 </tr>
             </thead>
             <tbody id="medicineTableBody" class="divide-y divide-slate-200 text-sm transition-opacity duration-150">
@@ -202,10 +202,84 @@
     </div>
 </div>
 
+@push('scripts')
+<style>
+/* DataTables custom styling to match Tailwind/slate design */
+#medicinesDataTable_wrapper .dataTables_filter,
+#medicinesDataTable_wrapper .dataTables_length,
+#medicinesDataTable_wrapper .dataTables_info,
+#medicinesDataTable_wrapper .dataTables_paginate { display: none !important; }
+table.dataTable thead th {
+    background: #f1f5f9 !important;
+    color: #475569 !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    padding: 12px 16px !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+    border-top: none !important;
+    cursor: pointer;
+    white-space: nowrap;
+    user-select: none;
+}
+table.dataTable thead th.sorting:after,
+table.dataTable thead th.sorting_asc:after,
+table.dataTable thead th.sorting_desc:after {
+    font-size: 10px;
+    margin-left: 4px;
+    opacity: 0.6;
+}
+table.dataTable thead th.sorting_asc:after  { content: ' ▲'; opacity: 1; color: #0d9488; }
+table.dataTable thead th.sorting_desc:after { content: ' ▼'; opacity: 1; color: #0d9488; }
+table.dataTable thead th.sorting:after       { content: ' ⇅'; }
+table.dataTable thead th.no-sort { cursor: default !important; }
+table.dataTable thead th.no-sort:after { content: '' !important; }
+table.dataTable thead th.sorting_asc.no-sort:after,
+table.dataTable thead th.sorting_desc.no-sort:after { content: '' !important; }
+table.dataTable { border-collapse: collapse !important; }
+table.dataTable tbody tr { border-bottom: 1px solid #f1f5f9; }
+table.dataTable tbody tr:hover { background: #f8fafc !important; }
+</style>
+
 <script>
+    let medicinesDT = null;
     let nextPage = {{ $medicines->currentPage() + 1 }};
     let perPage = '{{ request("per_page", 50) }}';
     let currentSearch = '{{ request("search") }}';
+
+    // Initialize DataTables (UI only — sorting by visible columns, no server-side DT)
+    $(document).ready(function () {
+        medicinesDT = $('#medicinesDataTable').DataTable({
+            paging:    false,
+            searching: false,
+            info:      false,
+            ordering:  true,
+            autoWidth: false,
+            columnDefs: [
+                { orderable: false, targets: [0, 2, 10] } // checkbox, image, actions
+            ],
+            order: [] // no default sort
+        });
+    });
+
+    function reinitDT() {
+        if (medicinesDT) {
+            medicinesDT.destroy();
+            medicinesDT = null;
+        }
+        medicinesDT = $('#medicinesDataTable').DataTable({
+            paging:    false,
+            searching: false,
+            info:      false,
+            ordering:  true,
+            autoWidth: false,
+            columnDefs: [
+                { orderable: false, targets: [0, 2, 10] }
+            ],
+            order: []
+        });
+    }
 
     function updateExportUrls() {
         const queryParams = `?per_page=${perPage}&search=${encodeURIComponent(currentSearch)}`;
@@ -215,36 +289,29 @@
 
     function changePerPage(size) {
         perPage = size;
-        
-        // Update active pill UI
         document.querySelectorAll('.per-page-pill').forEach(btn => {
             btn.className = 'per-page-pill px-3 py-1 text-xs font-semibold rounded-md transition text-slate-600 hover:bg-slate-100';
         });
         const activeBtn = document.getElementById(`per-page-btn-${size}`);
-        if(activeBtn) {
+        if (activeBtn) {
             activeBtn.className = 'per-page-pill px-3 py-1 text-xs font-semibold rounded-md transition bg-teal-600 text-white shadow-2xs';
         }
-
         performLiveSearch();
     }
 
-    // Instant Live Search
+    // Live Search
     let liveSearchTimer;
-    document.getElementById('medicineSearchInput').addEventListener('input', function(e) {
+    document.getElementById('medicineSearchInput').addEventListener('input', function (e) {
         clearTimeout(liveSearchTimer);
         currentSearch = e.target.value;
         document.getElementById('searchSpinner').classList.remove('hidden');
-
-        liveSearchTimer = setTimeout(() => {
-            performLiveSearch();
-        }, 250); // 250ms instant response
+        liveSearchTimer = setTimeout(() => performLiveSearch(), 250);
     });
 
     function performLiveSearch() {
         const tbody = document.getElementById('medicineTableBody');
         tbody.classList.add('opacity-40');
         document.getElementById('searchSpinner').classList.remove('hidden');
-
         updateExportUrls();
 
         fetch(`{{ route('admin.medicines.index') }}?page=1&per_page=${perPage}&search=${encodeURIComponent(currentSearch)}`, {
@@ -255,15 +322,12 @@
             tbody.innerHTML = data.html;
             tbody.classList.remove('opacity-40');
             document.getElementById('searchSpinner').classList.add('hidden');
-
             document.getElementById('currentLoadedCount').textContent = data.count;
             document.getElementById('totalMedicinesCount').textContent = data.total;
-
             nextPage = 2;
             renderLoadMoreButton(data.has_more_pages);
-
-            const newUrl = `{{ route('admin.medicines.index') }}?per_page=${perPage}&search=${encodeURIComponent(currentSearch)}`;
-            history.pushState(null, '', newUrl);
+            history.pushState(null, '', `{{ route('admin.medicines.index') }}?per_page=${perPage}&search=${encodeURIComponent(currentSearch)}`);
+            reinitDT();
         })
         .catch(err => {
             console.error('Live search error:', err);
@@ -276,28 +340,24 @@
         const container = document.getElementById('loadMoreActionContainer');
         if (hasMorePages) {
             container.innerHTML = `
-                <button id="loadMoreBtn" 
-                        onclick="loadMoreMedicines()"
+                <button id="loadMoreBtn" onclick="loadMoreMedicines()"
                         class="bg-white hover:bg-slate-100 text-teal-700 font-semibold py-2 px-6 rounded-lg border border-teal-200 transition shadow-xs flex items-center justify-center min-w-[150px]">
                     <span id="loadMoreText">Load More</span>
                     <svg id="loadMoreSpinner" class="w-4 h-4 ml-2 animate-spin hidden text-teal-600" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                </button>
-            `;
+                </button>`;
         } else {
             container.innerHTML = '<div class="text-xs text-slate-400 font-medium">All medicines loaded</div>';
         }
     }
 
-    // Load More Ajax Function
     function loadMoreMedicines() {
         const btn = document.getElementById('loadMoreBtn');
         const spinner = document.getElementById('loadMoreSpinner');
         const btnText = document.getElementById('loadMoreText');
-
-        if(!btn) return;
+        if (!btn) return;
 
         btn.disabled = true;
         btnText.textContent = 'Loading...';
@@ -306,18 +366,15 @@
         fetch(`{{ route('admin.medicines.index') }}?page=${nextPage}&per_page=${perPage}&search=${encodeURIComponent(currentSearch)}`, {
             headers: { 'X-Requested-With': 'XMLHttpRequest' }
         })
-        .then(response => response.json())
+        .then(r => r.json())
         .then(data => {
-            if(data.html) {
+            if (data.html) {
+                if (medicinesDT) medicinesDT.destroy();
                 document.getElementById('medicineTableBody').insertAdjacentHTML('beforeend', data.html);
-                
                 const loadedElem = document.getElementById('currentLoadedCount');
-                if(loadedElem) {
-                    const currentCount = parseInt(loadedElem.textContent) || 0;
-                    loadedElem.textContent = currentCount + data.count;
-                }
+                if (loadedElem) loadedElem.textContent = parseInt(loadedElem.textContent || 0) + data.count;
 
-                if(data.has_more_pages) {
+                if (data.has_more_pages) {
                     nextPage = data.next_page;
                     btn.disabled = false;
                     btnText.textContent = 'Load More';
@@ -325,6 +382,7 @@
                 } else {
                     document.getElementById('loadMoreActionContainer').innerHTML = '<div class="text-xs text-slate-400 font-medium">All medicines loaded</div>';
                 }
+                reinitDT();
             }
         })
         .catch(err => {
@@ -335,75 +393,51 @@
         });
     }
 
-    // Bulk Delete Handlers
+    // Bulk Delete
     function toggleSelectAllMedicines(master) {
-        const checkboxes = document.querySelectorAll('.medicine-select-checkbox');
-        checkboxes.forEach(cb => cb.checked = master.checked);
+        document.querySelectorAll('.medicine-select-checkbox').forEach(cb => cb.checked = master.checked);
         onMedicineCheckboxChange();
     }
 
     function onMedicineCheckboxChange() {
         const selected = document.querySelectorAll('.medicine-select-checkbox:checked');
-        const bulkBtn = document.getElementById('bulkDeleteBtn');
+        const bulkBtn  = document.getElementById('bulkDeleteBtn');
         const countSpan = document.getElementById('bulkDeleteCount');
         const selectAll = document.getElementById('selectAllCheckbox');
-        const allCheckboxes = document.querySelectorAll('.medicine-select-checkbox');
-
+        const all = document.querySelectorAll('.medicine-select-checkbox');
         if (countSpan) countSpan.textContent = selected.length;
-
-        if (selected.length > 0) {
-            bulkBtn.classList.remove('hidden');
-        } else {
-            bulkBtn.classList.add('hidden');
-        }
-
-        if (selectAll && allCheckboxes.length > 0) {
-            selectAll.checked = (selected.length === allCheckboxes.length);
-        }
+        selected.length > 0 ? bulkBtn.classList.remove('hidden') : bulkBtn.classList.add('hidden');
+        if (selectAll && all.length > 0) selectAll.checked = selected.length === all.length;
     }
 
     function executeBulkDelete() {
-        const selectedCheckboxes = document.querySelectorAll('.medicine-select-checkbox:checked');
-        const selectedIds = Array.from(selectedCheckboxes).map(cb => cb.value);
-
-        if (selectedIds.length === 0) return;
-
-        if (!confirm(`Are you sure you want to delete ${selectedIds.length} selected medicines? This action cannot be undone.`)) {
-            return;
-        }
+        const ids = Array.from(document.querySelectorAll('.medicine-select-checkbox:checked')).map(cb => cb.value);
+        if (!ids.length) return;
+        if (!confirm(`Delete ${ids.length} selected medicines? This cannot be undone.`)) return;
 
         const bulkBtn = document.getElementById('bulkDeleteBtn');
         bulkBtn.disabled = true;
-        const originalHtml = bulkBtn.innerHTML;
-        bulkBtn.innerHTML = `Deleting...`;
+        const orig = bulkBtn.innerHTML;
+        bulkBtn.innerHTML = 'Deleting...';
 
         fetch(`{{ route('admin.medicines.bulk-delete') }}`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                'X-Requested-With': 'XMLHttpRequest'
-            },
-            body: JSON.stringify({ ids: selectedIds })
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'X-Requested-With': 'XMLHttpRequest' },
+            body: JSON.stringify({ ids })
         })
-        .then(res => res.json())
+        .then(r => r.json())
         .then(data => {
             if (data.success) {
                 performLiveSearch();
-                const selectAll = document.getElementById('selectAllCheckbox');
-                if (selectAll) selectAll.checked = false;
+                const sa = document.getElementById('selectAllCheckbox');
+                if (sa) sa.checked = false;
             } else {
                 alert(data.message || 'Bulk delete failed.');
             }
         })
-        .catch(err => {
-            console.error('Bulk delete error:', err);
-            alert('An error occurred during bulk delete.');
-        })
-        .finally(() => {
-            bulkBtn.disabled = false;
-            bulkBtn.innerHTML = originalHtml;
-        });
+        .catch(() => alert('An error occurred during bulk delete.'))
+        .finally(() => { bulkBtn.disabled = false; bulkBtn.innerHTML = orig; });
     }
 </script>
+@endpush
 @endsection

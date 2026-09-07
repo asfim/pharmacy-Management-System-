@@ -45,6 +45,11 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // ==================== PRODUCTS ====================
+    Route::get('categories/sample-csv', [CategoryController::class, 'sampleCsv'])->name('categories.sample-csv');
+    Route::post('categories/bulk-delete', [CategoryController::class, 'bulkDelete'])->name('categories.bulk-delete');
+    Route::post('categories/import-csv', [CategoryController::class, 'importCsv'])->name('categories.import-csv');
+    Route::get('categories/export-csv', [CategoryController::class, 'exportCsv'])->name('categories.export-csv');
+    Route::get('categories/export-pdf', [CategoryController::class, 'exportPdf'])->name('categories.export-pdf');
     Route::resource('categories', CategoryController::class);
     Route::resource('sub-categories', SubCategoryController::class);
     Route::resource('generics', GenericController::class);
