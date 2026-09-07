@@ -74,12 +74,14 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-1">SKU</label>
-                    <input type="text" name="sku" value="{{ old('sku') }}" class="w-full px-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-teal-500 focus:border-teal-500 @error('sku') border-red-500 @enderror">
+                    <input type="text" name="sku" value="{{ old('sku') }}" placeholder="Auto-generated if empty" class="w-full px-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-teal-500 focus:border-teal-500 @error('sku') border-red-500 @enderror">
+                    <p class="mt-1 text-xs text-slate-400">Leave empty to auto-generate, or enter custom value to save.</p>
                     @error('sku')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-1">Barcode</label>
-                    <input type="text" name="barcode" value="{{ old('barcode') }}" class="w-full px-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-teal-500 focus:border-teal-500 @error('barcode') border-red-500 @enderror">
+                    <input type="text" name="barcode" value="{{ old('barcode') }}" placeholder="Auto-generated if empty" class="w-full px-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-teal-500 focus:border-teal-500 @error('barcode') border-red-500 @enderror">
+                    <p class="mt-1 text-xs text-slate-400">Leave empty to auto-generate, or enter custom value to save.</p>
                     @error('barcode')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
                 </div>
                 <div>
