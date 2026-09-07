@@ -114,7 +114,6 @@
                     <th class="px-4 py-3.5">SL</th>
                     <th class="px-4 py-3.5 no-sort">Image</th>
                     <th class="px-4 py-3.5">Name</th>
-                    <th class="px-4 py-3.5">Parent Category</th>
                     <th class="px-4 py-3.5">Description</th>
                     <th class="px-4 py-3.5">Status</th>
                     <th class="px-4 py-3.5 no-sort">Actions</th>
@@ -278,7 +277,7 @@ function initDT() {
         info:      false,
         ordering:  true,
         autoWidth: false,
-        columnDefs: [{ orderable: false, targets: [0, 2, 7] }],
+        columnDefs: [{ orderable: false, targets: [0, 2, 6] }],
         order: []
     });
 }

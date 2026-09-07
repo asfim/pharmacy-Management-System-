@@ -21,7 +21,6 @@
         @endif
     </td>
     <td class="px-4 py-3 font-medium text-slate-900 text-sm">{{ $category->name }}</td>
-    <td class="px-4 py-3 text-slate-600 text-sm">{{ $category->category->name ?? '-' }}</td>
     <td class="px-4 py-3 text-slate-500 text-sm max-w-xs truncate">{{ $category->description ?? '-' }}</td>
     <td class="px-4 py-3">
         @if($category->status === 'active')
@@ -56,7 +55,7 @@
 </tr>
 @empty
 <tr>
-    <td colspan="8" class="px-6 py-10 text-center text-slate-500">
+    <td colspan="7" class="px-6 py-10 text-center text-slate-500">
         <div class="flex flex-col items-center">
             <svg class="w-12 h-12 text-slate-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
