@@ -76,8 +76,7 @@
 
     <!-- ==================== SIDEBAR ==================== -->
     <aside class="fixed inset-y-0 left-0 z-50 w-64 bg-slate-900 shadow-2xl flex flex-col transition-transform duration-300 ease-in-out"
-           :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
-           x-cloak>
+           :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'">
 
         <!-- Logo -->
         <div class="flex items-center justify-between h-16 px-4 bg-slate-950 border-b border-slate-800 flex-shrink-0">
@@ -323,7 +322,7 @@
          class="fixed inset-0 z-40 bg-black bg-opacity-60 lg:hidden" x-cloak></div>
 
     <!-- ==================== MAIN ==================== -->
-    <div class="flex flex-col flex-1 min-w-0 transition-all duration-300"
+    <div class="flex flex-col flex-1 min-w-0 transition-all duration-300 lg:ml-64"
          :class="sidebarOpen ? 'lg:ml-64' : 'lg:ml-0'">
 
         <!-- TOP HEADER -->

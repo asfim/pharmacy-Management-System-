@@ -10,14 +10,14 @@
     
     <div class="flex flex-wrap items-center gap-2">
         <!-- CSV Export -->
-        <a href="{{ route('admin.medicines.export-csv', request()->query()) }}" 
+        <a id="exportCsvBtn" href="{{ route('admin.medicines.export-csv', request()->query()) }}" 
            class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 font-medium py-2 px-3 rounded-lg flex items-center transition text-sm shadow-xs">
             <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
             Export CSV
         </a>
 
         <!-- PDF Export -->
-        <a href="{{ route('admin.medicines.export-pdf', request()->query()) }}" target="_blank"
+        <a id="exportPdfBtn" href="{{ route('admin.medicines.export-pdf', request()->query()) }}" target="_blank"
            class="bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-medium py-2 px-3 rounded-lg flex items-center transition text-sm shadow-xs">
             <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
             Export PDF
@@ -51,26 +51,33 @@
                     <button type="button" 
                             onclick="changePerPage('{{ $size }}')"
                             id="per-page-btn-{{ $size }}"
-                            class="px-3 py-1 text-xs font-semibold rounded-md transition {{ (request('per_page', 50) == $size) ? 'bg-teal-600 text-white shadow-2xs' : 'text-slate-600 hover:bg-slate-100' }}">
+                            class="per-page-pill px-3 py-1 text-xs font-semibold rounded-md transition {{ (request('per_page', 50) == $size) ? 'bg-teal-600 text-white shadow-2xs' : 'text-slate-600 hover:bg-slate-100' }}">
                         {{ strtoupper($size) }}
                     </button>
                 @endforeach
             </div>
         </div>
 
-        <!-- Search Box -->
+        <!-- Live Search Box -->
         <div class="relative w-full md:w-80">
             <input type="text" 
                    id="medicineSearchInput"
                    value="{{ request('search') }}"
-                   placeholder="Search medicine, generic, brand..." 
-                   class="w-full pl-9 pr-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 bg-white">
+                   placeholder="Instant search medicine..." 
+                   autocomplete="off"
+                   class="w-full pl-9 pr-8 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 bg-white transition">
             <svg class="w-4 h-4 text-slate-400 absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            <div id="searchSpinner" class="hidden absolute right-2.5 top-2.5">
+                <svg class="w-4 h-4 animate-spin text-teal-600" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+            </div>
         </div>
     </div>
 
     <!-- Medicine Table -->
-    <div class="overflow-x-auto">
+    <div class="overflow-x-auto relative">
         <table class="w-full text-left">
             <thead class="bg-slate-100 border-b border-slate-200 text-slate-600 text-xs uppercase tracking-wider font-semibold">
                 <tr>
@@ -86,31 +93,33 @@
                     <th class="px-4 py-3.5 text-right">Actions</th>
                 </tr>
             </thead>
-            <tbody id="medicineTableBody" class="divide-y divide-slate-200 text-sm">
+            <tbody id="medicineTableBody" class="divide-y divide-slate-200 text-sm transition-opacity duration-150">
                 @include('admin.medicines.partials.table_rows')
             </tbody>
         </table>
     </div>
 
-    <!-- Load More Footer Section (Replacing Standard Pagination) -->
+    <!-- Load More Footer Section -->
     <div class="px-6 py-4 border-t border-slate-200 bg-slate-50 flex flex-col md:flex-row items-center justify-between gap-4">
         <div id="medicineCountInfo" class="text-sm text-slate-600 font-medium">
             Showing <span id="currentLoadedCount">{{ $medicines->count() }}</span> of <span id="totalMedicinesCount">{{ $medicines->total() }}</span> medicines
         </div>
 
-        @if($medicines->hasMorePages())
-            <button id="loadMoreBtn" 
-                    onclick="loadMoreMedicines()"
-                    class="bg-white hover:bg-slate-100 text-teal-700 font-semibold py-2.5 px-6 rounded-lg border border-teal-200 transition shadow-xs flex items-center justify-center min-w-[160px]">
-                <span id="loadMoreText">Load More</span>
-                <svg id="loadMoreSpinner" class="w-5 h-5 ml-2 animate-spin hidden text-teal-600" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-            </button>
-        @else
-            <div id="noMoreMedicinesMsg" class="text-xs text-slate-400 font-medium">All medicines loaded</div>
-        @endif
+        <div id="loadMoreActionContainer">
+            @if($medicines->hasMorePages())
+                <button id="loadMoreBtn" 
+                        onclick="loadMoreMedicines()"
+                        class="bg-white hover:bg-slate-100 text-teal-700 font-semibold py-2 px-6 rounded-lg border border-teal-200 transition shadow-xs flex items-center justify-center min-w-[150px]">
+                    <span id="loadMoreText">Load More</span>
+                    <svg id="loadMoreSpinner" class="w-4 h-4 ml-2 animate-spin hidden text-teal-600" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                </button>
+            @else
+                <div class="text-xs text-slate-400 font-medium">All medicines loaded</div>
+            @endif
+        </div>
     </div>
 </div>
 
@@ -162,20 +171,89 @@
     let perPage = '{{ request("per_page", 50) }}';
     let currentSearch = '{{ request("search") }}';
 
-    function changePerPage(size) {
-        perPage = size;
-        window.location.href = `{{ route('admin.medicines.index') }}?per_page=${perPage}&search=${encodeURIComponent(currentSearch)}`;
+    function updateExportUrls() {
+        const queryParams = `?per_page=${perPage}&search=${encodeURIComponent(currentSearch)}`;
+        document.getElementById('exportCsvBtn').href = `{{ route('admin.medicines.export-csv') }}${queryParams}`;
+        document.getElementById('exportPdfBtn').href = `{{ route('admin.medicines.export-pdf') }}${queryParams}`;
     }
 
-    // Live search debounced
-    let searchTimeout;
+    function changePerPage(size) {
+        perPage = size;
+        
+        // Update active pill UI
+        document.querySelectorAll('.per-page-pill').forEach(btn => {
+            btn.className = 'per-page-pill px-3 py-1 text-xs font-semibold rounded-md transition text-slate-600 hover:bg-slate-100';
+        });
+        const activeBtn = document.getElementById(`per-page-btn-${size}`);
+        if(activeBtn) {
+            activeBtn.className = 'per-page-pill px-3 py-1 text-xs font-semibold rounded-md transition bg-teal-600 text-white shadow-2xs';
+        }
+
+        performLiveSearch();
+    }
+
+    // Instant Live Search
+    let liveSearchTimer;
     document.getElementById('medicineSearchInput').addEventListener('input', function(e) {
-        clearTimeout(searchTimeout);
+        clearTimeout(liveSearchTimer);
         currentSearch = e.target.value;
-        searchTimeout = setTimeout(() => {
-            window.location.href = `{{ route('admin.medicines.index') }}?per_page=${perPage}&search=${encodeURIComponent(currentSearch)}`;
-        }, 600);
+        document.getElementById('searchSpinner').classList.remove('hidden');
+
+        liveSearchTimer = setTimeout(() => {
+            performLiveSearch();
+        }, 250); // 250ms instant response
     });
+
+    function performLiveSearch() {
+        const tbody = document.getElementById('medicineTableBody');
+        tbody.classList.add('opacity-40');
+        document.getElementById('searchSpinner').classList.remove('hidden');
+
+        updateExportUrls();
+
+        fetch(`{{ route('admin.medicines.index') }}?page=1&per_page=${perPage}&search=${encodeURIComponent(currentSearch)}`, {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(res => res.json())
+        .then(data => {
+            tbody.innerHTML = data.html;
+            tbody.classList.remove('opacity-40');
+            document.getElementById('searchSpinner').classList.add('hidden');
+
+            document.getElementById('currentLoadedCount').textContent = data.count;
+            document.getElementById('totalMedicinesCount').textContent = data.total;
+
+            nextPage = 2;
+            renderLoadMoreButton(data.has_more_pages);
+
+            const newUrl = `{{ route('admin.medicines.index') }}?per_page=${perPage}&search=${encodeURIComponent(currentSearch)}`;
+            history.pushState(null, '', newUrl);
+        })
+        .catch(err => {
+            console.error('Live search error:', err);
+            tbody.classList.remove('opacity-40');
+            document.getElementById('searchSpinner').classList.add('hidden');
+        });
+    }
+
+    function renderLoadMoreButton(hasMorePages) {
+        const container = document.getElementById('loadMoreActionContainer');
+        if (hasMorePages) {
+            container.innerHTML = `
+                <button id="loadMoreBtn" 
+                        onclick="loadMoreMedicines()"
+                        class="bg-white hover:bg-slate-100 text-teal-700 font-semibold py-2 px-6 rounded-lg border border-teal-200 transition shadow-xs flex items-center justify-center min-w-[150px]">
+                    <span id="loadMoreText">Load More</span>
+                    <svg id="loadMoreSpinner" class="w-4 h-4 ml-2 animate-spin hidden text-teal-600" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                </button>
+            `;
+        } else {
+            container.innerHTML = '<div class="text-xs text-slate-400 font-medium">All medicines loaded</div>';
+        }
+    }
 
     // Load More Ajax Function
     function loadMoreMedicines() {
@@ -190,9 +268,7 @@
         spinner.classList.remove('hidden');
 
         fetch(`{{ route('admin.medicines.index') }}?page=${nextPage}&per_page=${perPage}&search=${encodeURIComponent(currentSearch)}`, {
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            }
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
         })
         .then(response => response.json())
         .then(data => {
@@ -211,7 +287,7 @@
                     btnText.textContent = 'Load More';
                     spinner.classList.add('hidden');
                 } else {
-                    btn.parentElement.innerHTML = '<div class="text-xs text-slate-400 font-medium">All medicines loaded</div>';
+                    document.getElementById('loadMoreActionContainer').innerHTML = '<div class="text-xs text-slate-400 font-medium">All medicines loaded</div>';
                 }
             }
         })
