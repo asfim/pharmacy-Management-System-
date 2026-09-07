@@ -141,7 +141,8 @@
                 <i class="fas fa-boxes-stacked"></i>
                 <span>Batches & Expiry</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="{{ route('admin.stock.index') }}"
+               class="sidebar-link {{ request()->routeIs('admin.stock*') ? 'active' : '' }}">
                 <i class="fas fa-warehouse"></i>
                 <span>Stock & Inventory</span>
             </a>
@@ -149,19 +150,23 @@
             <!-- SALES & POS -->
             <p class="sidebar-section">Sales & POS</p>
 
-            <a href="#" class="sidebar-link">
+            <a href="{{ route('admin.pos.index') }}"
+               class="sidebar-link {{ request()->routeIs('admin.pos*') ? 'active' : '' }}">
                 <i class="fas fa-cash-register"></i>
                 <span>POS System</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="{{ route('admin.sales.index') }}"
+               class="sidebar-link {{ request()->routeIs('admin.sales*') ? 'active' : '' }}">
                 <i class="fas fa-file-invoice-dollar"></i>
                 <span>Sales Invoices</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="{{ route('admin.sale-returns.index') }}"
+               class="sidebar-link {{ request()->routeIs('admin.sale-returns*') ? 'active' : '' }}">
                 <i class="fas fa-rotate-left"></i>
                 <span>Sales Returns</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="{{ route('admin.orders.index') }}"
+               class="sidebar-link {{ request()->routeIs('admin.orders*') ? 'active' : '' }}">
                 <i class="fas fa-bag-shopping"></i>
                 <span>Online Orders</span>
             </a>
@@ -169,51 +174,80 @@
             <!-- PROCUREMENT -->
             <p class="sidebar-section">Procurement</p>
 
-            <a href="#" class="sidebar-link">
+            <a href="{{ route('admin.purchases.index') }}"
+               class="sidebar-link {{ request()->routeIs('admin.purchases*') ? 'active' : '' }}">
                 <i class="fas fa-cart-flatbed"></i>
-                <span>Purchase Orders</span>
+                <span>Purchases</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="{{ route('admin.suppliers.index') }}"
+               class="sidebar-link {{ request()->routeIs('admin.suppliers*') ? 'active' : '' }}">
                 <i class="fas fa-truck"></i>
                 <span>Suppliers</span>
-            </a>
-            <a href="#" class="sidebar-link">
-                <i class="fas fa-right-left"></i>
-                <span>Purchase Returns</span>
             </a>
 
             <!-- MANAGEMENT -->
             <p class="sidebar-section">Management</p>
 
-            <a href="#" class="sidebar-link">
+            <a href="{{ route('admin.customers.index') }}"
+               class="sidebar-link {{ request()->routeIs('admin.customers*') ? 'active' : '' }}">
                 <i class="fas fa-users"></i>
                 <span>Customers</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="{{ route('admin.doctors.index') }}"
+               class="sidebar-link {{ request()->routeIs('admin.doctors*') ? 'active' : '' }}">
                 <i class="fas fa-user-doctor"></i>
                 <span>Doctors</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="{{ route('admin.employees.index') }}"
+               class="sidebar-link {{ request()->routeIs('admin.employees*') ? 'active' : '' }}">
                 <i class="fas fa-id-card"></i>
                 <span>HRM & Payroll</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="{{ route('admin.accounts.index') }}"
+               class="sidebar-link {{ request()->routeIs('admin.accounts*') ? 'active' : '' }}">
                 <i class="fas fa-chart-line"></i>
                 <span>Accounts & Finance</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="{{ route('admin.expenses.index') }}"
+               class="sidebar-link {{ request()->routeIs('admin.expenses*') ? 'active' : '' }}">
+                <i class="fas fa-receipt"></i>
+                <span>Expenses</span>
+            </a>
+            <a href="{{ route('admin.branches.index') }}"
+               class="sidebar-link {{ request()->routeIs('admin.branches*') ? 'active' : '' }}">
                 <i class="fas fa-code-branch"></i>
                 <span>Branches</span>
+            </a>
+
+            <!-- REPORTS -->
+            <p class="sidebar-section">Reports</p>
+
+            <a href="{{ route('admin.reports.sales') }}"
+               class="sidebar-link {{ request()->routeIs('admin.reports.sales') ? 'active' : '' }}">
+                <i class="fas fa-chart-bar"></i>
+                <span>Sales Report</span>
+            </a>
+            <a href="{{ route('admin.reports.profit') }}"
+               class="sidebar-link {{ request()->routeIs('admin.reports.profit') ? 'active' : '' }}">
+                <i class="fas fa-money-bill-trend-up"></i>
+                <span>Profit & Loss</span>
+            </a>
+            <a href="{{ route('admin.reports.expiry') }}"
+               class="sidebar-link {{ request()->routeIs('admin.reports.expiry') ? 'active' : '' }}">
+                <i class="fas fa-calendar-xmark"></i>
+                <span>Expiry Report</span>
             </a>
 
             <!-- ADMIN -->
             <p class="sidebar-section">Admin</p>
 
-            <a href="#" class="sidebar-link">
+            <a href="{{ route('admin.settings.index') }}"
+               class="sidebar-link {{ request()->routeIs('admin.settings*') ? 'active' : '' }}">
                 <i class="fas fa-gear"></i>
                 <span>Settings</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="{{ route('admin.users.index') }}"
+               class="sidebar-link {{ request()->routeIs('admin.users*') ? 'active' : '' }}">
                 <i class="fas fa-shield-halved"></i>
                 <span>Roles & Users</span>
             </a>
@@ -292,10 +326,10 @@
                             <p class="text-sm font-semibold text-slate-800">{{ Auth::user()->name }}</p>
                             <p class="text-xs text-slate-400 truncate">{{ Auth::user()->email }}</p>
                         </div>
-                        <a href="#" class="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-600 hover:bg-slate-50 transition">
+                        <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-600 hover:bg-slate-50 transition">
                             <i class="fas fa-user text-slate-400 w-4 text-center"></i> My Profile
                         </a>
-                        <a href="#" class="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-600 hover:bg-slate-50 transition">
+                        <a href="{{ route('admin.settings.index') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-600 hover:bg-slate-50 transition">
                             <i class="fas fa-gear text-slate-400 w-4 text-center"></i> Settings
                         </a>
                         <hr class="my-1 border-slate-100">
