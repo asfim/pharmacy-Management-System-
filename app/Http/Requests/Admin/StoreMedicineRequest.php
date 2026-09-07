@@ -42,4 +42,20 @@ class StoreMedicineRequest extends FormRequest
             'image'                 => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'name.required'           => 'Medicine Name is required.',
+            'purchase_price.required' => 'Purchase Price is required.',
+            'purchase_price.numeric'  => 'Purchase Price must be a valid number.',
+            'sale_price.required'     => 'Sale Price is required.',
+            'sale_price.numeric'      => 'Sale Price must be a valid number.',
+            'status.required'         => 'Status is required.',
+            'sku.unique'              => 'This SKU has already been taken.',
+            'barcode.unique'          => 'This Barcode has already been taken.',
+            'image.image'             => 'The file must be an image (jpeg, png, jpg, gif).',
+            'image.max'               => 'The image size must not exceed 2MB.',
+        ];
+    }
 }

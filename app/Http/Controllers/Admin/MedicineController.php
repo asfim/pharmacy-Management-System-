@@ -18,6 +18,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 
+use Illuminate\Support\Str;
+
 class MedicineController extends Controller
 {
     private function getFormData(): array
@@ -83,25 +85,53 @@ class MedicineController extends Controller
 
     public function store(StoreMedicineRequest $request)
     {
-        $data = $request->validated();
-        $data['prescription_required'] = $request->boolean('prescription_required');
+        try {
+            DB::beginTransaction();
 
-        if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('medicines', 'public');
-        }
+            $data = $request->validated();
+            $data['prescription_required'] = $request->boolean('prescription_required');
 
-        $product = Product::create($data);
+            if (empty($data['sku'])) {
+                $data['sku'] = 'MED-' . strtoupper(Str::random(6));
+            }
 
-        if (isset($data['image'])) {
-            ProductImage::create([
-                'product_id' => $product->id,
-                'image_url'  => $data['image'],
-                'is_primary' => true,
-                'sort_order' => 1,
+            if (empty($data['barcode'])) {
+                $data['barcode'] = '880' . sprintf('%010d', rand(100000, 999999));
+            }
+
+            if ($request->hasFile('image')) {
+                $data['image'] = $request->file('image')->store('medicines', 'public');
+            }
+
+            $product = Product::create($data);
+
+            if (!empty($data['image'])) {
+                ProductImage::create([
+                    'product_id' => $product->id,
+                    'image_url'  => $data['image'],
+                    'is_primary' => true,
+                    'sort_order' => 1,
+                ]);
+            }
+
+            Batch::create([
+                'product_id'     => $product->id,
+                'batch_no'       => 'B' . sprintf('%05d', rand(100, 99999)),
+                'expiry_date'    => now()->addMonths(24)->format('Y-m-d'),
+                'purchase_price' => $product->purchase_price,
+                'sale_price'     => $product->sale_price,
+                'mrp'            => $product->mrp ?: $product->sale_price,
+                'quantity'       => 100,
+                'status'         => 'active',
             ]);
-        }
 
-        return redirect()->route('admin.medicines.index')->with('success', 'Medicine added successfully.');
+            DB::commit();
+
+            return redirect()->route('admin.medicines.index')->with('success', 'Medicine "' . $product->name . '" has been added successfully!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withInput()->with('error', 'Error creating medicine: ' . $e->getMessage());
+        }
     }
 
     public function show(Product $medicine)
