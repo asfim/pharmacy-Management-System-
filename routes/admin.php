@@ -71,6 +71,9 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::get('medicines/export-csv', [MedicineController::class, 'exportCsv'])->name('medicines.export-csv');
     Route::get('medicines/export-pdf', [MedicineController::class, 'exportPdf'])->name('medicines.export-pdf');
     Route::resource('medicines', MedicineController::class);
+    Route::post('batches/bulk-delete', [BatchController::class, 'bulkDelete'])->name('batches.bulk-delete');
+    Route::get('batches/export-csv', [BatchController::class, 'exportCsv'])->name('batches.export-csv');
+    Route::get('batches/export-pdf', [BatchController::class, 'exportPdf'])->name('batches.export-pdf');
     Route::resource('batches', BatchController::class);
 
     // ==================== PURCHASE ====================
