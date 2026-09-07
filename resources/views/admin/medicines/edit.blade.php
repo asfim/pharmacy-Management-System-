@@ -155,7 +155,11 @@
             @if($imgUrl)
                 <div class="mb-4">
                     <p class="text-xs font-medium text-slate-500 mb-1.5">Current Medicine Image:</p>
-                    <img src="{{ $imgUrl }}" alt="{{ $medicine->name }}" class="h-28 w-28 object-cover rounded-xl border border-slate-200 shadow-sm">
+                    <img src="{{ $imgUrl }}" 
+                         alt="{{ $medicine->name }}" 
+                         onclick="openImagePreview('{{ $imgUrl }}', '{{ addslashes($medicine->name) }}')"
+                         title="Click to view large image"
+                         class="h-28 w-28 object-cover rounded-xl border border-slate-200 shadow-sm cursor-pointer hover:scale-105 hover:ring-2 hover:ring-teal-500 transition-all duration-150">
                 </div>
             @endif
             <label class="block text-sm font-medium text-slate-700 mb-1">Upload New Image</label>

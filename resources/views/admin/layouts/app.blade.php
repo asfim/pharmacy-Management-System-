@@ -390,6 +390,58 @@
 
 </div>
 
+<!-- Global Image Lightbox Preview Modal -->
+<div id="globalImagePreviewModal" 
+     class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/80 backdrop-blur-md hidden p-4 transition-all duration-200"
+     onclick="closeGlobalImagePreview(event)">
+    <div class="relative max-w-4xl w-full bg-slate-900 rounded-2xl shadow-2xl overflow-hidden border border-slate-800 animate-in fade-in zoom-in duration-150"
+         onclick="event.stopPropagation()">
+        <!-- Modal Header -->
+        <div class="px-6 py-4 bg-slate-950 text-white flex justify-between items-center border-b border-slate-800">
+            <h3 class="font-bold text-base text-white flex items-center gap-2.5">
+                <i class="fas fa-image text-teal-400"></i>
+                <span id="globalPreviewTitleText">Medicine Image Preview</span>
+            </h3>
+            <button onclick="closeGlobalImagePreview()" class="text-slate-400 hover:text-white p-1.5 rounded-lg transition hover:bg-slate-800">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+        <!-- Modal Body (Image Display) -->
+        <div class="p-6 bg-slate-950 flex justify-center items-center min-h-[320px] max-h-[75vh] overflow-hidden">
+            <img id="globalPreviewSrc" src="" alt="Preview" class="max-h-[68vh] max-w-full object-contain rounded-xl shadow-2xl border border-slate-800 transition-all duration-200">
+        </div>
+    </div>
+</div>
+
+<script>
+    function openImagePreview(src, title = 'Medicine Image') {
+        const modal = document.getElementById('globalImagePreviewModal');
+        const img = document.getElementById('globalPreviewSrc');
+        const titleElem = document.getElementById('globalPreviewTitleText');
+        
+        if (img && modal) {
+            img.src = src;
+            if (titleElem) titleElem.textContent = title;
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    function closeGlobalImagePreview(e) {
+        const modal = document.getElementById('globalImagePreviewModal');
+        if (modal) {
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+    }
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeGlobalImagePreview();
+        }
+    });
+</script>
+
 @stack('scripts')
 </body>
 </html>

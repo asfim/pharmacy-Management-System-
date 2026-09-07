@@ -11,9 +11,18 @@
             }
         @endphp
         @if($imgUrl)
-            <img src="{{ $imgUrl }}" alt="{{ $item->name }}" class="w-10 h-10 object-cover rounded-lg border border-slate-200 shadow-xs">
+            <div class="relative group cursor-pointer w-12 h-12 flex-shrink-0" 
+                 onclick="openImagePreview('{{ $imgUrl }}', '{{ addslashes($item->name) }} @if($item->strength)({{ addslashes($item->strength) }})@endif')">
+                <img src="{{ $imgUrl }}" 
+                     alt="{{ $item->name }}" 
+                     title="Click to view large image"
+                     class="w-12 h-12 object-cover rounded-xl border border-slate-200 shadow-xs group-hover:scale-105 group-hover:ring-2 group-hover:ring-teal-500 transition-all duration-200">
+                <div class="absolute inset-0 bg-slate-900/40 rounded-xl opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-200">
+                    <i class="fas fa-magnifying-glass-plus text-white text-xs"></i>
+                </div>
+            </div>
         @else
-            <div class="w-10 h-10 rounded-lg bg-teal-50 text-teal-600 flex items-center justify-center font-bold text-xs border border-teal-100">
+            <div class="w-12 h-12 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center font-bold text-xs border border-teal-100">
                 {{ strtoupper(substr($item->name, 0, 2)) }}
             </div>
         @endif

@@ -9,11 +9,13 @@
         .header h1 { margin: 0; color: #0d9488; font-size: 24px; }
         .header p { margin: 4px 0 0; color: #666; font-size: 12px; }
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { border: 1px solid #cbd5e1; padding: 6px 8px; text-align: left; }
+        th, td { border: 1px solid #cbd5e1; padding: 6px 8px; text-align: left; vertical-align: middle; }
         th { background-color: #f1f5f9; font-weight: bold; color: #334155; }
         tr:nth-child(even) { background-color: #f8fafc; }
         .text-right { text-align: right; }
+        .text-center { text-align: center; }
         .price { font-weight: bold; color: #0f172a; }
+        .img-thumb { width: 38px; height: 38px; object-fit: cover; border-radius: 6px; border: 1px solid #cbd5e1; display: inline-block; }
         @media print {
             .no-print { display: none; }
         }
@@ -27,13 +29,14 @@
 
     <div class="header">
         <h1>Pharmacy Management System</h1>
-        <p>Medicine List Report - Generated on {{ date('d M, Y h:i A') }}</p>
+        <p>Medicine Directory Report with Product Images — Generated on {{ date('d M, Y h:i A') }}</p>
     </div>
 
     <table>
         <thead>
             <tr>
-                <th>SL</th>
+                <th style="width: 35px;">SL</th>
+                <th style="width: 50px;" class="text-center">Image</th>
                 <th>Medicine Name</th>
                 <th>Generic Name</th>
                 <th>Manufacturer</th>
@@ -44,8 +47,21 @@
         </thead>
         <tbody>
             @foreach($medicines as $index => $item)
+            @php
+                $imgUrl = $item->product_images->first()->image_url ?? $item->image ?? null;
+                if ($imgUrl && !str_starts_with($imgUrl, 'http')) {
+                    $imgUrl = asset('storage/' . $imgUrl);
+                }
+            @endphp
             <tr>
-                <td>{{ $index + 1 }}</td>
+                <td class="text-center">{{ $index + 1 }}</td>
+                <td class="text-center">
+                    @if($imgUrl)
+                        <img src="{{ $imgUrl }}" alt="{{ $item->name }}" class="img-thumb">
+                    @else
+                        -
+                    @endif
+                </td>
                 <td><strong>{{ $item->name }}</strong></td>
                 <td>{{ $item->generic->name ?? '-' }}</td>
                 <td>{{ $item->manufacturer->company_name ?? '-' }}</td>

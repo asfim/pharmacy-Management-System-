@@ -140,13 +140,38 @@
 
         <form action="{{ route('admin.medicines.import-csv') }}" method="POST" enctype="multipart/form-data" class="p-6 space-y-4">
             @csrf
+            
+            <!-- Download Demo CSV Banner -->
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-semibold text-slate-800">Need the required CSV format pattern?</p>
+                    <p class="text-[11px] text-slate-500">Download the sample CSV file to view structure & sample rows</p>
+                </div>
+                <a href="{{ route('admin.medicines.sample-csv') }}" 
+                   class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold py-2 px-3 rounded-lg flex items-center transition shadow-2xs flex-shrink-0 ml-2">
+                    <svg class="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    Download Demo CSV
+                </a>
+            </div>
+
+            <!-- Required Columns Pattern -->
+            <div class="bg-amber-50/60 border border-amber-200/80 rounded-xl p-3">
+                <p class="text-xs font-semibold text-amber-900 mb-1 flex items-center">
+                    <svg class="w-3.5 h-3.5 mr-1 text-amber-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Required CSV Column Pattern (Headers):
+                </p>
+                <div class="bg-white border border-amber-200 rounded-md p-2 text-[11px] font-mono text-slate-700 overflow-x-auto select-all">
+                    medicine_name, category_name, slug, generic_name, strength, manufacturer_name, unit, unit_size, price, image
+                </div>
+            </div>
+
             <div>
                 <label class="block text-sm font-medium text-slate-700 mb-2">Select CSV File</label>
-                <div class="border-2 border-dashed border-slate-300 hover:border-indigo-500 rounded-xl p-6 text-center cursor-pointer transition bg-slate-50 hover:bg-indigo-50/30"
+                <div class="border-2 border-dashed border-slate-300 hover:border-indigo-500 rounded-xl p-5 text-center cursor-pointer transition bg-slate-50 hover:bg-indigo-50/30"
                      onclick="document.getElementById('csvFileInput').click()">
-                    <svg class="w-10 h-10 mx-auto text-slate-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    <svg class="w-9 h-9 mx-auto text-slate-400 mb-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                     <p id="csvFileNameText" class="text-sm font-medium text-slate-700">Click to choose `.csv` file</p>
-                    <p class="text-xs text-slate-400 mt-1">Supports up to 50MB (medicine_name, category_name, slug, generic_name, strength, manufacturer_name, unit, unit_size, price)</p>
+                    <p class="text-xs text-slate-400 mt-0.5">Supports up to 50MB CSV files</p>
                     <input type="file" id="csvFileInput" name="csv_file" accept=".csv, .txt" class="hidden" required onchange="document.getElementById('csvFileNameText').textContent = this.files[0] ? this.files[0].name : 'Click to choose .csv file'">
                 </div>
             </div>

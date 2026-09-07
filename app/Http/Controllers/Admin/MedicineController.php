@@ -211,7 +211,12 @@ class MedicineController extends Controller
                 $purchasePrice = round($price * 0.85, 2);
                 $sku = 'MED-' . strtoupper(Str::random(6));
 
-                $assignedImage = $totalLocalImages > 0 ? $localImages[$count % $totalLocalImages] : null;
+                $csvImage = trim($row[9] ?? '');
+                if (!empty($csvImage)) {
+                    $assignedImage = $csvImage;
+                } else {
+                    $assignedImage = $totalLocalImages > 0 ? $localImages[$count % $totalLocalImages] : null;
+                }
 
                 $product = Product::create([
                     'sku'                  => $sku,
@@ -278,7 +283,7 @@ class MedicineController extends Controller
     {
         $fileName = 'medicines_' . date('Y_m_d_His') . '.csv';
 
-        $query = Product::with(['category', 'generic', 'manufacturer']);
+        $query = Product::with(['category', 'generic', 'manufacturer', 'product_images']);
         if ($search = $request->get('search')) {
             $query->where('name', 'like', "%{$search}%");
         }
@@ -297,10 +302,16 @@ class MedicineController extends Controller
             // Add UTF-8 BOM
             fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
 
-            fputcsv($file, ['SKU', 'Name', 'Generic', 'Manufacturer', 'Category', 'Strength', 'Pack Size', 'Purchase Price', 'Sale Price', 'Status']);
+            fputcsv($file, ['SL', 'SKU', 'Name', 'Generic', 'Manufacturer', 'Category', 'Strength', 'Pack Size', 'Purchase Price', 'Sale Price', 'Status', 'Image URL']);
 
-            foreach ($products as $p) {
+            foreach ($products as $index => $p) {
+                $imgUrl = $p->product_images->first()->image_url ?? $p->image ?? '';
+                if ($imgUrl && !str_starts_with($imgUrl, 'http')) {
+                    $imgUrl = asset('storage/' . $imgUrl);
+                }
+
                 fputcsv($file, [
+                    $index + 1,
                     $p->sku,
                     $p->name,
                     $p->generic->name ?? '',
@@ -311,6 +322,7 @@ class MedicineController extends Controller
                     $p->purchase_price,
                     $p->sale_price,
                     $p->status,
+                    $imgUrl,
                 ]);
             }
             fclose($file);
@@ -321,12 +333,59 @@ class MedicineController extends Controller
 
     public function exportPdf(Request $request)
     {
-        $query = Product::with(['category', 'generic', 'manufacturer']);
+        $query = Product::with(['category', 'generic', 'manufacturer', 'product_images']);
         if ($search = $request->get('search')) {
             $query->where('name', 'like', "%{$search}%");
         }
-        $medicines = $query->limit(500)->get();
+        $medicines = $query->limit(1000)->get();
 
         return view('admin.medicines.pdf', compact('medicines'));
+    }
+
+    public function sampleCsv()
+    {
+        $fileName = 'sample_medicine_import_format.csv';
+
+        $headers = [
+            "Content-type"        => "text/csv; charset=UTF-8",
+            "Content-Disposition" => "attachment; filename={$fileName}",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        ];
+
+        $callback = function () {
+            $file = fopen('php://output', 'w');
+            fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
+
+            fputcsv($file, [
+                'medicine_name',
+                'category_name',
+                'slug',
+                'generic_name',
+                'strength',
+                'manufacturer_name',
+                'unit',
+                'unit_size',
+                'price',
+                'image'
+            ]);
+
+            $sampleRows = [
+                ['Napa', 'Tablet', 'napa', 'Paracetamol', '500 mg', 'Beximco Pharmaceuticals Ltd.', 'Piece', '10 Tablets', '1.20', 'medicines/images01.jpg'],
+                ['Seclo 20', 'Capsule', 'seclo-20', 'Omeprazole', '20 mg', 'Square Pharmaceuticals Ltd.', 'Piece', '14 Capsules', '6.00', 'medicines/images02.jpg'],
+                ['Ceevit', 'Chewable Tablet', 'ceevit', 'Vitamin C [Ascorbic acid]', '250 mg', 'Square Pharmaceuticals Ltd.', 'Piece', '100 Tablets', '1.90', 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=300&q=80'],
+                ['Entacyd Plus', 'Syrup', 'entacyd-plus', 'Aluminium Hydroxide + Simethicone', '200 ml', 'Square Pharmaceuticals Ltd.', 'Bottle', '1 Bottle', '80.00', 'medicines/images04.jpg'],
+                ['Alben DS', 'Chewable Tablet', 'alben-ds', 'Albendazole', '400 mg', 'Eskayef Bangladesh Ltd.', 'Piece', '1 Tablet', '5.00', 'medicines/images05.jpg'],
+            ];
+
+            foreach ($sampleRows as $row) {
+                fputcsv($file, $row);
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 }
