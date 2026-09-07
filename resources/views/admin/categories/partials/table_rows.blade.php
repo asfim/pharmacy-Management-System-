@@ -1,10 +1,10 @@
 @forelse($categories as $category)
 <tr class="hover:bg-slate-50 transition cat-row" data-id="{{ $category->id }}">
-    <td class="px-4 py-3 text-center text-slate-500 text-sm">
-        {{ ($categories->currentPage() - 1) * $categories->perPage() + $loop->iteration }}
-    </td>
     <td class="px-4 py-3 text-center">
         <input type="checkbox" class="row-check w-4 h-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500" value="{{ $category->id }}">
+    </td>
+    <td class="px-4 py-3 text-center text-slate-500 text-sm">
+        {{ ($categories->currentPage() - 1) * $categories->perPage() + $loop->iteration }}
     </td>
     <td class="px-4 py-3">
         @if($category->image)
