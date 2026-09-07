@@ -104,19 +104,19 @@
 
     {{-- Category Table --}}
     <div class="overflow-x-auto relative">
-        <table id="categoriesDataTable" class="w-full text-left" style="width:100%">
+        <table id="categoriesTable" class="w-full text-left">
             <thead class="bg-slate-100 border-b border-slate-200 text-slate-600 text-xs uppercase tracking-wider font-semibold">
                 <tr>
-                    <th class="px-4 py-3.5 w-10 no-sort">
+                    <th class="px-4 py-3.5 w-10">
                         <input type="checkbox" id="selectAllCheckbox" onclick="toggleSelectAll(this)"
                                class="w-4 h-4 rounded text-teal-600 border-slate-300 focus:ring-teal-500 cursor-pointer" title="Select All">
                     </th>
-                    <th class="px-4 py-3.5">SL</th>
-                    <th class="px-4 py-3.5 no-sort">Image</th>
-                    <th class="px-4 py-3.5">Name</th>
-                    <th class="px-4 py-3.5">Description</th>
-                    <th class="px-4 py-3.5">Status</th>
-                    <th class="px-4 py-3.5 no-sort">Actions</th>
+                    <th class="px-4 py-3.5 sortable">SL</th>
+                    <th class="px-4 py-3.5">Image</th>
+                    <th class="px-4 py-3.5 sortable">Name</th>
+                    <th class="px-4 py-3.5 sortable">Description</th>
+                    <th class="px-4 py-3.5 sortable">Status</th>
+                    <th class="px-4 py-3.5">Actions</th>
                 </tr>
             </thead>
             <tbody id="categoryTableBody" class="divide-y divide-slate-200 text-sm transition-opacity duration-150">
@@ -230,64 +230,81 @@
 
 @push('scripts')
 <style>
-#categoriesDataTable_wrapper .dataTables_filter,
-#categoriesDataTable_wrapper .dataTables_length,
-#categoriesDataTable_wrapper .dataTables_info,
-#categoriesDataTable_wrapper .dataTables_paginate { display: none !important; }
-table#categoriesDataTable thead th {
-    background: #f1f5f9 !important;
-    color: #475569 !important;
-    font-size: 11px !important;
-    font-weight: 700 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.05em !important;
-    padding: 12px 16px !important;
-    border-bottom: 1px solid #e2e8f0 !important;
-    border-top: none !important;
+/* Custom sortable header styles */
+#categoriesTable thead th.sortable {
     cursor: pointer;
-    white-space: nowrap;
     user-select: none;
+    white-space: nowrap;
 }
-table#categoriesDataTable thead th.sorting_asc:after  { content: ' ▲'; opacity: 1; color: #0d9488; }
-table#categoriesDataTable thead th.sorting_desc:after { content: ' ▼'; opacity: 1; color: #0d9488; }
-table#categoriesDataTable thead th.sorting:after       { content: ' ⇅'; font-size:10px; margin-left:4px; opacity:0.6; }
-table#categoriesDataTable thead th.no-sort { cursor: default !important; }
-table#categoriesDataTable thead th.no-sort:after,
-table#categoriesDataTable thead th.sorting_asc.no-sort:after,
-table#categoriesDataTable thead th.sorting_desc.no-sort:after { content: '' !important; }
-table#categoriesDataTable { border-collapse: collapse !important; }
-table#categoriesDataTable tbody tr:hover { background: #f8fafc !important; }
+#categoriesTable thead th.sortable:hover { background: #e2e8f0; }
+#categoriesTable thead th .sort-icon {
+    display: inline-block;
+    margin-left: 4px;
+    font-size: 10px;
+    opacity: 0.4;
+}
+#categoriesTable thead th.sort-asc .sort-icon,
+#categoriesTable thead th.sort-desc .sort-icon { opacity: 1; color: #0d9488; }
 </style>
 
 <script>
-let categoriesDT = null;
-let nextPage = {{ $categories->currentPage() + 1 }};
-let perPage   = '{{ $perPageRaw }}';
+let nextPage     = {{ $categories->currentPage() + 1 }};
+let perPage      = '{{ $perPageRaw }}';
 let currentSearch = '{{ request('search') }}';
+let sortCol      = -1;
+let sortDir      = 'asc';
 
-$(document).ready(function () {
-    initDT();
+// ─── Column Sort (vanilla JS) ──────────────────────────
+document.querySelectorAll('#categoriesTable thead th.sortable').forEach((th, idx) => {
+    // track actual column index in full table
+    const colIndex = Array.from(th.parentNode.children).indexOf(th);
+    th.innerHTML += '<span class="sort-icon">⇅</span>';
+
+    th.addEventListener('click', () => {
+        if (sortCol === colIndex) {
+            sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+        } else {
+            sortCol = colIndex;
+            sortDir = 'asc';
+        }
+        // Update header UI
+        document.querySelectorAll('#categoriesTable thead th').forEach(h => {
+            h.classList.remove('sort-asc', 'sort-desc');
+            const ic = h.querySelector('.sort-icon');
+            if (ic) ic.textContent = '⇅';
+        });
+        th.classList.add(sortDir === 'asc' ? 'sort-asc' : 'sort-desc');
+        const icon = th.querySelector('.sort-icon');
+        if (icon) icon.textContent = sortDir === 'asc' ? '▲' : '▼';
+
+        sortTable(colIndex, sortDir);
+    });
 });
 
-function initDT() {
-    if (categoriesDT) { categoriesDT.destroy(); categoriesDT = null; }
-    categoriesDT = $('#categoriesDataTable').DataTable({
-        paging:    false,
-        searching: false,
-        info:      false,
-        ordering:  true,
-        autoWidth: false,
-        columnDefs: [{ orderable: false, targets: [0, 2, 6] }],
-        order: []
+function sortTable(colIdx, dir) {
+    const tbody = document.getElementById('categoryTableBody');
+    const rows  = Array.from(tbody.querySelectorAll('tr.cat-row'));
+    rows.sort((a, b) => {
+        const aText = (a.cells[colIdx]?.innerText || '').trim().toLowerCase();
+        const bText = (b.cells[colIdx]?.innerText || '').trim().toLowerCase();
+        const aNum  = parseFloat(aText);
+        const bNum  = parseFloat(bText);
+        if (!isNaN(aNum) && !isNaN(bNum)) {
+            return dir === 'asc' ? aNum - bNum : bNum - aNum;
+        }
+        return dir === 'asc' ? aText.localeCompare(bText) : bText.localeCompare(aText);
     });
+    rows.forEach(r => tbody.appendChild(r));
 }
 
+// ─── Export URL updater ──────────────────────────────────
 function updateExportUrls() {
     const q = `?per_page=${perPage}&search=${encodeURIComponent(currentSearch)}`;
     document.getElementById('exportCsvBtn').href = `{{ route('admin.categories.export-csv') }}${q}`;
     document.getElementById('exportPdfBtn').href = `{{ route('admin.categories.export-pdf') }}${q}`;
 }
 
+// ─── Per Page ────────────────────────────────────────────
 function changePerPage(size) {
     perPage = size;
     document.querySelectorAll('.per-page-pill').forEach(btn => {
@@ -298,7 +315,7 @@ function changePerPage(size) {
     performSearch();
 }
 
-// Live Search
+// ─── Live Search ─────────────────────────────────────────
 let searchTimer;
 document.getElementById('categorySearchInput').addEventListener('input', function (e) {
     clearTimeout(searchTimer);
@@ -324,9 +341,9 @@ function performSearch() {
         document.getElementById('currentLoadedCount').textContent = data.count;
         document.getElementById('totalCategoriesCount').textContent = data.total;
         nextPage = 2;
+        sortCol = -1; sortDir = 'asc'; // reset sort
         renderLoadMore(data.has_more_pages);
         history.pushState(null, '', `{{ route('admin.categories.index') }}?per_page=${perPage}&search=${encodeURIComponent(currentSearch)}`);
-        initDT();
     })
     .catch(() => {
         tbody.classList.remove('opacity-40');
@@ -334,6 +351,7 @@ function performSearch() {
     });
 }
 
+// ─── Load More ───────────────────────────────────────────
 function renderLoadMore(hasMore) {
     const c = document.getElementById('loadMoreActionContainer');
     if (hasMore) {
@@ -351,14 +369,14 @@ function renderLoadMore(hasMore) {
 }
 
 function loadMoreCategories() {
-    const btn     = document.getElementById('loadMoreBtn');
-    const spinner = document.getElementById('loadMoreSpinner');
-    const text    = document.getElementById('loadMoreText');
+    const btn = document.getElementById('loadMoreBtn');
+    const text = document.getElementById('loadMoreText');
+    const spin = document.getElementById('loadMoreSpinner');
     if (!btn) return;
 
     btn.disabled = true;
-    text.textContent = 'Loading...';
-    spinner.classList.remove('hidden');
+    if (text) text.textContent = 'Loading...';
+    if (spin) spin.classList.remove('hidden');
 
     fetch(`{{ route('admin.categories.index') }}?page=${nextPage}&per_page=${perPage}&search=${encodeURIComponent(currentSearch)}`, {
         headers: { 'X-Requested-With': 'XMLHttpRequest' }
@@ -366,49 +384,43 @@ function loadMoreCategories() {
     .then(r => r.json())
     .then(data => {
         if (data.html) {
-            if (categoriesDT) categoriesDT.destroy();
             document.getElementById('categoryTableBody').insertAdjacentHTML('beforeend', data.html);
             const el = document.getElementById('currentLoadedCount');
             if (el) el.textContent = parseInt(el.textContent || 0) + data.count;
             if (data.has_more_pages) {
                 nextPage = data.next_page;
-                btn.disabled = false;
-                text.textContent = 'Load More';
-                spinner.classList.add('hidden');
+                renderLoadMore(true);
             } else {
                 renderLoadMore(false);
             }
-            initDT();
         }
     })
     .catch(() => {
-        btn.disabled = false;
-        text.textContent = 'Load More';
-        spinner.classList.add('hidden');
+        if (text) text.textContent = 'Load More';
+        if (spin) spin.classList.add('hidden');
+        if (btn) btn.disabled = false;
     });
 }
 
-// Select All
+// ─── Select All / Checkboxes ─────────────────────────────
 function toggleSelectAll(master) {
     document.querySelectorAll('.row-check').forEach(cb => cb.checked = master.checked);
     onCheckboxChange();
 }
-
 document.addEventListener('change', function (e) {
     if (e.target.classList.contains('row-check')) onCheckboxChange();
 });
-
 function onCheckboxChange() {
     const selected = document.querySelectorAll('.row-check:checked');
     const btn = document.getElementById('bulkDeleteBtn');
     document.getElementById('bulkDeleteCount').textContent = selected.length;
     selected.length > 0 ? btn.classList.remove('hidden') : btn.classList.add('hidden');
-    const sa = document.getElementById('selectAllCheckbox');
+    const sa  = document.getElementById('selectAllCheckbox');
     const all = document.querySelectorAll('.row-check');
     if (sa && all.length > 0) sa.checked = selected.length === all.length;
 }
 
-// Bulk Delete
+// ─── Bulk Delete ─────────────────────────────────────────
 function executeBulkDelete() {
     const ids = Array.from(document.querySelectorAll('.row-check:checked')).map(cb => cb.value);
     if (!ids.length) return;
@@ -439,3 +451,4 @@ function executeBulkDelete() {
 }
 </script>
 @endpush
+

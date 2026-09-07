@@ -7,7 +7,7 @@
         <h2 class="text-2xl font-bold text-slate-800">Medicine Directory</h2>
         <p class="text-sm text-slate-500">Manage, export, and bulk upload pharmacy medicines</p>
     </div>
-    
+
     <div class="flex flex-wrap items-center gap-2">
         <!-- Bulk Delete Action Button (Hidden when 0 selected) -->
         <button id="bulkDeleteBtn"
@@ -18,7 +18,7 @@
         </button>
 
         <!-- CSV Export -->
-        <a id="exportCsvBtn" href="{{ route('admin.medicines.export-csv', request()->query()) }}" 
+        <a id="exportCsvBtn" href="{{ route('admin.medicines.export-csv', request()->query()) }}"
            class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 font-medium py-2 px-3 rounded-lg flex items-center transition text-sm shadow-xs">
             <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
             Export CSV
@@ -56,7 +56,7 @@
             <span class="font-medium text-slate-700">Show per page:</span>
             <div class="inline-flex rounded-lg border border-slate-200 bg-white p-1 shadow-2xs">
                 @foreach([50, 100, 200, 500, 'all'] as $size)
-                    <button type="button" 
+                    <button type="button"
                             onclick="changePerPage('{{ $size }}')"
                             id="per-page-btn-{{ $size }}"
                             class="per-page-pill px-3 py-1 text-xs font-semibold rounded-md transition {{ (request('per_page', 50) == $size) ? 'bg-teal-600 text-white shadow-2xs' : 'text-slate-600 hover:bg-slate-100' }}">
@@ -68,10 +68,10 @@
 
         <!-- Live Search Box -->
         <div class="relative w-full md:w-80">
-            <input type="text" 
+            <input type="text"
                    id="medicineSearchInput"
                    value="{{ request('search') }}"
-                   placeholder="Instant search medicine..." 
+                   placeholder="Instant search medicine..."
                    autocomplete="off"
                    class="w-full pl-9 pr-8 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 bg-white transition">
             <svg class="w-4 h-4 text-slate-400 absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
@@ -86,22 +86,22 @@
 
     <!-- Medicine Table -->
     <div class="overflow-x-auto relative">
-        <table id="medicinesDataTable" class="w-full text-left" style="width:100%">
+        <table id="medicinesTable" class="w-full text-left">
             <thead class="bg-slate-100 border-b border-slate-200 text-slate-600 text-xs uppercase tracking-wider font-semibold">
                 <tr>
-                    <th class="px-4 py-3.5 w-10 no-sort">
+                    <th class="px-4 py-3.5 w-10">
                         <input type="checkbox" id="selectAllCheckbox" onclick="toggleSelectAllMedicines(this)" class="w-4 h-4 rounded text-teal-600 border-slate-300 focus:ring-teal-500 cursor-pointer" title="Select All">
                     </th>
-                    <th class="px-4 py-3.5">SL</th>
-                    <th class="px-4 py-3.5 no-sort">Image</th>
-                    <th class="px-4 py-3.5">Name</th>
-                    <th class="px-4 py-3.5">Generic</th>
-                    <th class="px-4 py-3.5">Manufacturer</th>
-                    <th class="px-4 py-3.5">Category</th>
-                    <th class="px-4 py-3.5">Sale Price</th>
-                    <th class="px-4 py-3.5">Rx</th>
-                    <th class="px-4 py-3.5">Status</th>
-                    <th class="px-4 py-3.5 no-sort">Actions</th>
+                    <th class="px-4 py-3.5 sortable">SL</th>
+                    <th class="px-4 py-3.5">Image</th>
+                    <th class="px-4 py-3.5 sortable">Name</th>
+                    <th class="px-4 py-3.5 sortable">Generic</th>
+                    {{-- <th class="px-4 py-3.5 sortable">Manufacturer</th> --}}
+                    <th class="px-4 py-3.5 sortable">Category</th>
+                    <th class="px-4 py-3.5 sortable">Sale Price</th>
+                    <th class="px-4 py-3.5 sortable">Rx</th>
+                    <th class="px-4 py-3.5 sortable">Status</th>
+                    <th class="px-4 py-3.5">Actions</th>
                 </tr>
             </thead>
             <tbody id="medicineTableBody" class="divide-y divide-slate-200 text-sm transition-opacity duration-150">
@@ -118,7 +118,7 @@
 
         <div id="loadMoreActionContainer">
             @if($medicines->hasMorePages())
-                <button id="loadMoreBtn" 
+                <button id="loadMoreBtn"
                         onclick="loadMoreMedicines()"
                         class="bg-white hover:bg-slate-100 text-teal-700 font-semibold py-2 px-6 rounded-lg border border-teal-200 transition shadow-xs flex items-center justify-center min-w-[150px]">
                     <span id="loadMoreText">Load More</span>
@@ -151,14 +151,14 @@
 
         <form action="{{ route('admin.medicines.import-csv') }}" method="POST" enctype="multipart/form-data" class="p-6 space-y-4">
             @csrf
-            
+
             <!-- Download Demo CSV Banner -->
             <div class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 flex items-center justify-between">
                 <div>
                     <p class="text-xs font-semibold text-slate-800">Need the required CSV format pattern?</p>
                     <p class="text-[11px] text-slate-500">Download the sample CSV file to view structure & sample rows</p>
                 </div>
-                <a href="{{ route('admin.medicines.sample-csv') }}" 
+                <a href="{{ route('admin.medicines.sample-csv') }}"
                    class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold py-2 px-3 rounded-lg flex items-center transition shadow-2xs flex-shrink-0 ml-2">
                     <svg class="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                     Download Demo CSV
@@ -204,102 +204,85 @@
 
 @push('scripts')
 <style>
-/* DataTables custom styling to match Tailwind/slate design */
-#medicinesDataTable_wrapper .dataTables_filter,
-#medicinesDataTable_wrapper .dataTables_length,
-#medicinesDataTable_wrapper .dataTables_info,
-#medicinesDataTable_wrapper .dataTables_paginate { display: none !important; }
-table.dataTable thead th {
-    background: #f1f5f9 !important;
-    color: #475569 !important;
-    font-size: 11px !important;
-    font-weight: 700 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.05em !important;
-    padding: 12px 16px !important;
-    border-bottom: 1px solid #e2e8f0 !important;
-    border-top: none !important;
+#medicinesTable thead th.sortable {
     cursor: pointer;
-    white-space: nowrap;
     user-select: none;
+    white-space: nowrap;
 }
-table.dataTable thead th.sorting:after,
-table.dataTable thead th.sorting_asc:after,
-table.dataTable thead th.sorting_desc:after {
-    font-size: 10px;
+#medicinesTable thead th.sortable:hover { background: #e2e8f0; }
+#medicinesTable thead th .sort-icon {
+    display: inline-block;
     margin-left: 4px;
-    opacity: 0.6;
+    font-size: 10px;
+    opacity: 0.4;
 }
-table.dataTable thead th.sorting_asc:after  { content: ' ▲'; opacity: 1; color: #0d9488; }
-table.dataTable thead th.sorting_desc:after { content: ' ▼'; opacity: 1; color: #0d9488; }
-table.dataTable thead th.sorting:after       { content: ' ⇅'; }
-table.dataTable thead th.no-sort { cursor: default !important; }
-table.dataTable thead th.no-sort:after { content: '' !important; }
-table.dataTable thead th.sorting_asc.no-sort:after,
-table.dataTable thead th.sorting_desc.no-sort:after { content: '' !important; }
-table.dataTable { border-collapse: collapse !important; }
-table.dataTable tbody tr { border-bottom: 1px solid #f1f5f9; }
-table.dataTable tbody tr:hover { background: #f8fafc !important; }
+#medicinesTable thead th.sort-asc .sort-icon,
+#medicinesTable thead th.sort-desc .sort-icon { opacity: 1; color: #0d9488; }
 </style>
 
 <script>
-    let medicinesDT = null;
     let nextPage = {{ $medicines->currentPage() + 1 }};
     let perPage = '{{ request("per_page", 50) }}';
     let currentSearch = '{{ request("search") }}';
+    let sortCol = -1;
+    let sortDir = 'asc';
 
-    // Initialize DataTables (UI only — sorting by visible columns, no server-side DT)
-    $(document).ready(function () {
-        medicinesDT = $('#medicinesDataTable').DataTable({
-            paging:    false,
-            searching: false,
-            info:      false,
-            ordering:  true,
-            autoWidth: false,
-            columnDefs: [
-                { orderable: false, targets: [0, 2, 10] } // checkbox, image, actions
-            ],
-            order: [] // no default sort
+    // ─── Vanilla JS Column Sort ───────────────────────────
+    document.querySelectorAll('#medicinesTable thead th.sortable').forEach(th => {
+        const colIndex = Array.from(th.parentNode.children).indexOf(th);
+        th.innerHTML += '<span class="sort-icon">⇅</span>';
+        th.addEventListener('click', () => {
+            if (sortCol === colIndex) {
+                sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+            } else {
+                sortCol = colIndex;
+                sortDir = 'asc';
+            }
+            document.querySelectorAll('#medicinesTable thead th').forEach(h => {
+                h.classList.remove('sort-asc', 'sort-desc');
+                const ic = h.querySelector('.sort-icon');
+                if (ic) ic.textContent = '⇅';
+            });
+            th.classList.add(sortDir === 'asc' ? 'sort-asc' : 'sort-desc');
+            const icon = th.querySelector('.sort-icon');
+            if (icon) icon.textContent = sortDir === 'asc' ? '▲' : '▼';
+            sortTable(colIndex, sortDir);
         });
     });
 
-    function reinitDT() {
-        if (medicinesDT) {
-            medicinesDT.destroy();
-            medicinesDT = null;
-        }
-        medicinesDT = $('#medicinesDataTable').DataTable({
-            paging:    false,
-            searching: false,
-            info:      false,
-            ordering:  true,
-            autoWidth: false,
-            columnDefs: [
-                { orderable: false, targets: [0, 2, 10] }
-            ],
-            order: []
+    function sortTable(colIdx, dir) {
+        const tbody = document.getElementById('medicineTableBody');
+        const rows  = Array.from(tbody.querySelectorAll('tr.medicine-row'));
+        rows.sort((a, b) => {
+            const aText = (a.cells[colIdx]?.innerText || '').trim().toLowerCase();
+            const bText = (b.cells[colIdx]?.innerText || '').trim().toLowerCase();
+            const aNum  = parseFloat(aText.replace(/[^0-9.]/g, ''));
+            const bNum  = parseFloat(bText.replace(/[^0-9.]/g, ''));
+            if (!isNaN(aNum) && !isNaN(bNum)) return dir === 'asc' ? aNum - bNum : bNum - aNum;
+            return dir === 'asc' ? aText.localeCompare(bText) : bText.localeCompare(aText);
         });
+        rows.forEach(r => tbody.appendChild(r));
     }
 
+    // ─── Export URLs ─────────────────────────────────────
     function updateExportUrls() {
-        const queryParams = `?per_page=${perPage}&search=${encodeURIComponent(currentSearch)}`;
-        document.getElementById('exportCsvBtn').href = `{{ route('admin.medicines.export-csv') }}${queryParams}`;
-        document.getElementById('exportPdfBtn').href = `{{ route('admin.medicines.export-pdf') }}${queryParams}`;
+        const q = `?per_page=${perPage}&search=${encodeURIComponent(currentSearch)}`;
+        document.getElementById('exportCsvBtn').href = `{{ route('admin.medicines.export-csv') }}${q}`;
+        document.getElementById('exportPdfBtn').href = `{{ route('admin.medicines.export-pdf') }}${q}`;
     }
 
+    // ─── Per Page ─────────────────────────────────────────
     function changePerPage(size) {
         perPage = size;
         document.querySelectorAll('.per-page-pill').forEach(btn => {
             btn.className = 'per-page-pill px-3 py-1 text-xs font-semibold rounded-md transition text-slate-600 hover:bg-slate-100';
         });
         const activeBtn = document.getElementById(`per-page-btn-${size}`);
-        if (activeBtn) {
-            activeBtn.className = 'per-page-pill px-3 py-1 text-xs font-semibold rounded-md transition bg-teal-600 text-white shadow-2xs';
-        }
+        if (activeBtn) activeBtn.className = 'per-page-pill px-3 py-1 text-xs font-semibold rounded-md transition bg-teal-600 text-white shadow-2xs';
         performLiveSearch();
     }
 
-    // Live Search
+    // ─── Live Search ──────────────────────────────────────
     let liveSearchTimer;
     document.getElementById('medicineSearchInput').addEventListener('input', function (e) {
         clearTimeout(liveSearchTimer);
@@ -325,9 +308,9 @@ table.dataTable tbody tr:hover { background: #f8fafc !important; }
             document.getElementById('currentLoadedCount').textContent = data.count;
             document.getElementById('totalMedicinesCount').textContent = data.total;
             nextPage = 2;
+            sortCol = -1; sortDir = 'asc';
             renderLoadMoreButton(data.has_more_pages);
             history.pushState(null, '', `{{ route('admin.medicines.index') }}?per_page=${perPage}&search=${encodeURIComponent(currentSearch)}`);
-            reinitDT();
         })
         .catch(err => {
             console.error('Live search error:', err);
@@ -336,6 +319,7 @@ table.dataTable tbody tr:hover { background: #f8fafc !important; }
         });
     }
 
+    // ─── Load More ────────────────────────────────────────
     function renderLoadMoreButton(hasMorePages) {
         const container = document.getElementById('loadMoreActionContainer');
         if (hasMorePages) {
@@ -354,14 +338,14 @@ table.dataTable tbody tr:hover { background: #f8fafc !important; }
     }
 
     function loadMoreMedicines() {
-        const btn = document.getElementById('loadMoreBtn');
+        const btn     = document.getElementById('loadMoreBtn');
         const spinner = document.getElementById('loadMoreSpinner');
         const btnText = document.getElementById('loadMoreText');
         if (!btn) return;
 
         btn.disabled = true;
-        btnText.textContent = 'Loading...';
-        spinner.classList.remove('hidden');
+        if (btnText) btnText.textContent = 'Loading...';
+        if (spinner) spinner.classList.remove('hidden');
 
         fetch(`{{ route('admin.medicines.index') }}?page=${nextPage}&per_page=${perPage}&search=${encodeURIComponent(currentSearch)}`, {
             headers: { 'X-Requested-With': 'XMLHttpRequest' }
@@ -369,42 +353,37 @@ table.dataTable tbody tr:hover { background: #f8fafc !important; }
         .then(r => r.json())
         .then(data => {
             if (data.html) {
-                if (medicinesDT) medicinesDT.destroy();
                 document.getElementById('medicineTableBody').insertAdjacentHTML('beforeend', data.html);
                 const loadedElem = document.getElementById('currentLoadedCount');
                 if (loadedElem) loadedElem.textContent = parseInt(loadedElem.textContent || 0) + data.count;
-
                 if (data.has_more_pages) {
                     nextPage = data.next_page;
-                    btn.disabled = false;
-                    btnText.textContent = 'Load More';
-                    spinner.classList.add('hidden');
+                    renderLoadMoreButton(true);
                 } else {
-                    document.getElementById('loadMoreActionContainer').innerHTML = '<div class="text-xs text-slate-400 font-medium">All medicines loaded</div>';
+                    renderLoadMoreButton(false);
                 }
-                reinitDT();
             }
         })
         .catch(err => {
             console.error('Load more error:', err);
-            btn.disabled = false;
-            btnText.textContent = 'Load More';
-            spinner.classList.add('hidden');
+            if (btnText) btnText.textContent = 'Load More';
+            if (spinner) spinner.classList.add('hidden');
+            if (btn) btn.disabled = false;
         });
     }
 
-    // Bulk Delete
+    // ─── Bulk Delete ──────────────────────────────────────
     function toggleSelectAllMedicines(master) {
         document.querySelectorAll('.medicine-select-checkbox').forEach(cb => cb.checked = master.checked);
         onMedicineCheckboxChange();
     }
 
     function onMedicineCheckboxChange() {
-        const selected = document.querySelectorAll('.medicine-select-checkbox:checked');
-        const bulkBtn  = document.getElementById('bulkDeleteBtn');
+        const selected  = document.querySelectorAll('.medicine-select-checkbox:checked');
+        const bulkBtn   = document.getElementById('bulkDeleteBtn');
         const countSpan = document.getElementById('bulkDeleteCount');
         const selectAll = document.getElementById('selectAllCheckbox');
-        const all = document.querySelectorAll('.medicine-select-checkbox');
+        const all       = document.querySelectorAll('.medicine-select-checkbox');
         if (countSpan) countSpan.textContent = selected.length;
         selected.length > 0 ? bulkBtn.classList.remove('hidden') : bulkBtn.classList.add('hidden');
         if (selectAll && all.length > 0) selectAll.checked = selected.length === all.length;

@@ -35,7 +35,7 @@
         <p class="text-xs text-slate-400">{{ $item->strength }} {{ $item->dosage_form }}</p>
     </td>
     <td class="px-4 py-3 text-slate-600">{{ $item->generic->name ?? '-' }}</td>
-    <td class="px-4 py-3 text-slate-600">{{ $item->manufacturer->company_name ?? $item->brand->name ?? '-' }}</td>
+    {{-- <td class="px-4 py-3 text-slate-600">{{ $item->manufacturer->company_name ?? $item->brand->name ?? '-' }}</td> --}}
     <td class="px-4 py-3 text-slate-600">{{ $item->category->name ?? '-' }}</td>
     <td class="px-4 py-3 font-semibold text-slate-800">৳ {{ number_format($item->sale_price, 2) }}</td>
     <td class="px-4 py-3">
