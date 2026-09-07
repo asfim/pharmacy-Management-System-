@@ -1,60 +1,415 @@
 @extends('admin.layouts.app')
 @php $header = 'Generics'; @endphp
+
 @section('content')
-<div class="mb-6 flex justify-between items-center">
+<div class="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
     <div>
-        <h2 class="text-2xl font-bold text-slate-800">Generics</h2>
-        <p class="text-sm text-slate-500">Manage medicine generic names</p>
+        <h2 class="text-2xl font-bold text-slate-800">Generic Names</h2>
+        <p class="text-sm text-slate-500">Manage, export, and bulk upload generic medicine names</p>
     </div>
-    <a href="{{ route('admin.generics.create') }}" class="bg-teal-600 hover:bg-teal-700 text-white font-medium py-2 px-4 rounded-lg flex items-center transition shadow-sm">
-        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
-        Add Generic
-    </a>
+
+    <div class="flex flex-wrap items-center gap-2">
+        {{-- Bulk Delete (hidden until rows selected) --}}
+        <button id="bulkDeleteBtn"
+                onclick="executeBulkDelete()"
+                class="hidden bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-3 rounded-lg flex items-center transition text-sm shadow-xs">
+            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+            </svg>
+            Delete (<span id="bulkDeleteCount">0</span>)
+        </button>
+
+        <a id="exportCsvBtn" href="{{ route('admin.generics.export-csv', request()->query()) }}"
+           class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 font-medium py-2 px-3 rounded-lg flex items-center transition text-sm shadow-xs">
+            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            Export CSV
+        </a>
+
+        <a id="exportPdfBtn" href="{{ route('admin.generics.export-pdf', request()->query()) }}" target="_blank"
+           class="bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-medium py-2 px-3 rounded-lg flex items-center transition text-sm shadow-xs">
+            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
+            </svg>
+            Export PDF
+        </a>
+
+        <button onclick="document.getElementById('bulkUploadModal').classList.remove('hidden')"
+                class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-3 rounded-lg flex items-center transition text-sm shadow-xs">
+            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+            </svg>
+            Bulk Upload CSV
+        </button>
+
+        <a href="{{ route('admin.generics.create') }}"
+           class="bg-teal-600 hover:bg-teal-700 text-white font-medium py-2 px-4 rounded-lg flex items-center transition text-sm shadow-xs">
+            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+            </svg>
+            Add Generic
+        </a>
+    </div>
 </div>
+
 @include('admin.layouts.alerts')
+
 <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-    <div class="overflow-x-auto">
-        <table class="w-full text-left">
-            <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 text-sm">
+
+    {{-- Toolbar --}}
+    <div class="px-4 py-3 border-b border-slate-200 bg-slate-50 flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+        <div class="flex items-center gap-2 flex-wrap">
+            <span class="font-medium text-slate-700 text-sm">Show per page:</span>
+            <div class="inline-flex rounded-lg border border-slate-200 bg-white p-1 shadow-sm">
+                @foreach([50, 100, 200, 500, 'all'] as $size)
+                    <button type="button"
+                            onclick="changePerPage('{{ $size }}')"
+                            id="per-page-btn-{{ $size }}"
+                            class="per-page-pill px-3 py-1 text-xs font-semibold rounded-md transition {{ (request('per_page', 50) == $size) ? 'bg-teal-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100' }}">
+                        {{ strtoupper($size) }}
+                    </button>
+                @endforeach
+            </div>
+        </div>
+
+        <div class="relative w-full md:w-72">
+            <input type="text"
+                   id="genericSearchInput"
+                   value="{{ request('search') }}"
+                   placeholder="Search generics..."
+                   autocomplete="off"
+                   class="w-full pl-9 pr-8 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 bg-white transition">
+            <svg class="w-4 h-4 text-slate-400 absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+            <svg id="searchSpinner" class="w-4 h-4 text-teal-500 absolute right-3 top-3 animate-spin hidden" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+            </svg>
+        </div>
+    </div>
+
+    {{-- Table --}}
+    <div class="overflow-x-auto relative">
+        <table id="genericsTable" class="w-full text-left">
+            <thead class="bg-slate-100 border-b border-slate-200 text-slate-600 text-xs uppercase tracking-wider font-semibold">
                 <tr>
-                    <th class="px-6 py-4 font-semibold">#</th>
-                    <th class="px-6 py-4 font-semibold">Name</th>
-                    <th class="px-6 py-4 font-semibold">Description</th>
-                    <th class="px-6 py-4 font-semibold">Status</th>
-                    <th class="px-6 py-4 font-semibold text-right">Actions</th>
+                    <th class="px-4 py-3.5 w-10">
+                        <input type="checkbox" id="selectAllCheckbox" onclick="toggleSelectAll(this)"
+                               class="w-4 h-4 rounded text-teal-600 border-slate-300 focus:ring-teal-500 cursor-pointer" title="Select All">
+                    </th>
+                    <th class="px-4 py-3.5 sortable">SL</th>
+                    <th class="px-4 py-3.5 sortable">Name</th>
+                    <th class="px-4 py-3.5 sortable">Dosage</th>
+                    <th class="px-4 py-3.5 sortable">Description</th>
+                    <th class="px-4 py-3.5 sortable">Status</th>
+                    <th class="px-4 py-3.5">Actions</th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-slate-200 text-sm">
-                @forelse($generics as $item)
-                <tr class="hover:bg-slate-50 transition">
-                    <td class="px-6 py-4 text-slate-500">{{ $loop->iteration }}</td>
-                    <td class="px-6 py-4 font-medium text-slate-900">{{ $item->name }}</td>
-                    <td class="px-6 py-4 text-slate-600">{{ Str::limit($item->description, 50, '...') }}</td>
-                    <td class="px-6 py-4">
-                        <span class="px-2.5 py-1 rounded-full text-xs font-medium {{ $item->status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                            {{ ucfirst($item->status) }}
-                        </span>
-                    </td>
-                    <td class="px-6 py-4 text-right flex justify-end space-x-2">
-                        <a href="{{ route('admin.generics.edit', $item) }}" class="text-indigo-600 bg-indigo-50 hover:bg-indigo-100 p-2 rounded-lg transition">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
-                        </a>
-                        <form action="{{ route('admin.generics.destroy', $item) }}" method="POST" onsubmit="return confirm('Delete this generic?')">
-                            @csrf @method('DELETE')
-                            <button type="submit" class="text-red-600 bg-red-50 hover:bg-red-100 p-2 rounded-lg transition">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-                @empty
-                <tr><td colspan="5" class="px-6 py-8 text-center text-slate-400">No generics found.</td></tr>
-                @endforelse
+            <tbody id="genericTableBody" class="divide-y divide-slate-200 text-sm transition-opacity duration-150">
+                @include('admin.generics.partials.table_rows')
             </tbody>
         </table>
     </div>
-    @if($generics->hasPages())
-        <div class="px-6 py-4 border-t border-slate-200 bg-slate-50">{{ $generics->links() }}</div>
-    @endif
+
+    {{-- Load More Footer --}}
+    <div class="px-6 py-4 border-t border-slate-200 bg-slate-50 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div class="text-sm text-slate-600 font-medium">
+            Showing <span id="currentLoadedCount">{{ $generics->count() }}</span>
+            of <span id="totalGenericsCount">{{ $generics->total() }}</span> generics
+        </div>
+        <div id="loadMoreActionContainer">
+            @if($generics->hasMorePages())
+                <button id="loadMoreBtn" onclick="loadMoreGenerics()"
+                        class="bg-white hover:bg-slate-100 text-teal-700 font-semibold py-2 px-6 rounded-lg border border-teal-200 transition shadow-sm flex items-center justify-center min-w-[150px]">
+                    <span id="loadMoreText">Load More</span>
+                    <svg id="loadMoreSpinner" class="w-4 h-4 ml-2 animate-spin hidden text-teal-600" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                </button>
+            @else
+                <div class="text-xs text-slate-400 font-medium">All generics loaded</div>
+            @endif
+        </div>
+    </div>
 </div>
+
+{{-- Bulk Upload Modal --}}
+<div id="bulkUploadModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-slate-200">
+            <h3 class="text-lg font-bold text-slate-800">Bulk Import Generics (CSV)</h3>
+            <button onclick="document.getElementById('bulkUploadModal').classList.add('hidden')"
+                    class="text-slate-400 hover:text-slate-600 transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+
+        <form action="{{ route('admin.generics.import-csv') }}" method="POST" enctype="multipart/form-data" class="p-6 space-y-4">
+            @csrf
+
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-semibold text-slate-700">Download Sample CSV</p>
+                    <p class="text-[11px] text-slate-500">View the required format before importing</p>
+                </div>
+                <a href="{{ route('admin.generics.sample-csv') }}"
+                   class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold py-2 px-3 rounded-lg flex items-center transition shadow-sm flex-shrink-0 ml-2">
+                    <svg class="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                    </svg>
+                    Download Demo CSV
+                </a>
+            </div>
+
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 text-xs text-blue-700 space-y-1">
+                <p class="font-semibold">Required CSV columns:</p>
+                <code class="block bg-blue-100 rounded px-2 py-1 text-blue-800 font-mono">name, description, dosage, status</code>
+                <p>Status must be <strong>active</strong> or <strong>inactive</strong>.</p>
+                <p>Existing generics (by name) will be updated.</p>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Select CSV File</label>
+                <input type="file" name="csv_file" accept=".csv,.txt" required
+                       class="w-full text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100">
+            </div>
+
+            <div class="flex justify-end gap-3 pt-2">
+                <button type="button"
+                        onclick="document.getElementById('bulkUploadModal').classList.add('hidden')"
+                        class="px-5 py-2 text-sm font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg">
+                    Cancel
+                </button>
+                <button type="submit"
+                        onclick="this.disabled=true; this.innerText='Uploading...'; this.form.submit();"
+                        class="px-5 py-2 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-sm">
+                    Upload & Import
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 @endsection
+
+@push('scripts')
+<style>
+#genericsTable thead th.sortable {
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+}
+#genericsTable thead th.sortable:hover { background: #e2e8f0; }
+#genericsTable thead th .sort-icon {
+    display: inline-block;
+    margin-left: 4px;
+    font-size: 10px;
+    opacity: 0.4;
+}
+#genericsTable thead th.sort-asc .sort-icon,
+#genericsTable thead th.sort-desc .sort-icon { opacity: 1; color: #0d9488; }
+</style>
+
+<script>
+let nextPage      = {{ $generics->currentPage() + 1 }};
+let perPage       = '{{ $perPageRaw }}';
+let currentSearch = '{{ request('search') }}';
+let sortCol       = -1;
+let sortDir       = 'asc';
+
+// ─── Vanilla JS Column Sort ──────────────────────────────
+document.querySelectorAll('#genericsTable thead th.sortable').forEach(th => {
+    const colIndex = Array.from(th.parentNode.children).indexOf(th);
+    th.innerHTML += '<span class="sort-icon">⇅</span>';
+    th.addEventListener('click', () => {
+        sortCol === colIndex ? (sortDir = sortDir === 'asc' ? 'desc' : 'asc') : (sortCol = colIndex, sortDir = 'asc');
+        document.querySelectorAll('#genericsTable thead th').forEach(h => {
+            h.classList.remove('sort-asc', 'sort-desc');
+            const ic = h.querySelector('.sort-icon');
+            if (ic) ic.textContent = '⇅';
+        });
+        th.classList.add(sortDir === 'asc' ? 'sort-asc' : 'sort-desc');
+        const icon = th.querySelector('.sort-icon');
+        if (icon) icon.textContent = sortDir === 'asc' ? '▲' : '▼';
+        sortTable(colIndex, sortDir);
+    });
+});
+
+function sortTable(colIdx, dir) {
+    const tbody = document.getElementById('genericTableBody');
+    const rows  = Array.from(tbody.querySelectorAll('tr.generic-row'));
+    rows.sort((a, b) => {
+        const aText = (a.cells[colIdx]?.innerText || '').trim().toLowerCase();
+        const bText = (b.cells[colIdx]?.innerText || '').trim().toLowerCase();
+        const aNum  = parseFloat(aText);
+        const bNum  = parseFloat(bText);
+        if (!isNaN(aNum) && !isNaN(bNum)) return dir === 'asc' ? aNum - bNum : bNum - aNum;
+        return dir === 'asc' ? aText.localeCompare(bText) : bText.localeCompare(aText);
+    });
+    rows.forEach(r => tbody.appendChild(r));
+}
+
+// ─── Export URLs ─────────────────────────────────────────
+function updateExportUrls() {
+    const q = `?per_page=${perPage}&search=${encodeURIComponent(currentSearch)}`;
+    document.getElementById('exportCsvBtn').href = `{{ route('admin.generics.export-csv') }}${q}`;
+    document.getElementById('exportPdfBtn').href = `{{ route('admin.generics.export-pdf') }}${q}`;
+}
+
+// ─── Per Page ─────────────────────────────────────────────
+function changePerPage(size) {
+    perPage = size;
+    document.querySelectorAll('.per-page-pill').forEach(btn => {
+        btn.className = 'per-page-pill px-3 py-1 text-xs font-semibold rounded-md transition text-slate-600 hover:bg-slate-100';
+    });
+    const active = document.getElementById(`per-page-btn-${size}`);
+    if (active) active.className = 'per-page-pill px-3 py-1 text-xs font-semibold rounded-md transition bg-teal-600 text-white shadow-sm';
+    performSearch();
+}
+
+// ─── Live Search ──────────────────────────────────────────
+let searchTimer;
+document.getElementById('genericSearchInput').addEventListener('input', function (e) {
+    clearTimeout(searchTimer);
+    currentSearch = e.target.value;
+    document.getElementById('searchSpinner').classList.remove('hidden');
+    searchTimer = setTimeout(() => performSearch(), 250);
+});
+
+function performSearch() {
+    const tbody = document.getElementById('genericTableBody');
+    tbody.classList.add('opacity-40');
+    document.getElementById('searchSpinner').classList.remove('hidden');
+    updateExportUrls();
+
+    fetch(`{{ route('admin.generics.index') }}?page=1&per_page=${perPage}&search=${encodeURIComponent(currentSearch)}`, {
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    })
+    .then(r => r.json())
+    .then(data => {
+        tbody.innerHTML = data.html;
+        tbody.classList.remove('opacity-40');
+        document.getElementById('searchSpinner').classList.add('hidden');
+        document.getElementById('currentLoadedCount').textContent = data.count;
+        document.getElementById('totalGenericsCount').textContent = data.total;
+        nextPage = 2;
+        sortCol = -1; sortDir = 'asc';
+        renderLoadMore(data.has_more_pages);
+        history.pushState(null, '', `{{ route('admin.generics.index') }}?per_page=${perPage}&search=${encodeURIComponent(currentSearch)}`);
+    })
+    .catch(() => {
+        tbody.classList.remove('opacity-40');
+        document.getElementById('searchSpinner').classList.add('hidden');
+    });
+}
+
+// ─── Load More ────────────────────────────────────────────
+function renderLoadMore(hasMore) {
+    const c = document.getElementById('loadMoreActionContainer');
+    if (hasMore) {
+        c.innerHTML = `<button id="loadMoreBtn" onclick="loadMoreGenerics()"
+            class="bg-white hover:bg-slate-100 text-teal-700 font-semibold py-2 px-6 rounded-lg border border-teal-200 transition shadow-sm flex items-center justify-center min-w-[150px]">
+            <span id="loadMoreText">Load More</span>
+            <svg id="loadMoreSpinner" class="w-4 h-4 ml-2 animate-spin hidden text-teal-600" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+        </button>`;
+    } else {
+        c.innerHTML = '<div class="text-xs text-slate-400 font-medium">All generics loaded</div>';
+    }
+}
+
+function loadMoreGenerics() {
+    const btn  = document.getElementById('loadMoreBtn');
+    const text = document.getElementById('loadMoreText');
+    const spin = document.getElementById('loadMoreSpinner');
+    if (!btn) return;
+
+    btn.disabled = true;
+    if (text) text.textContent = 'Loading...';
+    if (spin) spin.classList.remove('hidden');
+
+    fetch(`{{ route('admin.generics.index') }}?page=${nextPage}&per_page=${perPage}&search=${encodeURIComponent(currentSearch)}`, {
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.html) {
+            document.getElementById('genericTableBody').insertAdjacentHTML('beforeend', data.html);
+            const el = document.getElementById('currentLoadedCount');
+            if (el) el.textContent = parseInt(el.textContent || 0) + data.count;
+            if (data.has_more_pages) {
+                nextPage = data.next_page;
+                renderLoadMore(true);
+            } else {
+                renderLoadMore(false);
+            }
+        }
+    })
+    .catch(() => {
+        if (text) text.textContent = 'Load More';
+        if (spin) spin.classList.add('hidden');
+        if (btn) btn.disabled = false;
+    });
+}
+
+// ─── Select All ───────────────────────────────────────────
+function toggleSelectAll(master) {
+    document.querySelectorAll('.row-check').forEach(cb => cb.checked = master.checked);
+    onCheckboxChange();
+}
+document.addEventListener('change', e => {
+    if (e.target.classList.contains('row-check')) onCheckboxChange();
+});
+function onCheckboxChange() {
+    const selected = document.querySelectorAll('.row-check:checked');
+    const btn = document.getElementById('bulkDeleteBtn');
+    document.getElementById('bulkDeleteCount').textContent = selected.length;
+    selected.length > 0 ? btn.classList.remove('hidden') : btn.classList.add('hidden');
+    const sa  = document.getElementById('selectAllCheckbox');
+    const all = document.querySelectorAll('.row-check');
+    if (sa && all.length > 0) sa.checked = selected.length === all.length;
+}
+
+// ─── Bulk Delete ──────────────────────────────────────────
+function executeBulkDelete() {
+    const ids = Array.from(document.querySelectorAll('.row-check:checked')).map(cb => cb.value);
+    if (!ids.length) return;
+    if (!confirm(`Delete ${ids.length} selected generic(s)? This cannot be undone.`)) return;
+
+    const btn = document.getElementById('bulkDeleteBtn');
+    btn.disabled = true;
+    const orig = btn.innerHTML;
+    btn.innerHTML = 'Deleting...';
+
+    fetch(`{{ route('admin.generics.bulk-delete') }}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'X-Requested-With': 'XMLHttpRequest' },
+        body: JSON.stringify({ ids })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            performSearch();
+            const sa = document.getElementById('selectAllCheckbox');
+            if (sa) sa.checked = false;
+        } else {
+            alert(data.message || 'Bulk delete failed.');
+        }
+    })
+    .catch(() => alert('An error occurred.'))
+    .finally(() => { btn.disabled = false; btn.innerHTML = orig; });
+}
+</script>
+@endpush
