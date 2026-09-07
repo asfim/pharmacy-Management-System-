@@ -50,6 +50,9 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::resource('generics', GenericController::class);
     Route::resource('brands', BrandController::class);
     Route::resource('manufacturers', ManufacturerController::class);
+    Route::post('medicines/import-csv', [MedicineController::class, 'importCsv'])->name('medicines.import-csv');
+    Route::get('medicines/export-csv', [MedicineController::class, 'exportCsv'])->name('medicines.export-csv');
+    Route::get('medicines/export-pdf', [MedicineController::class, 'exportPdf'])->name('medicines.export-pdf');
     Route::resource('medicines', MedicineController::class);
     Route::resource('batches', BatchController::class);
 
