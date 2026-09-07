@@ -19,22 +19,64 @@ class RoleSeeder extends Seeder
         // Reset cached roles and permissions
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
-        $roles = [
-            'Super Admin',
-            'Admin',
-            'Manager',
-            'Pharmacist',
-            'Cashier',
-            'Accountant',
-            'Store Keeper',
-            'Branch Manager'
+        // System Modules
+        $modules = [
+            'medicines',
+            'categories',
+            'sub_categories',
+            'generics',
+            'brands',
+            'manufacturers',
+            'batches',
+            'stock',
+            'pos',
+            'sales',
+            'sale_returns',
+            'orders',
+            'purchases',
+            'suppliers',
+            'customers',
+            'doctors',
+            'prescriptions',
+            'employees',
+            'attendances',
+            'payrolls',
+            'accounts',
+            'expenses',
+            'incomes',
+            'branches',
+            'reports',
+            'users',
+            'roles',
+            'settings',
         ];
 
-        foreach ($roles as $role) {
-            Role::firstOrCreate(['name' => $role]);
+        $actions = ['view', 'create', 'edit', 'delete'];
+
+        $allPermissions = [];
+        foreach ($modules as $module) {
+            foreach ($actions as $action) {
+                $permissionName = "{$action} {$module}";
+                $permission = Permission::firstOrCreate(['name' => $permissionName]);
+                $allPermissions[] = $permission;
+            }
         }
 
-        // Create Super Admin User
+        // Roles
+        $superAdminRole = Role::firstOrCreate(['name' => 'Super Admin']);
+        $adminRole      = Role::firstOrCreate(['name' => 'Admin']);
+        $managerRole    = Role::firstOrCreate(['name' => 'Manager']);
+        $pharmacistRole = Role::firstOrCreate(['name' => 'Pharmacist']);
+        $cashierRole    = Role::firstOrCreate(['name' => 'Cashier']);
+        $accountantRole = Role::firstOrCreate(['name' => 'Accountant']);
+        $storeKeeperRole= Role::firstOrCreate(['name' => 'Store Keeper']);
+        $branchMgrRole  = Role::firstOrCreate(['name' => 'Branch Manager']);
+
+        // Assign all permissions to Super Admin and Admin
+        $superAdminRole->syncPermissions(Permission::all());
+        $adminRole->syncPermissions(Permission::all());
+
+        // Create or sync Super Admin User
         $superAdmin = User::firstOrCreate(
             ['email' => 'admin@pharmacy.com'],
             [
@@ -45,6 +87,8 @@ class RoleSeeder extends Seeder
             ]
         );
 
-        $superAdmin->assignRole('Super Admin');
+        if (!$superAdmin->hasRole('Super Admin')) {
+            $superAdmin->assignRole('Super Admin');
+        }
     }
 }

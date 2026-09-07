@@ -102,126 +102,167 @@
             <!-- PRODUCTS -->
             <p class="sidebar-section">Products</p>
 
+            @can('view medicines')
             <a href="{{ route('admin.medicines.index') }}"
                class="sidebar-link {{ request()->routeIs('admin.medicines*') ? 'active' : '' }}">
                 <i class="fas fa-capsules"></i>
                 <span>Medicines</span>
             </a>
+            @endcan
+            @can('view categories')
             <a href="{{ route('admin.categories.index') }}"
                class="sidebar-link {{ request()->routeIs('admin.categories*') ? 'active' : '' }}">
                 <i class="fas fa-layer-group"></i>
                 <span>Categories</span>
             </a>
+            @endcan
+            @can('view sub_categories')
             <a href="{{ route('admin.sub-categories.index') }}"
                class="sidebar-link {{ request()->routeIs('admin.sub-categories*') ? 'active' : '' }}">
                 <i class="fas fa-sitemap"></i>
                 <span>Sub-Categories</span>
             </a>
+            @endcan
+            @can('view generics')
             <a href="{{ route('admin.generics.index') }}"
                class="sidebar-link {{ request()->routeIs('admin.generics*') ? 'active' : '' }}">
                 <i class="fas fa-dna"></i>
                 <span>Generics</span>
             </a>
+            @endcan
+            @can('view brands')
             <a href="{{ route('admin.brands.index') }}"
                class="sidebar-link {{ request()->routeIs('admin.brands*') ? 'active' : '' }}">
                 <i class="fas fa-certificate"></i>
                 <span>Brands</span>
             </a>
+            @endcan
+            @can('view manufacturers')
             <a href="{{ route('admin.manufacturers.index') }}"
                class="sidebar-link {{ request()->routeIs('admin.manufacturers*') ? 'active' : '' }}">
                 <i class="fas fa-industry"></i>
                 <span>Manufacturers</span>
             </a>
+            @endcan
 
             <!-- INVENTORY -->
             <p class="sidebar-section">Inventory</p>
 
+            @can('view batches')
             <a href="{{ route('admin.batches.index') }}"
                class="sidebar-link {{ request()->routeIs('admin.batches*') ? 'active' : '' }}">
                 <i class="fas fa-boxes-stacked"></i>
                 <span>Batches & Expiry</span>
             </a>
+            @endcan
+            @can('view stock')
             <a href="{{ route('admin.stock.index') }}"
                class="sidebar-link {{ request()->routeIs('admin.stock*') ? 'active' : '' }}">
                 <i class="fas fa-warehouse"></i>
                 <span>Stock & Inventory</span>
             </a>
+            @endcan
 
             <!-- SALES & POS -->
             <p class="sidebar-section">Sales & POS</p>
 
+            @can('view pos')
             <a href="{{ route('admin.pos.index') }}"
                class="sidebar-link {{ request()->routeIs('admin.pos*') ? 'active' : '' }}">
                 <i class="fas fa-cash-register"></i>
                 <span>POS System</span>
             </a>
+            @endcan
+            @can('view sales')
             <a href="{{ route('admin.sales.index') }}"
                class="sidebar-link {{ request()->routeIs('admin.sales*') ? 'active' : '' }}">
                 <i class="fas fa-file-invoice-dollar"></i>
                 <span>Sales Invoices</span>
             </a>
+            @endcan
+            @can('view sale_returns')
             <a href="{{ route('admin.sale-returns.index') }}"
                class="sidebar-link {{ request()->routeIs('admin.sale-returns*') ? 'active' : '' }}">
                 <i class="fas fa-rotate-left"></i>
                 <span>Sales Returns</span>
             </a>
+            @endcan
+            @can('view orders')
             <a href="{{ route('admin.orders.index') }}"
                class="sidebar-link {{ request()->routeIs('admin.orders*') ? 'active' : '' }}">
                 <i class="fas fa-bag-shopping"></i>
                 <span>Online Orders</span>
             </a>
+            @endcan
 
             <!-- PROCUREMENT -->
             <p class="sidebar-section">Procurement</p>
 
+            @can('view purchases')
             <a href="{{ route('admin.purchases.index') }}"
                class="sidebar-link {{ request()->routeIs('admin.purchases*') ? 'active' : '' }}">
                 <i class="fas fa-cart-flatbed"></i>
                 <span>Purchases</span>
             </a>
+            @endcan
+            @can('view suppliers')
             <a href="{{ route('admin.suppliers.index') }}"
                class="sidebar-link {{ request()->routeIs('admin.suppliers*') ? 'active' : '' }}">
                 <i class="fas fa-truck"></i>
                 <span>Suppliers</span>
             </a>
+            @endcan
 
             <!-- MANAGEMENT -->
             <p class="sidebar-section">Management</p>
 
+            @can('view customers')
             <a href="{{ route('admin.customers.index') }}"
                class="sidebar-link {{ request()->routeIs('admin.customers*') ? 'active' : '' }}">
                 <i class="fas fa-users"></i>
                 <span>Customers</span>
             </a>
+            @endcan
+            @can('view doctors')
             <a href="{{ route('admin.doctors.index') }}"
                class="sidebar-link {{ request()->routeIs('admin.doctors*') ? 'active' : '' }}">
                 <i class="fas fa-user-doctor"></i>
                 <span>Doctors</span>
             </a>
+            @endcan
+            @can('view employees')
             <a href="{{ route('admin.employees.index') }}"
                class="sidebar-link {{ request()->routeIs('admin.employees*') ? 'active' : '' }}">
                 <i class="fas fa-id-card"></i>
                 <span>HRM & Payroll</span>
             </a>
+            @endcan
+            @can('view accounts')
             <a href="{{ route('admin.accounts.index') }}"
                class="sidebar-link {{ request()->routeIs('admin.accounts*') ? 'active' : '' }}">
                 <i class="fas fa-chart-line"></i>
                 <span>Accounts & Finance</span>
             </a>
+            @endcan
+            @can('view expenses')
             <a href="{{ route('admin.expenses.index') }}"
                class="sidebar-link {{ request()->routeIs('admin.expenses*') ? 'active' : '' }}">
                 <i class="fas fa-receipt"></i>
                 <span>Expenses</span>
             </a>
+            @endcan
+            @can('view branches')
             <a href="{{ route('admin.branches.index') }}"
                class="sidebar-link {{ request()->routeIs('admin.branches*') ? 'active' : '' }}">
                 <i class="fas fa-code-branch"></i>
                 <span>Branches</span>
             </a>
+            @endcan
 
             <!-- REPORTS -->
             <p class="sidebar-section">Reports</p>
 
+            @can('view reports')
             <a href="{{ route('admin.reports.sales') }}"
                class="sidebar-link {{ request()->routeIs('admin.reports.sales') ? 'active' : '' }}">
                 <i class="fas fa-chart-bar"></i>
@@ -237,20 +278,32 @@
                 <i class="fas fa-calendar-xmark"></i>
                 <span>Expiry Report</span>
             </a>
+            @endcan
 
             <!-- ADMIN -->
             <p class="sidebar-section">Admin</p>
 
+            @can('view users')
+            <a href="{{ route('admin.users.index') }}"
+               class="sidebar-link {{ request()->routeIs('admin.users*') ? 'active' : '' }}">
+                <i class="fas fa-users-gear"></i>
+                <span>Users Management</span>
+            </a>
+            @endcan
+            @can('view roles')
+            <a href="{{ route('admin.roles.index') }}"
+               class="sidebar-link {{ request()->routeIs('admin.roles*') ? 'active' : '' }}">
+                <i class="fas fa-user-shield"></i>
+                <span>Roles & Permissions</span>
+            </a>
+            @endcan
+            @can('view settings')
             <a href="{{ route('admin.settings.index') }}"
                class="sidebar-link {{ request()->routeIs('admin.settings*') ? 'active' : '' }}">
                 <i class="fas fa-gear"></i>
                 <span>Settings</span>
             </a>
-            <a href="{{ route('admin.users.index') }}"
-               class="sidebar-link {{ request()->routeIs('admin.users*') ? 'active' : '' }}">
-                <i class="fas fa-shield-halved"></i>
-                <span>Roles & Users</span>
-            </a>
+            @endcan
         </nav>
 
         <!-- Logout -->

@@ -33,8 +33,29 @@ class RoleController extends Controller
         return redirect()->route('admin.roles.index')->with('success', 'Role created successfully.');
     }
 
+    public function edit(Role $role)
+    {
+        $permissions = Permission::all();
+        $rolePermissions = $role->permissions->pluck('name')->toArray();
+        return view('admin.roles.edit', compact('role', 'permissions', 'rolePermissions'));
+    }
+
+    public function update(Request $request, Role $role)
+    {
+        $request->validate([
+            'name' => 'required|string|unique:roles,name,' . $role->id,
+        ]);
+        $role->update(['name' => $request->name]);
+        $role->syncPermissions($request->permissions ?? []);
+
+        return redirect()->route('admin.roles.index')->with('success', 'Role updated successfully.');
+    }
+
     public function destroy(Role $role)
     {
+        if ($role->name === 'Super Admin') {
+            return redirect()->route('admin.roles.index')->with('error', 'Super Admin role cannot be deleted.');
+        }
         $role->delete();
         return redirect()->route('admin.roles.index')->with('success', 'Role deleted successfully.');
     }

@@ -1,10 +1,10 @@
 @extends('admin.layouts.app')
-@php $header = 'Create Role & Assign Permissions'; @endphp
+@php $header = 'Edit Role & Permissions'; @endphp
 @section('content')
 <div class="flex justify-between items-center mb-6">
     <div>
-        <h2 class="text-2xl font-bold text-slate-800">Create New Role</h2>
-        <p class="text-sm text-slate-500 mt-1">Set role name and select view, create, edit, delete permissions</p>
+        <h2 class="text-2xl font-bold text-slate-800">Edit Role: {{ $role->name }}</h2>
+        <p class="text-sm text-slate-500 mt-1">Modify role name and update assigned permissions</p>
     </div>
     <a href="{{ route('admin.roles.index') }}" class="inline-flex items-center gap-2 border border-slate-300 text-slate-600 hover:bg-slate-50 text-sm font-medium px-4 py-2 rounded-xl transition">
         <i class="fas fa-arrow-left"></i> Back
@@ -12,11 +12,13 @@
 </div>
 
 <div class="bg-white rounded-2xl border border-slate-100 shadow-sm max-w-5xl">
-    <form action="{{ route('admin.roles.store') }}" method="POST" class="p-6 space-y-6">
+    <form action="{{ route('admin.roles.update', $role) }}" method="POST" class="p-6 space-y-6">
         @csrf
+        @method('PUT')
+
         <div>
             <label class="block text-sm font-semibold text-slate-700 mb-1.5">Role Name *</label>
-            <input type="text" name="name" required placeholder="e.g. Senior Pharmacist / Branch Manager" class="w-full max-w-md px-4 py-2.5 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-teal-500">
+            <input type="text" name="name" value="{{ old('name', $role->name) }}" required class="w-full max-w-md px-4 py-2.5 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-teal-500">
             @error('name')<p class="text-xs text-red-600 mt-1">{{ $message }}</p>@enderror
         </div>
 
@@ -44,7 +46,7 @@
                     <div class="grid grid-cols-2 gap-2">
                         @foreach($perms as $p)
                         <label class="inline-flex items-center gap-2 text-xs text-slate-700 cursor-pointer hover:text-teal-700">
-                            <input type="checkbox" name="permissions[]" value="{{ $p->name }}" class="perm-checkbox rounded text-teal-600 focus:ring-teal-500">
+                            <input type="checkbox" name="permissions[]" value="{{ $p->name }}" {{ in_array($p->name, $rolePermissions) ? 'checked' : '' }} class="perm-checkbox rounded text-teal-600 focus:ring-teal-500">
                             <span class="capitalize">{{ $p->name }}</span>
                         </label>
                         @endforeach
@@ -54,9 +56,10 @@
             </div>
         </div>
 
-        <div class="flex justify-end pt-4 border-t border-slate-100">
+        <div class="flex justify-end pt-4 border-t border-slate-100 gap-3">
+            <a href="{{ route('admin.roles.index') }}" class="px-5 py-2.5 border border-slate-300 text-slate-600 text-sm font-semibold rounded-xl hover:bg-slate-50 transition">Cancel</a>
             <button type="submit" class="bg-teal-600 hover:bg-teal-700 text-white font-semibold text-sm px-6 py-2.5 rounded-xl transition shadow-sm">
-                Save Role & Permissions
+                Update Role & Permissions
             </button>
         </div>
     </form>
