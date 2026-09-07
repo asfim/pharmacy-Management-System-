@@ -18,9 +18,10 @@
             <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 text-sm">
                 <tr>
                     <th class="px-4 py-4 font-semibold">#</th>
+                    <th class="px-4 py-4 font-semibold">Image</th>
                     <th class="px-4 py-4 font-semibold">Name</th>
                     <th class="px-4 py-4 font-semibold">Generic</th>
-                    <th class="px-4 py-4 font-semibold">Brand</th>
+                    <th class="px-4 py-4 font-semibold">Manufacturer</th>
                     <th class="px-4 py-4 font-semibold">Category</th>
                     <th class="px-4 py-4 font-semibold">Sale Price</th>
                     <th class="px-4 py-4 font-semibold">Rx</th>
@@ -33,11 +34,26 @@
                 <tr class="hover:bg-slate-50 transition">
                     <td class="px-4 py-3 text-slate-500">{{ $loop->iteration }}</td>
                     <td class="px-4 py-3">
+                        @php
+                            $imgUrl = $item->product_images->first()->image_url ?? $item->image ?? null;
+                            if ($imgUrl && !str_starts_with($imgUrl, 'http')) {
+                                $imgUrl = asset('storage/' . $imgUrl);
+                            }
+                        @endphp
+                        @if($imgUrl)
+                            <img src="{{ $imgUrl }}" alt="{{ $item->name }}" class="w-10 h-10 object-cover rounded-lg border border-slate-200 shadow-xs">
+                        @else
+                            <div class="w-10 h-10 rounded-lg bg-teal-50 text-teal-600 flex items-center justify-center font-bold text-sm border border-teal-100">
+                                {{ strtoupper(substr($item->name, 0, 2)) }}
+                            </div>
+                        @endif
+                    </td>
+                    <td class="px-4 py-3">
                         <p class="font-medium text-slate-900">{{ $item->name }}</p>
                         <p class="text-xs text-slate-400">{{ $item->strength }} {{ $item->dosage_form }}</p>
                     </td>
                     <td class="px-4 py-3 text-slate-600">{{ $item->generic->name ?? '-' }}</td>
-                    <td class="px-4 py-3 text-slate-600">{{ $item->brand->name ?? '-' }}</td>
+                    <td class="px-4 py-3 text-slate-600">{{ $item->manufacturer->company_name ?? $item->brand->name ?? '-' }}</td>
                     <td class="px-4 py-3 text-slate-600">{{ $item->category->name ?? '-' }}</td>
                     <td class="px-4 py-3 font-semibold text-slate-800">৳ {{ number_format($item->sale_price, 2) }}</td>
                     <td class="px-4 py-3">
@@ -65,7 +81,7 @@
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="9" class="px-6 py-10 text-center text-slate-400">No medicines found. <a href="{{ route('admin.medicines.create') }}" class="text-teal-600 underline">Add one now</a>.</td></tr>
+                <tr><td colspan="10" class="px-6 py-10 text-center text-slate-400">No medicines found. <a href="{{ route('admin.medicines.create') }}" class="text-teal-600 underline">Add one now</a>.</td></tr>
                 @endforelse
             </tbody>
         </table>

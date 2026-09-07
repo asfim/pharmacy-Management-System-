@@ -34,7 +34,7 @@ class MedicineController extends Controller
 
     public function index()
     {
-        $medicines = Product::with(['category', 'brand', 'generic'])->latest()->paginate(15);
+        $medicines = Product::with(['category', 'brand', 'generic', 'product_images'])->latest()->paginate(15);
         return view('admin.medicines.index', compact('medicines'));
     }
 
