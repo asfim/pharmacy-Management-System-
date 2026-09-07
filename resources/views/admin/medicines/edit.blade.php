@@ -29,13 +29,6 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Brand</label>
-                    <select name="brand_id" class="w-full px-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-teal-500 focus:border-teal-500">
-                        <option value="">-- Select Brand --</option>
-                        @foreach($brands as $b)<option value="{{ $b->id }}" {{ old('brand_id', $medicine->brand_id) == $b->id ? 'selected' : '' }}>{{ $b->name }}</option>@endforeach
-                    </select>
-                </div>
-                <div>
                     <label class="block text-sm font-medium text-slate-700 mb-1">Manufacturer</label>
                     <select name="manufacturer_id" class="w-full px-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-teal-500 focus:border-teal-500">
                         <option value="">-- Select Manufacturer --</option>
@@ -47,13 +40,6 @@
                     <select name="category_id" class="w-full px-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-teal-500 focus:border-teal-500">
                         <option value="">-- Select Category --</option>
                         @foreach($categories as $c)<option value="{{ $c->id }}" {{ old('category_id', $medicine->category_id) == $c->id ? 'selected' : '' }}>{{ $c->name }}</option>@endforeach
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Sub Category</label>
-                    <select name="sub_category_id" class="w-full px-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-teal-500 focus:border-teal-500">
-                        <option value="">-- Select Sub Category --</option>
-                        @foreach($subCategories as $sc)<option value="{{ $sc->id }}" {{ old('sub_category_id', $medicine->sub_category_id) == $sc->id ? 'selected' : '' }}>{{ $sc->name }}</option>@endforeach
                     </select>
                 </div>
             </div>
@@ -160,9 +146,19 @@
 
         <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
             <h3 class="text-base font-semibold text-slate-800 mb-4 pb-2 border-b border-slate-100">Product Image</h3>
-            @if($medicine->image)
-                <div class="mb-3"><img src="{{ asset('storage/'.$medicine->image) }}" alt="{{ $medicine->name }}" class="h-24 w-24 object-cover rounded-lg border border-slate-200"></div>
+            @php
+                $imgUrl = $medicine->product_images->first()->image_url ?? $medicine->image ?? null;
+                if ($imgUrl && !str_starts_with($imgUrl, 'http')) {
+                    $imgUrl = asset('storage/' . $imgUrl);
+                }
+            @endphp
+            @if($imgUrl)
+                <div class="mb-4">
+                    <p class="text-xs font-medium text-slate-500 mb-1.5">Current Medicine Image:</p>
+                    <img src="{{ $imgUrl }}" alt="{{ $medicine->name }}" class="h-28 w-28 object-cover rounded-xl border border-slate-200 shadow-sm">
+                </div>
             @endif
+            <label class="block text-sm font-medium text-slate-700 mb-1">Upload New Image</label>
             <input type="file" name="image" accept="image/*" class="w-full text-sm text-slate-500 file:mr-4 file:py-1.5 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100">
             @error('image')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
         </div>

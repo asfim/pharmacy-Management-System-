@@ -115,25 +115,11 @@
                 <span>Categories</span>
             </a>
             @endcan
-            @can('view sub_categories')
-            <a href="{{ route('admin.sub-categories.index') }}"
-               class="sidebar-link {{ request()->routeIs('admin.sub-categories*') ? 'active' : '' }}">
-                <i class="fas fa-sitemap"></i>
-                <span>Sub-Categories</span>
-            </a>
-            @endcan
             @can('view generics')
             <a href="{{ route('admin.generics.index') }}"
                class="sidebar-link {{ request()->routeIs('admin.generics*') ? 'active' : '' }}">
                 <i class="fas fa-dna"></i>
                 <span>Generics</span>
-            </a>
-            @endcan
-            @can('view brands')
-            <a href="{{ route('admin.brands.index') }}"
-               class="sidebar-link {{ request()->routeIs('admin.brands*') ? 'active' : '' }}">
-                <i class="fas fa-certificate"></i>
-                <span>Brands</span>
             </a>
             @endcan
             @can('view manufacturers')

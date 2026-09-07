@@ -24,9 +24,7 @@ class MedicineController extends Controller
     {
         return [
             'categories'    => Category::all(),
-            'subCategories' => SubCategory::all(),
             'generics'      => Generic::all(),
-            'brands'        => Brand::all(),
             'manufacturers' => Manufacturer::all(),
             'units'         => Unit::all(),
             'medicineTypes' => [
@@ -114,6 +112,7 @@ class MedicineController extends Controller
 
     public function edit(Product $medicine)
     {
+        $medicine->load('product_images');
         return view('admin.medicines.edit', array_merge(['medicine' => $medicine], $this->getFormData()));
     }
 
