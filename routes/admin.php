@@ -51,6 +51,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::resource('brands', BrandController::class);
     Route::resource('manufacturers', ManufacturerController::class);
     Route::get('medicines/sample-csv', [MedicineController::class, 'sampleCsv'])->name('medicines.sample-csv');
+    Route::post('medicines/bulk-delete', [MedicineController::class, 'bulkDelete'])->name('medicines.bulk-delete');
     Route::post('medicines/import-csv', [MedicineController::class, 'importCsv'])->name('medicines.import-csv');
     Route::get('medicines/export-csv', [MedicineController::class, 'exportCsv'])->name('medicines.export-csv');
     Route::get('medicines/export-pdf', [MedicineController::class, 'exportPdf'])->name('medicines.export-pdf');

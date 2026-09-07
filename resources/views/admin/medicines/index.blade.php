@@ -9,6 +9,14 @@
     </div>
     
     <div class="flex flex-wrap items-center gap-2">
+        <!-- Bulk Delete Action Button (Hidden when 0 selected) -->
+        <button id="bulkDeleteBtn"
+                onclick="executeBulkDelete()"
+                class="hidden bg-rose-600 hover:bg-rose-700 text-white font-medium py-2 px-3 rounded-lg flex items-center transition text-sm shadow-xs animate-in fade-in duration-150">
+            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+            Delete Selected (<span id="bulkDeleteCount">0</span>)
+        </button>
+
         <!-- CSV Export -->
         <a id="exportCsvBtn" href="{{ route('admin.medicines.export-csv', request()->query()) }}" 
            class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 font-medium py-2 px-3 rounded-lg flex items-center transition text-sm shadow-xs">
@@ -19,7 +27,7 @@
         <!-- PDF Export -->
         <a id="exportPdfBtn" href="{{ route('admin.medicines.export-pdf', request()->query()) }}" target="_blank"
            class="bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-medium py-2 px-3 rounded-lg flex items-center transition text-sm shadow-xs">
-            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
             Export PDF
         </a>
 
@@ -81,6 +89,9 @@
         <table class="w-full text-left">
             <thead class="bg-slate-100 border-b border-slate-200 text-slate-600 text-xs uppercase tracking-wider font-semibold">
                 <tr>
+                    <th class="px-4 py-3.5 w-10">
+                        <input type="checkbox" id="selectAllCheckbox" onclick="toggleSelectAllMedicines(this)" class="w-4 h-4 rounded text-teal-600 border-slate-300 focus:ring-teal-500 cursor-pointer" title="Select All">
+                    </th>
                     <th class="px-4 py-3.5">SL</th>
                     <th class="px-4 py-3.5">Image</th>
                     <th class="px-4 py-3.5">Name</th>
@@ -321,6 +332,77 @@
             btn.disabled = false;
             btnText.textContent = 'Load More';
             spinner.classList.add('hidden');
+        });
+    }
+
+    // Bulk Delete Handlers
+    function toggleSelectAllMedicines(master) {
+        const checkboxes = document.querySelectorAll('.medicine-select-checkbox');
+        checkboxes.forEach(cb => cb.checked = master.checked);
+        onMedicineCheckboxChange();
+    }
+
+    function onMedicineCheckboxChange() {
+        const selected = document.querySelectorAll('.medicine-select-checkbox:checked');
+        const bulkBtn = document.getElementById('bulkDeleteBtn');
+        const countSpan = document.getElementById('bulkDeleteCount');
+        const selectAll = document.getElementById('selectAllCheckbox');
+        const allCheckboxes = document.querySelectorAll('.medicine-select-checkbox');
+
+        if (countSpan) countSpan.textContent = selected.length;
+
+        if (selected.length > 0) {
+            bulkBtn.classList.remove('hidden');
+        } else {
+            bulkBtn.classList.add('hidden');
+        }
+
+        if (selectAll && allCheckboxes.length > 0) {
+            selectAll.checked = (selected.length === allCheckboxes.length);
+        }
+    }
+
+    function executeBulkDelete() {
+        const selectedCheckboxes = document.querySelectorAll('.medicine-select-checkbox:checked');
+        const selectedIds = Array.from(selectedCheckboxes).map(cb => cb.value);
+
+        if (selectedIds.length === 0) return;
+
+        if (!confirm(`Are you sure you want to delete ${selectedIds.length} selected medicines? This action cannot be undone.`)) {
+            return;
+        }
+
+        const bulkBtn = document.getElementById('bulkDeleteBtn');
+        bulkBtn.disabled = true;
+        const originalHtml = bulkBtn.innerHTML;
+        bulkBtn.innerHTML = `Deleting...`;
+
+        fetch(`{{ route('admin.medicines.bulk-delete') }}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({ ids: selectedIds })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                performLiveSearch();
+                const selectAll = document.getElementById('selectAllCheckbox');
+                if (selectAll) selectAll.checked = false;
+            } else {
+                alert(data.message || 'Bulk delete failed.');
+            }
+        })
+        .catch(err => {
+            console.error('Bulk delete error:', err);
+            alert('An error occurred during bulk delete.');
+        })
+        .finally(() => {
+            bulkBtn.disabled = false;
+            bulkBtn.innerHTML = originalHtml;
         });
     }
 </script>

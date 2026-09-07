@@ -1,5 +1,8 @@
 @forelse($medicines as $item)
-<tr class="hover:bg-slate-50 transition border-b border-slate-100">
+<tr class="hover:bg-slate-50 transition border-b border-slate-100 medicine-row" id="medicine-row-{{ $item->id }}">
+    <td class="px-4 py-3">
+        <input type="checkbox" value="{{ $item->id }}" class="medicine-select-checkbox w-4 h-4 rounded text-teal-600 border-slate-300 focus:ring-teal-500 cursor-pointer" onchange="onMedicineCheckboxChange()">
+    </td>
     <td class="px-4 py-3 text-slate-500 font-medium text-xs">
         {{ $loop->iteration + ($medicines->currentPage() - 1) * $medicines->perPage() }}
     </td>

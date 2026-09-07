@@ -388,4 +388,43 @@ class MedicineController extends Controller
 
         return response()->stream($callback, 200, $headers);
     }
+
+    public function bulkDelete(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:products,id',
+        ]);
+
+        $ids = $request->input('ids');
+        $count = count($ids);
+
+        DB::beginTransaction();
+        try {
+            ProductImage::whereIn('product_id', $ids)->delete();
+            Batch::whereIn('product_id', $ids)->delete();
+            Product::whereIn('id', $ids)->delete();
+
+            DB::commit();
+
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'count'   => $count,
+                    'message' => "Successfully deleted {$count} selected medicines."
+                ]);
+            }
+
+            return back()->with('success', "Successfully deleted {$count} selected medicines.");
+        } catch (\Exception $e) {
+            DB::rollBack();
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "Bulk delete failed: " . $e->getMessage()
+                ], 500);
+            }
+            return back()->with('error', "Bulk delete failed: " . $e->getMessage());
+        }
+    }
 }
