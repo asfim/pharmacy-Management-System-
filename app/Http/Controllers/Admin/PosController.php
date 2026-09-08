@@ -16,8 +16,7 @@ class PosController extends Controller
     public function index()
     {
         $customers = Customer::where('status', 'active')->orderBy('name')->get();
-        $medicines = Product::where('status', 'active')->with('activeBatches')->orderBy('name')->get();
-        return view('admin.pos.index', compact('customers', 'medicines'));
+        return view('admin.pos.index', compact('customers'));
     }
 
     public function searchMedicine(Request $request)
@@ -44,7 +43,7 @@ class PosController extends Controller
                         'expiry_date' => $b->expiry_date,
                         'quantity'    => $b->quantity,
                         'sale_price'  => $b->sale_price,
-                    ]),
+                    ])->values(),
                 ];
             });
         return response()->json($medicines);
@@ -74,6 +73,7 @@ class PosController extends Controller
 
             $sale = Sale::create([
                 'invoice_no'     => 'INV-' . date('Ymd') . '-' . str_pad(Sale::whereDate('created_at', today())->count() + 1, 4, '0', STR_PAD_LEFT),
+                'branch_id'      => auth()->user()->branch_id ?? 1,
                 'customer_id'    => $request->customer_id ?: null,
                 'subtotal'       => $subtotal,
                 'discount'       => $discount,

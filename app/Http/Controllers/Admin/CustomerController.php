@@ -24,14 +24,6 @@ class CustomerController extends Controller
         $request->validate([
             'name'           => 'required|string|max:255',
             'phone'          => 'required|string|max:20',
-            'email'          => 'nullable|email|max:255',
-            'address'        => 'nullable|string',
-            'date_of_birth'  => 'nullable|date',
-            'gender'         => 'nullable|in:male,female,other',
-            'customer_type'  => 'nullable|string',
-            'opening_balance'=> 'nullable|numeric',
-            'credit_limit'   => 'nullable|numeric',
-            'status'         => 'required|in:active,inactive',
         ]);
 
         Customer::create($request->all());
@@ -54,7 +46,6 @@ class CustomerController extends Controller
         $request->validate([
             'name'  => 'required|string|max:255',
             'phone' => 'required|string|max:20',
-            'status'=> 'required|in:active,inactive',
         ]);
         $customer->update($request->all());
         return redirect()->route('admin.customers.index')->with('success', 'Customer updated.');

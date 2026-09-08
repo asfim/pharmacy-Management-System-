@@ -57,7 +57,6 @@ class Customer extends Model
 		'email',
 		'address',
 		'dob',
-		'date_of_birth',
 		'gender',
 		'customer_type',
 		'opening_balance',

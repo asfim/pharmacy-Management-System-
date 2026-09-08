@@ -150,6 +150,11 @@ class Product extends Model
 		return $this->hasMany(Batch::class);
 	}
 
+	public function activeBatches()
+	{
+		return $this->hasMany(Batch::class)->where('quantity', '>', 0);
+	}
+
 	public function damage_wastages()
 	{
 		return $this->hasMany(DamageWastage::class);

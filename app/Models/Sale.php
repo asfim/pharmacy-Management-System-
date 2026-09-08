@@ -90,6 +90,11 @@ class Sale extends Model
 		return $this->hasMany(SaleItem::class);
 	}
 
+	public function items()
+	{
+		return $this->hasMany(SaleItem::class);
+	}
+
 	public function sale_payments()
 	{
 		return $this->hasMany(SalePayment::class);
