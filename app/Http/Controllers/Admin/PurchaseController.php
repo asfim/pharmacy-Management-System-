@@ -22,8 +22,7 @@ class PurchaseController extends Controller
     public function create()
     {
         $suppliers = Supplier::where('status', 'active')->orderBy('company_name')->get();
-        $medicines = Product::where('status', 'active')->orderBy('name')->get();
-        return view('admin.purchases.create', compact('suppliers', 'medicines'));
+        return view('admin.purchases.create', compact('suppliers'));
     }
 
     public function store(Request $request)

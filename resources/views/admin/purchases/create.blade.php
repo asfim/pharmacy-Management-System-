@@ -107,9 +107,6 @@
                             <td class="px-2 py-2">
                                 <select name="items[0][product_id]" class="medicine-select w-full px-2 py-2 border border-slate-200 rounded-lg text-sm" required>
                                     <option value="">Select</option>
-                                    @foreach($medicines as $m)
-                                    <option value="{{ $m->id }}" data-price="{{ $m->purchase_price }}" data-sale="{{ $m->sale_price }}">{{ $m->name }}</option>
-                                    @endforeach
                                 </select>
                             </td>
                             <td class="px-2 py-2"><input type="text" name="items[0][batch_no]" required placeholder="Batch" class="w-full px-2 py-2 border border-slate-200 rounded-lg text-sm"></td>
@@ -198,11 +195,33 @@ $(document).ready(function() {
         placeholder: "Select Supplier",
         allowClear: true
     });
-    $('.medicine-select').select2({
-        placeholder: "Select Medicine",
-        allowClear: true
-    });
+    initMedicineSelect2('.medicine-select');
 });
+
+function initMedicineSelect2(selector) {
+    $(selector).select2({
+        placeholder: "Select Medicine",
+        allowClear: true,
+        ajax: {
+            url: '{{ route("admin.ajax.medicines-search") }}',
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return { q: params.term };
+            },
+            processResults: function (data) {
+                return { results: data.results };
+            },
+            cache: true
+        }
+    }).on('select2:select', function (e) {
+        const data = e.params.data;
+        const row = $(this).closest('.item-row')[0];
+        if (data.price !== undefined) row.querySelector('.price-input').value = data.price;
+        if (data.sale !== undefined) row.querySelectorAll('input[type=number]')[3].value = data.sale;
+        updateRowTotal(row);
+    });
+}
 
 let rowIndex = 1;
 
@@ -243,26 +262,14 @@ document.getElementById('addRow').addEventListener('click', () => {
     const template = document.querySelector('.item-row').cloneNode(true);
     template.querySelectorAll('input').forEach(i => { i.name = i.name.replace(/\[\d+\]/, `[${rowIndex}]`); if(i.type !== 'date') i.value = i.type === 'number' ? 0 : ''; });
     template.querySelector('select').name = template.querySelector('select').name.replace(/\[\d+\]/, `[${rowIndex}]`);
-    template.querySelector('select').value = '';
+    template.querySelector('select').innerHTML = '<option value="">Select</option>';
     template.querySelector('.row-total').textContent = '0.00';
     template.querySelector('.remove-row').addEventListener('click', function() { this.closest('.item-row').remove(); updateSummary(); });
     
     document.getElementById('itemsBody').appendChild(template);
     
-    // Re-initialize select2 on all medicine selects
-    $('.medicine-select').select2({
-        placeholder: "Select Medicine",
-        allowClear: true
-    });
-    
-    // Add listeners using jQuery for select2 events
-    $(template).find('.medicine-select').on('change', function() {
-        const opt = $(this).find('option:selected');
-        const row = $(this).closest('.item-row')[0];
-        if (opt.data('price')) row.querySelector('.price-input').value = opt.data('price');
-        if (opt.data('sale')) row.querySelectorAll('input[type=number]')[3].value = opt.data('sale');
-        updateRowTotal(row);
-    });
+    // Re-initialize select2 on all medicine selects with AJAX
+    initMedicineSelect2('.medicine-select');
 
     addRowListeners(template);
     rowIndex++;
@@ -271,17 +278,7 @@ document.getElementById('addRow').addEventListener('click', () => {
 function addRowListeners(row) {
     row.querySelector('.qty-input').addEventListener('input', () => updateRowTotal(row));
     row.querySelector('.price-input').addEventListener('input', () => updateRowTotal(row));
-    // Remove vanilla change listener for select since we use jQuery select2 change event
 }
-
-// Attach jQuery select2 change listener for the first row
-$('.medicine-select').on('change', function() {
-    const opt = $(this).find('option:selected');
-    const row = $(this).closest('.item-row')[0];
-    if (opt.data('price')) row.querySelector('.price-input').value = opt.data('price');
-    if (opt.data('sale')) row.querySelectorAll('input[type=number]')[3].value = opt.data('sale');
-    updateRowTotal(row);
-});
 
 // Remove row
 document.querySelectorAll('.remove-row').forEach(btn => {

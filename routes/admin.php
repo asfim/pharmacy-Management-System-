@@ -160,4 +160,25 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::get('ajax/batches', function () {
         return \App\Models\Batch::where('product_id', request('product_id'))->get(['id', 'batch_no', 'expiry_date', 'quantity', 'sale_price']);
     })->name('ajax.batches');
+    Route::get('ajax/medicines-search', function () {
+        $q = request('q');
+        $medicines = \App\Models\Product::where('status', 'active')
+            ->when($q, function($query) use ($q) {
+                $query->where('name', 'like', "%$q%")
+                      ->orWhere('barcode', $q)
+                      ->orWhere('sku', 'like', "%$q%");
+            })
+            ->limit(30)
+            ->get(['id', 'name', 'purchase_price', 'sale_price']);
+        
+        $results = $medicines->map(function ($m) {
+            return [
+                'id' => $m->id,
+                'text' => $m->name,
+                'price' => $m->purchase_price,
+                'sale' => $m->sale_price,
+            ];
+        });
+        return response()->json(['results' => $results]);
+    })->name('ajax.medicines-search');
 });
