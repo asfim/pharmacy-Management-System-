@@ -1,5 +1,44 @@
 @extends('admin.layouts.app')
 @php $header = 'New Purchase'; @endphp
+
+@push('styles')
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<style>
+    /* Tailwind styling for Select2 */
+    .select2-container .select2-selection--single {
+        min-height: 42px !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 0.5rem !important;
+        display: flex;
+        align-items: center;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        color: #334155 !important;
+        font-size: 0.875rem !important;
+        line-height: normal !important;
+        padding-left: 0.75rem !important;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 100% !important;
+        right: 8px !important;
+        display: flex;
+        align-items: center;
+    }
+    .select2-dropdown {
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 0.5rem !important;
+        overflow: hidden;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        z-index: 9999;
+    }
+    .select2-search__field {
+        border-radius: 0.375rem !important;
+        border: 1px solid #cbd5e1 !important;
+        padding: 4px 8px !important;
+    }
+</style>
+@endpush
+
 @section('content')
 <div class="flex justify-between items-center mb-6">
     <div><h2 class="text-2xl font-bold text-slate-800">New Purchase</h2><p class="text-sm text-slate-500">Record a new medicine purchase from supplier</p></div>
@@ -21,7 +60,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
                     <label class="block text-sm font-semibold text-slate-700 mb-1.5">Supplier *</label>
-                    <select name="supplier_id" required class="w-full px-4 py-2.5 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-teal-500">
+                    <select name="supplier_id" id="supplierSelect" required class="w-full px-4 py-2.5 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-teal-500">
                         <option value="">-- Select Supplier --</option>
                         @foreach($suppliers as $sup)
                         <option value="{{ $sup->id }}">{{ $sup->company_name }}</option>
@@ -66,7 +105,7 @@
                     <tbody id="itemsBody">
                         <tr class="item-row border-b border-slate-100">
                             <td class="px-2 py-2">
-                                <select name="items[0][product_id]" class="w-full px-2 py-2 border border-slate-200 rounded-lg text-sm" required>
+                                <select name="items[0][product_id]" class="medicine-select w-full px-2 py-2 border border-slate-200 rounded-lg text-sm" required>
                                     <option value="">Select</option>
                                     @foreach($medicines as $m)
                                     <option value="{{ $m->id }}" data-price="{{ $m->purchase_price }}" data-sale="{{ $m->sale_price }}">{{ $m->name }}</option>
@@ -151,7 +190,20 @@
 @endsection
 
 @push('scripts')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
+$(document).ready(function() {
+    $('#supplierSelect').select2({
+        placeholder: "Select Supplier",
+        allowClear: true
+    });
+    $('.medicine-select').select2({
+        placeholder: "Select Medicine",
+        allowClear: true
+    });
+});
+
 let rowIndex = 1;
 
 function updateRowTotal(row) {
@@ -185,13 +237,33 @@ function updateSummary() {
 
 // Add row
 document.getElementById('addRow').addEventListener('click', () => {
+    // Destroy select2 on the original before cloning to avoid duplicating select2 DOM elements
+    $('.medicine-select').select2('destroy');
+    
     const template = document.querySelector('.item-row').cloneNode(true);
     template.querySelectorAll('input').forEach(i => { i.name = i.name.replace(/\[\d+\]/, `[${rowIndex}]`); if(i.type !== 'date') i.value = i.type === 'number' ? 0 : ''; });
     template.querySelector('select').name = template.querySelector('select').name.replace(/\[\d+\]/, `[${rowIndex}]`);
     template.querySelector('select').value = '';
     template.querySelector('.row-total').textContent = '0.00';
     template.querySelector('.remove-row').addEventListener('click', function() { this.closest('.item-row').remove(); updateSummary(); });
+    
     document.getElementById('itemsBody').appendChild(template);
+    
+    // Re-initialize select2 on all medicine selects
+    $('.medicine-select').select2({
+        placeholder: "Select Medicine",
+        allowClear: true
+    });
+    
+    // Add listeners using jQuery for select2 events
+    $(template).find('.medicine-select').on('change', function() {
+        const opt = $(this).find('option:selected');
+        const row = $(this).closest('.item-row')[0];
+        if (opt.data('price')) row.querySelector('.price-input').value = opt.data('price');
+        if (opt.data('sale')) row.querySelectorAll('input[type=number]')[3].value = opt.data('sale');
+        updateRowTotal(row);
+    });
+
     addRowListeners(template);
     rowIndex++;
 });
@@ -199,13 +271,17 @@ document.getElementById('addRow').addEventListener('click', () => {
 function addRowListeners(row) {
     row.querySelector('.qty-input').addEventListener('input', () => updateRowTotal(row));
     row.querySelector('.price-input').addEventListener('input', () => updateRowTotal(row));
-    row.querySelector('select').addEventListener('change', function() {
-        const opt = this.options[this.selectedIndex];
-        if (opt.dataset.price) row.querySelector('.price-input').value = opt.dataset.price;
-        if (opt.dataset.sale) row.querySelectorAll('input[type=number]')[3].value = opt.dataset.sale;
-        updateRowTotal(row);
-    });
+    // Remove vanilla change listener for select since we use jQuery select2 change event
 }
+
+// Attach jQuery select2 change listener for the first row
+$('.medicine-select').on('change', function() {
+    const opt = $(this).find('option:selected');
+    const row = $(this).closest('.item-row')[0];
+    if (opt.data('price')) row.querySelector('.price-input').value = opt.data('price');
+    if (opt.data('sale')) row.querySelectorAll('input[type=number]')[3].value = opt.data('sale');
+    updateRowTotal(row);
+});
 
 // Remove row
 document.querySelectorAll('.remove-row').forEach(btn => {

@@ -125,6 +125,17 @@ class PosController extends Controller
                 ]);
             }
 
+            // Record the payment in sale_payments for the sales history view
+            if ($paid > 0) {
+                \App\Models\SalePayment::create([
+                    'sale_id'     => $sale->id,
+                    'account_id'  => 1,
+                    'method'      => $request->payment_method,
+                    'amount'      => $paid,
+                    'paid_at'     => now(),
+                ]);
+            }
+
             session(['last_sale_id' => $sale->id]);
         });
 

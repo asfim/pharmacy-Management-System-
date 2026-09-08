@@ -32,7 +32,7 @@
                     <td class="px-5 py-3.5 text-right font-bold text-slate-800">৳{{ number_format($s->total, 2) }}</td>
                     <td class="px-5 py-3.5 text-right text-green-600">৳{{ number_format($s->paid, 2) }}</td>
                     <td class="px-5 py-3.5 text-right {{ $s->due > 0 ? 'text-red-600 font-semibold' : 'text-slate-400' }}">৳{{ number_format($s->due, 2) }}</td>
-                    <td class="px-5 py-3.5 text-slate-600 capitalize">{{ $s->payment_method ?? '-' }}</td>
+                    <td class="px-5 py-3.5 text-slate-600 capitalize">{{ $s->sale_payments->first()->method ?? '-' }}</td>
                     <td class="px-5 py-3.5 text-right">
                         <div class="flex justify-end gap-1">
                             <a href="{{ route('admin.sales.invoice', $s) }}" class="p-2 text-green-600 bg-green-50 hover:bg-green-100 rounded-lg" title="Invoice"><i class="fas fa-print text-xs"></i></a>
