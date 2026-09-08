@@ -25,11 +25,6 @@ class SupplierController extends Controller
             'company_name'   => 'required|string|max:255',
             'contact_person' => 'nullable|string|max:255',
             'phone'          => 'nullable|string|max:20',
-            'email'          => 'nullable|email|max:255',
-            'address'        => 'nullable|string',
-            'opening_balance'=> 'nullable|numeric',
-            'credit_limit'   => 'nullable|numeric',
-            'payment_terms'  => 'nullable|string|max:255',
             'status'         => 'required|in:active,inactive',
         ]);
 
@@ -48,11 +43,6 @@ class SupplierController extends Controller
             'company_name'   => 'required|string|max:255',
             'contact_person' => 'nullable|string|max:255',
             'phone'          => 'nullable|string|max:20',
-            'email'          => 'nullable|email|max:255',
-            'address'        => 'nullable|string',
-            'opening_balance'=> 'nullable|numeric',
-            'credit_limit'   => 'nullable|numeric',
-            'payment_terms'  => 'nullable|string|max:255',
             'status'         => 'required|in:active,inactive',
         ]);
 

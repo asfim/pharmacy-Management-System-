@@ -17,11 +17,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $company_name
  * @property string|null $contact_person
  * @property string|null $phone
- * @property string|null $email
- * @property string|null $address
- * @property float $opening_balance
- * @property float $credit_limit
- * @property string|null $payment_terms
  * @property string $status
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -36,20 +31,10 @@ class Supplier extends Model
 {
 	protected $table = 'suppliers';
 
-	protected $casts = [
-		'opening_balance' => 'float',
-		'credit_limit' => 'float'
-	];
-
 	protected $fillable = [
 		'company_name',
 		'contact_person',
 		'phone',
-		'email',
-		'address',
-		'opening_balance',
-		'credit_limit',
-		'payment_terms',
 		'status'
 	];
 
