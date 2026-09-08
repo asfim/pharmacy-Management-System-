@@ -53,7 +53,7 @@
                     @forelse($customer->customerPayments as $payment)
                     <tr>
                         <td class="px-4 py-3">{{ $payment->created_at->format('d M, Y') }}</td>
-                        <td class="px-4 py-3">{{ ucfirst($payment->payment_method) }}</td>
+                        <td class="px-4 py-3">{{ ucfirst($payment->method ?? 'Cash') }}</td>
                         <td class="px-4 py-3 text-right text-green-600 font-medium">৳{{ number_format($payment->amount, 2) }}</td>
                     </tr>
                     @empty

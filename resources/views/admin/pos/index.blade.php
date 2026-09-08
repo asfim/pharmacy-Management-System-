@@ -1,6 +1,40 @@
 @extends('admin.layouts.app')
 @php $header = 'POS System'; @endphp
 
+@push('styles')
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<style>
+    /* Tailwind styling for Select2 */
+    .select2-container .select2-selection--single {
+        height: 46px !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 0.75rem !important;
+        display: flex;
+        align-items: center;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        color: #334155 !important;
+        font-size: 0.875rem !important;
+        line-height: normal !important;
+        padding-left: 1rem !important;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 44px !important;
+        right: 10px !important;
+    }
+    .select2-dropdown {
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 0.75rem !important;
+        overflow: hidden;
+        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    }
+    .select2-search__field {
+        border-radius: 0.5rem !important;
+        border: 1px solid #cbd5e1 !important;
+    }
+</style>
+@endpush
+
 @section('content')
 <div class="flex gap-5 h-[calc(100vh-9rem)]">
 
@@ -15,12 +49,17 @@
                     <input type="text" id="medicineSearch" placeholder="Search by name, barcode, SKU..." autocomplete="off"
                         class="w-full pl-11 pr-4 py-3 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
                 </div>
-                <select id="customerSelect" class="px-4 py-3 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-teal-500 min-w-[180px]">
-                    <option value="">Walk-in Customer</option>
-                    @foreach($customers as $c)
-                    <option value="{{ $c->id }}">{{ $c->name }} ({{ $c->phone }})</option>
-                    @endforeach
-                </select>
+                <div class="flex gap-1">
+                    <select id="customerSelect" class="px-4 py-3 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-teal-500 min-w-[180px]">
+                        <option value="">Walk-in Customer</option>
+                        @foreach($customers as $c)
+                        <option value="{{ $c->id }}">{{ $c->name }} ({{ $c->phone }})</option>
+                        @endforeach
+                    </select>
+                    <button type="button" onclick="document.getElementById('customerModal').classList.remove('hidden')" class="px-3 py-3 bg-teal-100 hover:bg-teal-200 text-teal-700 rounded-xl transition flex items-center justify-center" title="Add Customer">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
             </div>
             <!-- Search Results Dropdown -->
             <div id="searchResults" class="hidden mt-2 bg-white border border-slate-200 rounded-xl shadow-lg max-h-64 overflow-y-auto z-50"></div>
@@ -72,11 +111,11 @@
             <div class="flex justify-between text-sm"><span class="text-slate-600">Subtotal</span><span class="font-semibold" id="posSubtotal">৳0.00</span></div>
             <div class="flex items-center justify-between text-sm">
                 <span class="text-slate-600">Discount (৳)</span>
-                <input type="number" id="posDiscount" value="0" min="0" step="0.01" class="w-24 px-2 py-1 border border-slate-200 rounded-lg text-right text-sm">
+                <input type="number" id="posDiscount" placeholder="0.00" min="0" step="0.01" class="w-24 px-2 py-1 border border-slate-200 rounded-lg text-right text-sm">
             </div>
             <div class="flex items-center justify-between text-sm">
                 <span class="text-slate-600">VAT/Tax (৳)</span>
-                <input type="number" id="posTax" value="0" min="0" step="0.01" class="w-24 px-2 py-1 border border-slate-200 rounded-lg text-right text-sm">
+                <input type="number" id="posTax" placeholder="0.00" min="0" step="0.01" class="w-24 px-2 py-1 border border-slate-200 rounded-lg text-right text-sm">
             </div>
             <div class="flex justify-between font-bold text-lg border-t border-slate-100 pt-3">
                 <span class="text-slate-800">Total</span>
@@ -98,7 +137,7 @@
             </div>
             <div>
                 <label class="block text-sm font-semibold text-slate-700 mb-1.5">Paid Amount</label>
-                <input type="number" id="posPaid" value="0" min="0" step="0.01" class="w-full px-4 py-2.5 border border-slate-300 rounded-xl text-sm text-right font-bold text-lg">
+                <input type="number" id="posPaid" placeholder="0.00" value="0" min="0" step="0.01" readonly class="w-full px-4 py-2.5 border border-slate-300 rounded-xl text-sm text-right font-bold text-lg bg-slate-50 cursor-not-allowed text-slate-500">
             </div>
             <div class="flex justify-between text-sm bg-slate-50 rounded-xl p-3">
                 <span class="font-semibold text-slate-600">Change / Due:</span>
@@ -147,10 +186,45 @@
         </div>
     </div>
 </div>
+
+<!-- Add Customer Modal -->
+<div id="customerModal" class="hidden fixed inset-0 z-[60] flex items-center justify-center bg-black/50">
+    <div class="bg-white rounded-2xl p-6 max-w-sm w-full mx-4 shadow-2xl">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-bold text-slate-800">New Customer</h3>
+            <button onclick="document.getElementById('customerModal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600"><i class="fas fa-times"></i></button>
+        </div>
+        <form id="addCustomerForm" onsubmit="event.preventDefault(); saveCustomer();" class="space-y-4">
+            <div>
+                <label class="block text-sm font-semibold text-slate-700 mb-1">Name <span class="text-red-500">*</span></label>
+                <input type="text" id="custName" required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-teal-500">
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-slate-700 mb-1">Phone <span class="text-red-500">*</span></label>
+                <input type="text" id="custPhone" required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-teal-500">
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-slate-700 mb-1">Address</label>
+                <input type="text" id="custAddress" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-teal-500">
+            </div>
+            <div class="pt-2">
+                <button type="submit" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-2.5 rounded-xl transition">Save Customer</button>
+            </div>
+        </form>
+    </div>
+</div>
 @endsection
 
 @push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
+$(document).ready(function() {
+    $('#customerSelect').select2({
+        placeholder: "Select Customer",
+        allowClear: false
+    });
+});
+
 let cart = [];
 let selectedPayment = 'cash';
 
@@ -254,16 +328,18 @@ function updateSummary() {
     const discount = parseFloat(document.getElementById('posDiscount').value) || 0;
     const tax      = parseFloat(document.getElementById('posTax').value) || 0;
     const total    = subtotal - discount + tax;
-    const paid     = parseFloat(document.getElementById('posPaid').value) || 0;
-    const change   = paid - total;
+    
+    document.getElementById('posPaid').value = total > 0 ? total.toFixed(2) : '';
+    
+    const change   = 0;
 
     document.getElementById('posSubtotal').textContent = '৳' + subtotal.toFixed(2);
     document.getElementById('posTotal').textContent    = '৳' + total.toFixed(2);
     document.getElementById('posChange').textContent   = '৳' + change.toFixed(2);
-    document.getElementById('posChange').className     = 'font-bold ' + (change >= 0 ? 'text-green-600' : 'text-red-600');
+    document.getElementById('posChange').className     = 'font-bold text-green-600';
 }
 
-['posDiscount','posTax','posPaid'].forEach(id => document.getElementById(id).addEventListener('input', updateSummary));
+['posDiscount','posTax'].forEach(id => document.getElementById(id).addEventListener('input', updateSummary));
 
 function selectPayment(method) {
     selectedPayment = method;
@@ -325,9 +401,9 @@ function newSale() {
     cart = [];
     renderCart();
     document.getElementById('successModal').classList.add('hidden');
-    document.getElementById('posDiscount').value = 0;
-    document.getElementById('posTax').value = 0;
-    document.getElementById('posPaid').value = 0;
+    document.getElementById('posDiscount').value = '';
+    document.getElementById('posTax').value = '';
+    document.getElementById('posPaid').value = '';
     document.getElementById('posNote').value = '';
     selectPayment('cash');
     updateSummary();
@@ -340,6 +416,47 @@ function holdBill() {
     localStorage.setItem('heldBills', JSON.stringify(held));
     alert('Bill held successfully!');
     clearCart();
+}
+
+function saveCustomer() {
+    const btn = document.querySelector('#addCustomerForm button[type="submit"]');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
+    const payload = {
+        _token: document.querySelector('meta[name=csrf-token]').content,
+        name: document.getElementById('custName').value,
+        phone: document.getElementById('custPhone').value,
+        address: document.getElementById('custAddress').value,
+    };
+
+    fetch('{{ route("admin.customers.store") }}', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': payload._token },
+        body: JSON.stringify(payload)
+    })
+    .then(r => r.json())
+    .then(data => {
+        btn.disabled = false;
+        btn.innerHTML = 'Save Customer';
+        if (data.success) {
+            // Add to select and close modal
+            const sel = document.getElementById('customerSelect');
+            const opt = new Option(`${data.customer.name} (${data.customer.phone})`, data.customer.id);
+            sel.add(opt);
+            $('#customerSelect').val(data.customer.id).trigger('change');
+            
+            document.getElementById('customerModal').classList.add('hidden');
+            document.getElementById('addCustomerForm').reset();
+        } else {
+            alert('Error creating customer. Check inputs.');
+        }
+    })
+    .catch(() => {
+        btn.disabled = false;
+        btn.innerHTML = 'Save Customer';
+        alert('Network error. Please try again.');
+    });
 }
 </script>
 @endpush

@@ -26,7 +26,12 @@ class CustomerController extends Controller
             'phone'          => 'required|string|max:20',
         ]);
 
-        Customer::create($request->all());
+        $customer = Customer::create($request->all());
+
+        if ($request->wantsJson()) {
+            return response()->json(['success' => true, 'customer' => $customer]);
+        }
+
         return redirect()->route('admin.customers.index')->with('success', 'Customer created successfully.');
     }
 

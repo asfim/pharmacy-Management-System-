@@ -113,6 +113,18 @@ class PosController extends Controller
                 }
             }
 
+            // Record the payment in customer_payments
+            if ($request->customer_id && $paid > 0) {
+                \App\Models\CustomerPayment::create([
+                    'customer_id' => $request->customer_id,
+                    'sale_id'     => $sale->id,
+                    'account_id'  => 1, // Default cash account
+                    'amount'      => $paid,
+                    'method'      => $request->payment_method,
+                    'date'        => now(),
+                ]);
+            }
+
             session(['last_sale_id' => $sale->id]);
         });
 
