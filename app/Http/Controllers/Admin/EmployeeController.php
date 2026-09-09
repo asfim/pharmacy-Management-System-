@@ -32,7 +32,9 @@ class EmployeeController extends Controller
             'salary'       => 'required|numeric|min:0',
             'status'       => 'required|in:active,inactive',
         ]);
-        Employee::create($request->all());
+        $data = $request->all();
+        $data['branch_id'] = auth()->user()->branch_id ?? 1;
+        Employee::create($data);
         return redirect()->route('admin.employees.index')->with('success', 'Employee added.');
     }
 

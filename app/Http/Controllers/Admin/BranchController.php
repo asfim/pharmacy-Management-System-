@@ -24,7 +24,9 @@ class BranchController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
         ]);
-        Branch::create($request->all());
+        $data = $request->all();
+        $data['code'] = 'BR-' . strtoupper(\Illuminate\Support\Str::random(6));
+        Branch::create($data);
         return redirect()->route('admin.branches.index')->with('success', 'Branch created successfully.');
     }
 
