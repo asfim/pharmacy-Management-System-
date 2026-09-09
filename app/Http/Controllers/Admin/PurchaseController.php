@@ -101,7 +101,8 @@ class PurchaseController extends Controller
     public function show(PurchaseInvoice $purchase)
     {
         $purchase->load('supplier', 'items.product');
-        return view('admin.purchases.show', compact('purchase'));
+        $accounts = \App\Models\Account::where('status', 'active')->get();
+        return view('admin.purchases.show', compact('purchase', 'accounts'));
     }
 
     public function invoice(PurchaseInvoice $purchase)

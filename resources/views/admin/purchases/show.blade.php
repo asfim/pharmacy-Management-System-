@@ -73,4 +73,39 @@
         </table>
     </div>
 </div>
+
+@if($purchase->due > 0)
+<div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden mt-6">
+    <div class="p-6">
+        <h3 class="text-lg font-bold text-slate-800 mb-4">Add Payment</h3>
+        <form action="{{ route('admin.supplier-payments.store') }}" method="POST">
+            @csrf
+            <input type="hidden" name="supplier_id" value="{{ $purchase->supplier_id }}">
+            <input type="hidden" name="purchase_id" value="{{ $purchase->id }}">
+            <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-1.5">Amount (৳) *</label>
+                    <input type="number" step="0.01" max="{{ $purchase->due }}" name="amount" value="{{ $purchase->due }}" required class="w-full px-4 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-teal-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-1.5">Account *</label>
+                    <select name="account_id" required class="w-full px-4 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-teal-500">
+                        @foreach($accounts as $acc)
+                        <option value="{{ $acc->id }}">{{ $acc->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-1.5">Date *</label>
+                    <input type="date" name="date" value="{{ date('Y-m-d') }}" required class="w-full px-4 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-teal-500">
+                </div>
+                <div class="flex items-end">
+                    <button type="submit" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-semibold text-sm px-4 py-2.5 rounded-xl transition shadow-sm">Record Payment</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+@endif
+
 @endsection
