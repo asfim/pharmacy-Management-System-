@@ -37,7 +37,7 @@ class DashboardController extends Controller
 
         // Due amounts
         $customerDue    = Customer::sum('opening_balance') ?? 0;
-        $supplierDue    = Supplier::where('opening_balance', '<', 0)->sum('opening_balance') ?? 0;
+        $supplierDue    = PurchaseInvoice::sum('due') ?? 0;
         $todayExpense   = Expense::whereDate('expense_date', $today)->sum('amount') ?? 0;
 
         // Inventory alerts
