@@ -49,6 +49,8 @@ class Account extends Model
 	protected $fillable = [
 		'branch_id',
 		'name',
+        'account_number',
+        'bank_name',
 		'type',
 		'opening_balance',
 		'current_balance',

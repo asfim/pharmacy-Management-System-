@@ -22,11 +22,39 @@ class AccountController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'account_name' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'opening_balance' => 'nullable|numeric',
         ]);
-        Account::create($request->all());
+
+        $data = $request->all();
+        $data['branch_id'] = auth()->user()->branch_id ?? 1;
+        $data['type'] = !empty($request->bank_name) ? 'bank' : 'cash';
+        
+        if (!empty($data['opening_balance'])) {
+            $data['current_balance'] = $data['opening_balance'];
+        }
+
+        Account::create($data);
         return redirect()->route('admin.accounts.index')->with('success', 'Account created successfully.');
+    }
+
+    public function edit(Account $account)
+    {
+        return view('admin.accounts.edit', compact('account'));
+    }
+
+    public function update(Request $request, Account $account)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'opening_balance' => 'nullable|numeric',
+        ]);
+
+        $data = $request->all();
+        $data['type'] = !empty($request->bank_name) ? 'bank' : 'cash';
+        
+        $account->update($data);
+        return redirect()->route('admin.accounts.index')->with('success', 'Account updated successfully.');
     }
 
     public function destroy(Account $account)

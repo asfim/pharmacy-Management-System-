@@ -38,7 +38,10 @@
                             {{ $acc->status ?? 'active' }}
                         </span>
                     </td>
-                    <td class="px-5 py-3.5 text-right">
+                    <td class="px-5 py-3.5 flex justify-end gap-2">
+                        <a href="{{ route('admin.accounts.edit', $acc->id) }}" class="p-2 text-teal-600 bg-teal-50 hover:bg-teal-100 rounded-lg transition" title="Edit">
+                            <i class="fas fa-edit text-xs"></i>
+                        </a>
                         <form action="{{ route('admin.accounts.destroy', $acc) }}" method="POST" onsubmit="return confirm('Delete this account?')">
                             @csrf @method('DELETE')
                             <button class="p-2 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition" title="Delete">
