@@ -9,7 +9,10 @@
     <form action="{{ route('admin.expenses.store') }}" method="POST" class="p-6 space-y-5">
         @csrf
         <div>
-            <label class="block text-sm font-semibold text-slate-700 mb-1.5">Category *</label>
+            <div class="flex justify-between items-center mb-1.5">
+                <label class="block text-sm font-semibold text-slate-700">Category *</label>
+                <a href="{{ route('admin.expense-categories.index') }}" class="text-xs text-teal-600 hover:text-teal-700 hover:underline"><i class="fas fa-plus"></i> Add Category</a>
+            </div>
             <select name="category_id" required class="w-full px-4 py-2.5 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-teal-500">
                 <option value="">-- Select Category --</option>
                 @foreach($categories as $cat)

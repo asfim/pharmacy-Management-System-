@@ -111,6 +111,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::resource('damages', DamageController::class);
 
     // ==================== ACCOUNTING ====================
+    Route::resource('expense-categories', \App\Http\Controllers\Admin\ExpenseCategoryController::class)->except(['create', 'show', 'edit', 'update']);
     Route::resource('expenses', ExpenseController::class);
     Route::resource('incomes', IncomeController::class);
     Route::resource('accounts', AccountController::class);
