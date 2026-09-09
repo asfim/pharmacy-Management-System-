@@ -225,7 +225,14 @@
             <a href="{{ route('admin.employees.index') }}"
                class="sidebar-link {{ request()->routeIs('admin.employees*') ? 'active' : '' }}">
                 <i class="fas fa-id-card"></i>
-                <span>HRM & Payroll</span>
+                <span>Employees</span>
+            </a>
+            @endcan
+            @can('view employees')
+            <a href="{{ route('admin.payrolls.index') }}"
+               class="sidebar-link {{ request()->routeIs('admin.payrolls*') ? 'active' : '' }}">
+                <i class="fas fa-file-invoice-dollar"></i>
+                <span>Payroll</span>
             </a>
             @endcan
             @can('view accounts')

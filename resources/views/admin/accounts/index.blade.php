@@ -22,6 +22,7 @@
                     <th class="px-5 py-4">Account No.</th>
                     <th class="px-5 py-4">Bank Name</th>
                     <th class="px-5 py-4 text-right">Opening Balance</th>
+                    <th class="px-5 py-4 text-right">Current Balance</th>
                     <th class="px-5 py-4">Status</th>
                     <th class="px-5 py-4 text-right">Actions</th>
                 </tr>
@@ -32,7 +33,8 @@
                     <td class="px-5 py-3.5 font-semibold text-slate-800">{{ $acc->name ?? $acc->account_name }}</td>
                     <td class="px-5 py-3.5 font-mono text-slate-600">{{ $acc->account_number ?? 'N/A' }}</td>
                     <td class="px-5 py-3.5 text-slate-600">{{ $acc->bank_name ?? 'Cash / Mobile' }}</td>
-                    <td class="px-5 py-3.5 text-right font-bold text-slate-800">৳{{ number_format($acc->opening_balance ?? 0, 2) }}</td>
+                    <td class="px-5 py-3.5 text-right font-medium text-slate-500">৳{{ number_format($acc->opening_balance ?? 0, 2) }}</td>
+                    <td class="px-5 py-3.5 text-right font-bold text-slate-800">৳{{ number_format($acc->current_balance ?? 0, 2) }}</td>
                     <td class="px-5 py-3.5">
                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 capitalize">
                             {{ $acc->status ?? 'active' }}

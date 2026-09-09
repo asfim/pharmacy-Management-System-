@@ -6,6 +6,9 @@
         <h2 class="text-2xl font-bold text-slate-800">Payroll & Salary Sheets</h2>
         <p class="text-sm text-slate-500 mt-1">Employee monthly salary disbursements</p>
     </div>
+    <a href="{{ route('admin.payrolls.create') }}" class="inline-flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition shadow-sm">
+        <i class="fas fa-plus"></i> Pay Salary
+    </a>
 </div>
 
 @include('admin.layouts.alerts')
