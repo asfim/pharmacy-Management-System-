@@ -81,6 +81,11 @@ class PurchaseInvoice extends Model
 		return $this->hasMany(PurchaseItem::class, 'purchase_id');
 	}
 
+    public function items()
+    {
+        return $this->hasMany(PurchaseItem::class, 'purchase_id');
+    }
+
 	public function purchase_returns()
 	{
 		return $this->hasMany(PurchaseReturn::class, 'purchase_id');

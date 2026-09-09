@@ -52,6 +52,7 @@ class PurchaseController extends Controller
 
             $purchase = PurchaseInvoice::create([
                 'supplier_id'    => $request->supplier_id,
+                'branch_id'      => auth()->user()->branch_id ?? 1,
                 'invoice_no'     => $request->invoice_no,
                 'purchase_date'  => $request->purchase_date,
                 'subtotal'       => $subtotal,
@@ -69,20 +70,6 @@ class PurchaseController extends Controller
                 $freeQty = $item['free_quantity'] ?? 0;
                 $totalQty = $item['quantity'] + $freeQty;
 
-                PurchaseItem::create([
-                    'purchase_invoice_id' => $purchase->id,
-                    'product_id'          => $item['product_id'],
-                    'batch_no'            => $item['batch_no'],
-                    'manufacturing_date'  => $item['manufacturing_date'] ?? null,
-                    'expiry_date'         => $item['expiry_date'] ?? null,
-                    'quantity'            => $item['quantity'],
-                    'free_quantity'       => $freeQty,
-                    'purchase_price'      => $item['purchase_price'],
-                    'sale_price'          => $item['sale_price'],
-                    'discount'            => $item['discount'] ?? 0,
-                    'total'               => $item['quantity'] * $item['purchase_price'],
-                ]);
-
                 // Auto create/update batch stock
                 $batch = Batch::firstOrNew([
                     'product_id' => $item['product_id'],
@@ -93,8 +80,18 @@ class PurchaseController extends Controller
                 $batch->purchase_price     = $item['purchase_price'];
                 $batch->sale_price         = $item['sale_price'];
                 $batch->quantity           = ($batch->quantity ?? 0) + $totalQty;
-                $batch->supplier_id        = $request->supplier_id;
                 $batch->save();
+
+                PurchaseItem::create([
+                    'purchase_id'         => $purchase->id,
+                    'product_id'          => $item['product_id'],
+                    'batch_id'            => $batch->id,
+                    'quantity'            => $item['quantity'],
+                    'free_quantity'       => $freeQty,
+                    'purchase_price'      => $item['purchase_price'],
+                    'discount'            => $item['discount'] ?? 0,
+                    'total'               => $item['quantity'] * $item['purchase_price'],
+                ]);
             }
         });
 
