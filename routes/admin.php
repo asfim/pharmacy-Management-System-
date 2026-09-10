@@ -121,6 +121,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::resource('employees', EmployeeController::class);
     Route::resource('attendances', AttendanceController::class);
     Route::get('attendances/daily', [AttendanceController::class, 'daily'])->name('attendances.daily');
+    Route::post('payrolls/pay-due', [PayrollController::class, 'payDue'])->name('payrolls.payDue');
     Route::resource('payrolls', PayrollController::class);
     Route::get('payrolls/{payroll}/slip', [PayrollController::class, 'slip'])->name('payrolls.slip');
 

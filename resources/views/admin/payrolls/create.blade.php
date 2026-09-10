@@ -17,10 +17,10 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div>
                 <label class="block text-sm font-semibold text-slate-700 mb-1.5">Employee *</label>
-                <select name="employee_id" required class="w-full px-4 py-2.5 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-teal-500">
-                    <option value="">-- Select Employee --</option>
+                <select name="employee_id" id="employee_select" required class="w-full px-4 py-2.5 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-teal-500">
+                    <option value="" data-salary="">-- Select Employee --</option>
                     @foreach($employees as $emp)
-                    <option value="{{ $emp->id }}">{{ $emp->name }} (৳{{ $emp->salary }})</option>
+                    <option value="{{ $emp->id }}" data-salary="{{ $emp->salary }}">{{ $emp->name }} (৳{{ $emp->salary }})</option>
                     @endforeach
                 </select>
             </div>
@@ -42,7 +42,7 @@
             
             <div>
                 <label class="block text-sm font-semibold text-slate-700 mb-1.5">Basic Salary (৳) *</label>
-                <input type="number" step="0.01" name="basic_salary" required class="w-full px-4 py-2.5 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-teal-500">
+                <input type="number" step="0.01" name="basic_salary" id="basic_salary" required class="w-full px-4 py-2.5 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-teal-500">
             </div>
 
             <div>
@@ -57,7 +57,13 @@
 
             <div>
                 <label class="block text-sm font-semibold text-slate-700 mb-1.5">Deductions (৳)</label>
-                <input type="number" step="0.01" name="deductions" value="0" class="w-full px-4 py-2.5 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-teal-500 text-red-600">
+                <input type="number" step="0.01" name="deductions" id="deductions" value="0" class="w-full px-4 py-2.5 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-teal-500 text-red-600">
+            </div>
+
+            <div>
+                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Paid Amount (৳) *</label>
+                <input type="number" step="0.01" name="paid_amount" id="paid_amount" required class="w-full px-4 py-2.5 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-teal-500 text-emerald-600 font-bold">
+                <p class="text-xs text-slate-500 mt-1">Leave less than Net Salary to keep as Due.</p>
             </div>
         </div>
 
@@ -67,3 +73,43 @@
     </form>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const employeeSelect = document.getElementById('employee_select');
+        const basicSalaryInput = document.getElementById('basic_salary');
+        const paidAmountInput = document.getElementById('paid_amount');
+        const deductionsInput = document.getElementById('deductions');
+        const allowanceInput = document.querySelector('input[name="allowance"]');
+        const bonusInput = document.querySelector('input[name="bonus"]');
+
+        function calculateNet() {
+            const basic = parseFloat(basicSalaryInput.value) || 0;
+            const allow = parseFloat(allowanceInput.value) || 0;
+            const bonus = parseFloat(bonusInput.value) || 0;
+            const deduc = parseFloat(deductionsInput.value) || 0;
+            
+            const net = (basic + allow + bonus) - deduc;
+            paidAmountInput.value = net > 0 ? net : 0;
+        }
+
+        employeeSelect.addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            const salary = selectedOption.getAttribute('data-salary');
+            
+            if(salary) {
+                basicSalaryInput.value = salary;
+            } else {
+                basicSalaryInput.value = '';
+            }
+            calculateNet();
+        });
+
+        basicSalaryInput.addEventListener('input', calculateNet);
+        allowanceInput.addEventListener('input', calculateNet);
+        bonusInput.addEventListener('input', calculateNet);
+        deductionsInput.addEventListener('input', calculateNet);
+    });
+</script>
+@endpush
