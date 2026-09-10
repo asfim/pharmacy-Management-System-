@@ -40,33 +40,62 @@
                     <th class="px-5 py-4 text-center">Status</th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-slate-50">
-                @forelse($batches as $b)
-                @php $daysLeft = now()->diffInDays(\Carbon\Carbon::parse($b->expiry_date), false); @endphp
-                <tr class="hover:bg-slate-50 transition">
-                    <td class="px-5 py-3.5 font-semibold text-slate-800">{{ $b->product->name ?? '-' }}</td>
-                    <td class="px-5 py-3.5 font-mono text-slate-600">{{ $b->batch_no }}</td>
-                    <td class="px-5 py-3.5 font-semibold {{ $daysLeft < 0 ? 'text-red-600' : 'text-orange-600' }}">{{ \Carbon\Carbon::parse($b->expiry_date)->format('d M Y') }}</td>
-                    <td class="px-5 py-3.5 text-right font-bold text-slate-700">{{ $b->quantity }}</td>
-                    <td class="px-5 py-3.5 text-right text-slate-600">৳{{ number_format($b->quantity * $b->purchase_price, 2) }}</td>
-                    <td class="px-5 py-3.5 text-center">
-                        @if($daysLeft < 0)
-                            <span class="px-2 py-1 bg-red-100 text-red-700 text-xs font-bold rounded-full">Expired</span>
-                        @elseif($daysLeft <= 30)
-                            <span class="px-2 py-1 bg-orange-100 text-orange-700 text-xs font-bold rounded-full">{{ floor($daysLeft) }} Days</span>
-                        @else
-                            <span class="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs font-bold rounded-full">{{ floor($daysLeft) }} Days</span>
-                        @endif
-                    </td>
-                </tr>
-                @empty
-                <tr><td colspan="6" class="px-5 py-10 text-center text-slate-400">No batches expiring in this timeframe.</td></tr>
-                @endforelse
+            <tbody class="divide-y divide-slate-50" id="expiry_tbody">
+                @include('admin.reports.partials.expiry_rows')
             </tbody>
         </table>
     </div>
-    @if($batches->hasPages())
-    <div class="px-5 py-4 border-t border-slate-100 bg-slate-50">{{ $batches->links() }}</div>
+    @if($batches->hasMorePages())
+    <div class="px-5 py-4 border-t border-slate-100 bg-slate-50 text-center" id="load_more_container">
+        <button id="load_more_btn" data-url="{{ $batches->nextPageUrl() }}" class="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 px-6 py-2 rounded-xl text-sm font-semibold transition shadow-sm">
+            Load More
+        </button>
+    </div>
     @endif
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const loadMoreBtn = document.getElementById('load_more_btn');
+        if (loadMoreBtn) {
+            loadMoreBtn.addEventListener('click', function() {
+                const url = this.getAttribute('data-url');
+                if (!url) return;
+                
+                const originalText = this.innerText;
+                this.innerText = 'Loading...';
+                this.disabled = true;
+
+                fetch(url, {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('expiry_tbody').insertAdjacentHTML('beforeend', html);
+                    
+                    let currentUrl = new URL(url);
+                    let page = parseInt(currentUrl.searchParams.get('page'));
+                    currentUrl.searchParams.set('page', page + 1);
+                    
+                    if (html.trim() !== '') {
+                        this.setAttribute('data-url', currentUrl.toString());
+                        this.innerText = originalText;
+                        this.disabled = false;
+                    } else {
+                        document.getElementById('load_more_container').remove();
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    this.innerText = originalText;
+                    this.disabled = false;
+                });
+            });
+        }
+    });
+</script>
+@endpush

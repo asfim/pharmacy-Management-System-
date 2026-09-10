@@ -88,12 +88,19 @@ class ReportController extends Controller
     public function expiry(Request $request)
     {
         $days = $request->days ?? 90;
-        $batches = Batch::where('expiry_date', '<=', Carbon::now()->addDays($days))
-            ->where('quantity', '>', 0)
+        $batchesQuery = Batch::where('expiry_date', '<=', Carbon::now()->addDays($days))
+            ->where('quantity', '>', 0);
+            
+        $batches = (clone $batchesQuery)
             ->with('product')
             ->orderBy('expiry_date')
-            ->paginate(25);
-        $totalValue = $batches->sum(fn($b) => $b->quantity * $b->purchase_price);
+            ->paginate(10);
+
+        if ($request->ajax()) {
+            return view('admin.reports.partials.expiry_rows', compact('batches'))->render();
+        }
+
+        $totalValue = $batchesQuery->sum(DB::raw('quantity * purchase_price'));
         return view('admin.reports.expiry', compact('batches', 'days', 'totalValue'));
     }
 
