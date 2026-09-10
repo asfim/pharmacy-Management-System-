@@ -22,7 +22,11 @@ class ReportController extends Controller
 
         $sales = Sale::with('customer')
             ->whereBetween('created_at', [$from, $to])
-            ->latest()->paginate(20);
+            ->latest()->paginate(10);
+
+        if ($request->ajax()) {
+            return view('admin.reports.partials.sales_rows', compact('sales'))->render();
+        }
 
         $totalSales    = Sale::whereBetween('created_at', [$from, $to])->sum('total');
         $totalDiscount = Sale::whereBetween('created_at', [$from, $to])->sum('discount');
