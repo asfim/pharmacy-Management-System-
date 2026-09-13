@@ -308,5 +308,29 @@
         <button type="submit" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-semibold py-3 px-6 rounded-xl transition shadow-sm text-sm">Update Medicine</button>
     </div>
 </div>
+</div>
 </form>
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const mrpInput = document.querySelector('input[name="mrp"]');
+    const discountInput = document.querySelector('input[name="discount"]');
+    const salePriceInput = document.querySelector('input[name="sale_price"]');
+
+    function calculateSalePrice() {
+        const mrp = parseFloat(mrpInput.value) || 0;
+        const discount = parseFloat(discountInput.value) || 0;
+        
+        if (mrp > 0 && discount >= 0) {
+            const salePrice = mrp - (mrp * discount / 100);
+            salePriceInput.value = salePrice.toFixed(2);
+        }
+    }
+
+    mrpInput.addEventListener('input', calculateSalePrice);
+    discountInput.addEventListener('input', calculateSalePrice);
+});
+</script>
+@endpush
 @endsection
