@@ -8,6 +8,11 @@
         <p class="text-sm text-slate-500">Current inventory levels for all active medicines</p>
     </div>
     <div class="flex flex-wrap gap-2">
+        <a href="{{ route('admin.stock-transfers.index') }}"
+           class="inline-flex items-center gap-2 bg-emerald-100 hover:bg-emerald-200 text-emerald-800 text-sm font-semibold px-4 py-2 rounded-xl transition">
+            <i class="fas fa-right-left text-xs"></i>
+            Stock Transfers
+        </a>
         <a href="{{ route('admin.stock.low') }}"
            class="inline-flex items-center gap-2 bg-orange-100 hover:bg-orange-200 text-orange-700 text-sm font-semibold px-4 py-2 rounded-xl transition">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

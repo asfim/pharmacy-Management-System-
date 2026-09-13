@@ -109,6 +109,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::get('stock/low', [LowStockController::class, 'index'])->name('stock.low');
     Route::get('stock/expiry', [ExpiryController::class, 'index'])->name('stock.expiry');
     Route::resource('stock-adjustments', StockAdjustmentController::class);
+    Route::get('stock-transfers/branch-products', [StockTransferController::class, 'getBranchProducts'])->name('stock-transfers.branch-products');
     Route::resource('stock-transfers', StockTransferController::class);
     Route::post('stock-transfers/{transfer}/approve', [StockTransferController::class, 'approve'])->name('stock-transfers.approve');
     Route::resource('damages', DamageController::class);

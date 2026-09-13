@@ -93,12 +93,27 @@ class StockTransfer extends Model
         });
     }
 
+	public function sourceBranch()
+	{
+		return $this->belongsTo(Branch::class, 'source_branch_id');
+	}
+
+	public function destinationBranch()
+	{
+		return $this->belongsTo(Branch::class, 'destination_branch_id');
+	}
+
 	public function branch()
 	{
 		return $this->belongsTo(Branch::class, 'source_branch_id');
 	}
 
 	public function stock_transfer_items()
+	{
+		return $this->hasMany(StockTransferItem::class, 'transfer_id');
+	}
+
+	public function items()
 	{
 		return $this->hasMany(StockTransferItem::class, 'transfer_id');
 	}
