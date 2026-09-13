@@ -29,6 +29,7 @@ class MedicineController extends Controller
             'generics'      => Generic::all(),
             'manufacturers' => Manufacturer::all(),
             'units'         => Unit::all(),
+            'branches'      => \App\Models\Branch::where('status', 'active')->orderBy('name')->get(),
             'medicineTypes' => [
                 'Tablet', 'Capsule', 'Syrup', 'Injection', 'Cream', 'Ointment',
                 'Drops', 'Inhaler', 'Spray', 'Powder', 'Suspension', 'Suppository',
@@ -45,7 +46,16 @@ class MedicineController extends Controller
             $perPage = 50;
         }
 
-        $query = Product::with(['category', 'brand', 'generic', 'manufacturer', 'product_images']);
+        $selectedBranchId = session('selected_branch_id', auth()->user()->branch_id ?? 1);
+
+        $stockSub = \App\Models\StockBalance::withoutGlobalScopes()
+            ->selectRaw('COALESCE(SUM(qty_on_hand), 0)')
+            ->whereColumn('product_id', 'products.id')
+            ->where('branch_id', $selectedBranchId);
+
+        $query = Product::select('products.*')
+            ->selectSub($stockSub, 'branch_stock')
+            ->with(['category', 'brand', 'generic', 'manufacturer', 'product_images']);
 
         if ($search = $request->get('search')) {
             $query->where(function ($q) use ($search) {
@@ -114,24 +124,31 @@ class MedicineController extends Controller
                 ]);
             }
 
-            $batch = Batch::create([
-                'product_id'     => $product->id,
-                'batch_no'       => 'B' . sprintf('%05d', rand(100, 99999)),
-                'expiry_date'    => now()->addMonths(24)->format('Y-m-d'),
-                'purchase_price' => $product->purchase_price,
-                'sale_price'     => $product->sale_price,
-                'mrp'            => $product->mrp ?: $product->sale_price,
-                'quantity'       => 100,
-                'status'         => 'active',
-            ]);
+            $initialStock = (int) ($request->initial_stock ?? 0);
+            $batchNo      = $request->filled('batch_no') ? $request->batch_no : ('B' . sprintf('%05d', rand(100, 99999)));
+            $expiryDate   = $request->filled('expiry_date') ? $request->expiry_date : now()->addMonths(24)->format('Y-m-d');
 
-            \App\Models\StockBalance::withoutGlobalScopes()->updateOrCreate([
-                'branch_id'  => 1,
-                'product_id' => $product->id,
-                'batch_id'   => $batch->id,
-            ], [
-                'qty_on_hand' => 100
-            ]);
+            if ($initialStock >= 0) {
+                $batch = Batch::create([
+                    'product_id'     => $product->id,
+                    'batch_no'       => $batchNo,
+                    'expiry_date'    => $expiryDate,
+                    'purchase_price' => $product->purchase_price,
+                    'sale_price'     => $product->sale_price,
+                    'mrp'            => $product->mrp ?: $product->sale_price,
+                    'quantity'       => $initialStock,
+                    'status'         => 'active',
+                ]);
+
+                $branchId = $request->branch_id ?: session('selected_branch_id', auth()->user()->branch_id ?? 1);
+                \App\Models\StockBalance::withoutGlobalScopes()->updateOrCreate([
+                    'branch_id'  => $branchId,
+                    'product_id' => $product->id,
+                    'batch_id'   => $batch->id,
+                ], [
+                    'qty_on_hand' => $initialStock
+                ]);
+            }
 
             DB::commit();
 
@@ -150,7 +167,7 @@ class MedicineController extends Controller
 
     public function edit(Product $medicine)
     {
-        $medicine->load('product_images');
+        $medicine->load(['product_images', 'batches']);
         return view('admin.medicines.edit', array_merge(['medicine' => $medicine], $this->getFormData()));
     }
 
@@ -172,7 +189,69 @@ class MedicineController extends Controller
             );
         }
 
-        return redirect()->route('admin.medicines.index')->with('success', 'Medicine updated successfully.');
+        $currentBranchId = session('selected_branch_id', auth()->user()->branch_id ?? 1);
+
+        if ($request->has('batches')) {
+            foreach ($request->batches as $batchId => $batchData) {
+                $b = Batch::where('id', $batchId)->where('product_id', $medicine->id)->first();
+                if ($b) {
+                    if (!empty($batchData['expiry_date'])) {
+                        $b->expiry_date = $batchData['expiry_date'];
+                        $b->save();
+                    }
+
+                    if (isset($batchData['branch_qty']) && $batchData['branch_qty'] !== '') {
+                        $newQty = max(0, (int)$batchData['branch_qty']);
+                        
+                        $updated = \App\Models\StockBalance::withoutGlobalScopes()
+                            ->where('branch_id', $currentBranchId)
+                            ->where('product_id', $medicine->id)
+                            ->where('batch_id', $b->id)
+                            ->update(['qty_on_hand' => $newQty]);
+
+                        if (!$updated) {
+                            \App\Models\StockBalance::withoutGlobalScopes()->create([
+                                'branch_id'   => $currentBranchId,
+                                'product_id'  => $medicine->id,
+                                'batch_id'    => $b->id,
+                                'qty_on_hand' => $newQty,
+                            ]);
+                        }
+                    }
+                }
+            }
+        }
+
+        if ($request->filled('new_branch_qty') || $request->filled('new_batch_no') || $request->filled('new_expiry_date')) {
+            $newQty = max(0, (int)($request->new_branch_qty ?? 0));
+            $batchNo = $request->filled('new_batch_no') ? $request->new_batch_no : ('B' . sprintf('%05d', rand(100, 99999)));
+            $expiryDate = $request->filled('new_expiry_date') ? $request->new_expiry_date : now()->addMonths(24)->format('Y-m-d');
+            $targetBranchId = $request->new_branch_id ?: $currentBranchId;
+
+            $newBatch = Batch::create([
+                'product_id'     => $medicine->id,
+                'batch_no'       => $batchNo,
+                'expiry_date'    => $expiryDate,
+                'purchase_price' => $medicine->purchase_price,
+                'sale_price'     => $medicine->sale_price,
+                'mrp'            => $medicine->mrp ?: $medicine->sale_price,
+                'quantity'       => $newQty,
+                'status'         => 'active',
+            ]);
+
+            \App\Models\StockBalance::withoutGlobalScopes()->updateOrCreate(
+                [
+                    'branch_id'  => $targetBranchId,
+                    'product_id' => $medicine->id,
+                    'batch_id'   => $newBatch->id,
+                ],
+                [
+                    'qty_on_hand' => $newQty
+                ]
+            );
+        }
+
+        return redirect()->route('admin.medicines.index')->with('success', 'Medicine and batch stock updated successfully.');
     }
 
     public function destroy(Product $medicine)
@@ -300,8 +379,9 @@ class MedicineController extends Controller
                     'status'         => 'active',
                 ]);
 
+                $branchId = session('selected_branch_id', auth()->user()->branch_id ?? 1);
                 \App\Models\StockBalance::withoutGlobalScopes()->updateOrCreate([
-                    'branch_id'  => 1,
+                    'branch_id'  => $branchId,
                     'product_id' => $product->id,
                     'batch_id'   => $batch->id,
                 ], [

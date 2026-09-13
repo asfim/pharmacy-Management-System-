@@ -105,6 +105,7 @@
                     <th class="px-4 py-3.5 sortable">Generic</th>
                     {{-- <th class="px-4 py-3.5 sortable">Manufacturer</th> --}}
                     <th class="px-4 py-3.5 sortable">Category</th>
+                    <th class="px-4 py-3.5 sortable">Stock</th>
                     <th class="px-4 py-3.5 sortable">Sale Price</th>
                     <th class="px-4 py-3.5 sortable">Rx</th>
                     <th class="px-4 py-3.5 sortable">Status</th>

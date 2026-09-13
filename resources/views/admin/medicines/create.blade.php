@@ -166,6 +166,49 @@
             </div>
         </div>
 
+        <!-- Opening Stock & Batch -->
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+            <h3 class="text-base font-semibold text-slate-800 mb-4 pb-2 border-b border-slate-100 flex items-center justify-between">
+                <span>Opening Stock</span>
+                @if(auth()->user()->hasRole('Super Admin'))
+                    <span class="text-xs font-semibold px-2 py-0.5 bg-purple-50 text-purple-700 rounded-full border border-purple-200">
+                        Super Admin Mode
+                    </span>
+                @else
+                    <span class="text-xs font-semibold px-2 py-0.5 bg-teal-50 text-teal-700 rounded-full border border-teal-200">
+                        {{ auth()->user()->branch->name ?? 'Active Branch' }}
+                    </span>
+                @endif
+            </h3>
+            <div class="space-y-4">
+                @if(auth()->user()->hasRole('Super Admin'))
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Assign Stock To Branch *</label>
+                    <select name="branch_id" class="w-full px-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-teal-500 focus:border-teal-500">
+                        @foreach($branches as $br)
+                            <option value="{{ $br->id }}" {{ old('branch_id', session('selected_branch_id', 1)) == $br->id ? 'selected' : '' }}>
+                                {{ $br->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                @endif
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Opening Stock Quantity</label>
+                    <input type="number" name="initial_stock" value="{{ old('initial_stock', 0) }}" min="0" placeholder="e.g. 100" class="w-full px-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-teal-500 focus:border-teal-500">
+                    <p class="mt-1 text-xs text-slate-400">Initial stock quantity for selected branch.</p>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Batch Number</label>
+                    <input type="text" name="batch_no" value="{{ old('batch_no') }}" placeholder="Auto-generated if empty" class="w-full px-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-teal-500 focus:border-teal-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Expiry Date</label>
+                    <input type="date" name="expiry_date" value="{{ old('expiry_date') }}" class="w-full px-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-teal-500 focus:border-teal-500">
+                </div>
+            </div>
+        </div>
+
         <!-- Image -->
         <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
             <h3 class="text-base font-semibold text-slate-800 mb-4 pb-2 border-b border-slate-100">Product Image</h3>

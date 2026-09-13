@@ -37,6 +37,21 @@
     <td class="px-4 py-3 text-slate-600">{{ $item->generic->name ?? '-' }}</td>
     {{-- <td class="px-4 py-3 text-slate-600">{{ $item->manufacturer->company_name ?? $item->brand->name ?? '-' }}</td> --}}
     <td class="px-4 py-3 text-slate-600">{{ $item->category->name ?? '-' }}</td>
+    <td class="px-4 py-3 font-semibold">
+        @if(($item->branch_stock ?? 0) > 10)
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">
+                {{ number_format($item->branch_stock) }} Pcs
+            </span>
+        @elseif(($item->branch_stock ?? 0) > 0)
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800">
+                {{ number_format($item->branch_stock) }} Pcs
+            </span>
+        @else
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-100 text-rose-800">
+                0 (Out of Stock)
+            </span>
+        @endif
+    </td>
     <td class="px-4 py-3 font-semibold text-slate-800">৳ {{ number_format($item->sale_price, 2) }}</td>
     <td class="px-4 py-3">
         @if($item->prescription_required)

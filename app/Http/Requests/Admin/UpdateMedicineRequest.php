@@ -40,6 +40,12 @@ class UpdateMedicineRequest extends FormRequest
             'prescription_required' => 'nullable|boolean',
             'description'           => 'nullable|string',
             'status'                => 'required|in:active,inactive',
+            'batches'               => 'nullable|array',
+            'batches.*.expiry_date' => 'nullable|date',
+            'batches.*.branch_qty'  => 'nullable|integer|min:0',
+            'new_batch_no'          => 'nullable|string|max:100',
+            'new_expiry_date'       => 'nullable|date',
+            'new_branch_qty'        => 'nullable|integer|min:0',
             'image'                 => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ];
     }
