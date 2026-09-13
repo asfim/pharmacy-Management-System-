@@ -36,13 +36,25 @@
 @endpush
 
 @section('content')
+@php
+    $selectedBranchId = session('selected_branch_id');
+    $currentBranch = ($selectedBranchId && $selectedBranchId !== 'all') 
+        ? \App\Models\Branch::find($selectedBranchId) 
+        : (auth()->user()->employee->branch ?? auth()->user()->branch ?? \App\Models\Branch::first());
+@endphp
+
 <div class="flex gap-5 h-[calc(100vh-9rem)]">
 
     <!-- ========== LEFT: Search & Products ========== -->
     <div class="flex-1 flex flex-col min-w-0">
 
-        <!-- Search Bar -->
+        <!-- Search Bar & Branch Badge -->
         <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 mb-4">
+            <div class="mb-3 flex items-center justify-between">
+                <div class="inline-flex items-center gap-2 px-3 py-1 bg-teal-50 border border-teal-200/80 rounded-xl text-teal-800 text-xs font-semibold">
+                    <i class="fas fa-store text-teal-600"></i> POS Branch: <span class="font-bold text-teal-900">{{ $currentBranch->name ?? 'Main Branch' }}</span>
+                </div>
+            </div>
             <div class="flex gap-3">
                 <div class="flex-1 relative">
                     <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>

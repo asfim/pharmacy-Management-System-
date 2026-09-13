@@ -71,9 +71,14 @@ class PosController extends Controller
             $total    = $subtotal - $discount + $tax;
             $paid     = $request->paid ?? 0;
 
+            $selectedBranchId = session('selected_branch_id');
+            $branchId = ($selectedBranchId && $selectedBranchId !== 'all') 
+                ? $selectedBranchId 
+                : (auth()->user()->employee->branch_id ?? auth()->user()->branch_id ?? 1);
+
             $sale = Sale::create([
                 'invoice_no'     => 'INV-' . date('Ymd') . '-' . str_pad(Sale::whereDate('created_at', today())->count() + 1, 4, '0', STR_PAD_LEFT),
-                'branch_id'      => auth()->user()->branch_id ?? 1,
+                'branch_id'      => $branchId,
                 'customer_id'    => $request->customer_id ?: null,
                 'subtotal'       => $subtotal,
                 'discount'       => $discount,
