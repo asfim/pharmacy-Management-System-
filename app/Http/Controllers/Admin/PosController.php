@@ -82,8 +82,15 @@ class PosController extends Controller
                 $branchId = $userBranchId ?: 1;
             }
 
+            $todayCount = Sale::withoutGlobalScopes()->whereDate('created_at', today())->count() + 1;
+            $invoiceNo = 'INV-' . date('Ymd') . '-' . str_pad($todayCount, 4, '0', STR_PAD_LEFT);
+            while (Sale::withoutGlobalScopes()->where('invoice_no', $invoiceNo)->exists()) {
+                $todayCount++;
+                $invoiceNo = 'INV-' . date('Ymd') . '-' . str_pad($todayCount, 4, '0', STR_PAD_LEFT);
+            }
+
             $sale = Sale::create([
-                'invoice_no'     => 'INV-' . date('Ymd') . '-' . str_pad(Sale::whereDate('created_at', today())->count() + 1, 4, '0', STR_PAD_LEFT),
+                'invoice_no'     => $invoiceNo,
                 'branch_id'      => $branchId,
                 'customer_id'    => $request->customer_id ?: null,
                 'subtotal'       => $subtotal,
