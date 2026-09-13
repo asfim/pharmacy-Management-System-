@@ -147,8 +147,15 @@
         <!-- Batches, Expiry Date & Branch Stock Card -->
         <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-4">
             @php
-                $activeBranchId   = session('selected_branch_id', auth()->user()->branch_id ?? 1);
-                $activeBranchName = \App\Models\Branch::where('id', $activeBranchId)->value('name') ?? 'Active Branch';
+                $selectedBranchId = session('selected_branch_id');
+                $userBranchId     = auth()->user()->branch_id ?? null;
+                $activeBranchId   = (!empty($userBranchId) && !auth()->user()->hasRole('Super Admin'))
+                    ? $userBranchId
+                    : (($selectedBranchId && $selectedBranchId !== 'all') ? $selectedBranchId : null);
+
+                $activeBranchName = $activeBranchId
+                    ? (\App\Models\Branch::where('id', $activeBranchId)->value('name') ?? 'Active Branch')
+                    : 'All Branches';
             @endphp
             <div class="flex items-center justify-between pb-3 border-b border-slate-100 gap-2">
                 <div class="flex items-center gap-2">
@@ -167,10 +174,12 @@
                 <div class="space-y-3">
                     @foreach($medicine->batches as $b)
                         @php
-                            $branchStock = \App\Models\StockBalance::withoutGlobalScopes()
-                                ->where('batch_id', $b->id)
-                                ->where('branch_id', $activeBranchId)
-                                ->value('qty_on_hand') ?? 0;
+                            $stockQuery = \App\Models\StockBalance::withoutGlobalScopes()
+                                ->where('batch_id', $b->id);
+                            if ($activeBranchId) {
+                                $stockQuery->where('branch_id', $activeBranchId);
+                            }
+                            $branchStock = $stockQuery->sum('qty_on_hand');
                         @endphp
                         <div class="p-3.5 bg-slate-50/70 hover:bg-slate-50 border border-slate-200/80 hover:border-teal-300 rounded-xl transition-all duration-150 space-y-3">
                             <div class="flex items-center justify-between">

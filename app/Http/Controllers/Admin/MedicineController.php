@@ -46,12 +46,19 @@ class MedicineController extends Controller
             $perPage = 50;
         }
 
-        $selectedBranchId = session('selected_branch_id', auth()->user()->branch_id ?? 1);
+        $selectedBranchId = session('selected_branch_id');
+        $userBranchId     = auth()->user()->branch_id ?? null;
+        $activeBranchId   = (!empty($userBranchId) && !auth()->user()->hasRole('Super Admin'))
+            ? $userBranchId
+            : (($selectedBranchId && $selectedBranchId !== 'all') ? $selectedBranchId : null);
 
         $stockSub = \App\Models\StockBalance::withoutGlobalScopes()
             ->selectRaw('COALESCE(SUM(qty_on_hand), 0)')
-            ->whereColumn('product_id', 'products.id')
-            ->where('branch_id', $selectedBranchId);
+            ->whereColumn('product_id', 'products.id');
+
+        if ($activeBranchId) {
+            $stockSub->where('branch_id', $activeBranchId);
+        }
 
         $query = Product::select('products.*')
             ->selectSub($stockSub, 'branch_stock')

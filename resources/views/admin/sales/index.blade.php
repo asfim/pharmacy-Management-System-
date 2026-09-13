@@ -21,6 +21,7 @@
                     <th class="px-5 py-4 text-right">Paid</th>
                     <th class="px-5 py-4 text-right">Due</th>
                     <th class="px-5 py-4 text-left">Payment</th>
+                    <th class="px-5 py-4 text-center">Status</th>
                     <th class="px-5 py-4 text-right">Actions</th>
                 </tr>
             </thead>
@@ -39,6 +40,17 @@
                     <td class="px-5 py-3.5 text-right text-green-600">৳{{ number_format($s->paid, 2) }}</td>
                     <td class="px-5 py-3.5 text-right {{ $s->due > 0 ? 'text-red-600 font-semibold' : 'text-slate-400' }}">৳{{ number_format($s->due, 2) }}</td>
                     <td class="px-5 py-3.5 text-slate-600 capitalize">{{ $s->sale_payments->first()->method ?? '-' }}</td>
+                    <td class="px-5 py-3.5 text-center">
+                        @if($s->status === 'returned')
+                            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-700 border border-rose-200">
+                                <i class="fas fa-undo text-[10px]"></i> Returned
+                            </span>
+                        @else
+                            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700 border border-emerald-200">
+                                <i class="fas fa-check text-[10px]"></i> Completed
+                            </span>
+                        @endif
+                    </td>
                     <td class="px-5 py-3.5 text-right">
                         <div class="flex justify-end gap-1">
                             <a href="{{ route('admin.sales.invoice', $s) }}" class="p-2 text-green-600 bg-green-50 hover:bg-green-100 rounded-lg" title="Invoice"><i class="fas fa-print text-xs"></i></a>
