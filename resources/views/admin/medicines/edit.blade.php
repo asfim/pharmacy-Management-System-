@@ -171,72 +171,109 @@
             </div>
 
             @if($medicine->batches->count() > 0)
-                <div class="space-y-3">
+                <div class="space-y-4">
                     @foreach($medicine->batches as $b)
-                        @php
-                            $stockQuery = \App\Models\StockBalance::withoutGlobalScopes()
-                                ->where('batch_id', $b->id);
-                            if ($activeBranchId) {
-                                $stockQuery->where('branch_id', $activeBranchId);
-                            }
-                            $branchStock = $stockQuery->sum('qty_on_hand');
-                        @endphp
-                        <div class="p-3.5 bg-slate-50/70 hover:bg-slate-50 border border-slate-200/80 hover:border-teal-300 rounded-xl transition-all duration-150 space-y-3">
-                            <div class="flex items-center justify-between">
+                        <div class="p-4 bg-slate-50/90 border border-slate-200/90 rounded-2xl space-y-3 shadow-2xs hover:border-teal-300 transition">
+                            <!-- Batch Header -->
+                            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200/60 pb-3">
                                 <div class="flex items-center gap-2">
-                                    <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Batch:</span>
-                                    <span class="font-mono text-xs font-bold text-slate-800 bg-white px-2 py-0.5 border border-slate-200 rounded-md shadow-2xs">
+                                    <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Batch:</span>
+                                    <span class="font-mono text-xs font-extrabold text-slate-800 bg-white px-3 py-1 border border-slate-200 rounded-lg shadow-2xs">
                                         {{ $b->batch_no }}
                                     </span>
+                                    <span class="text-xs text-slate-500 font-medium">
+                                        (Exp: {{ $b->expiry_date ? \Carbon\Carbon::parse($b->expiry_date)->format('d M Y') : 'N/A' }})
+                                    </span>
                                 </div>
-                                <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold {{ $branchStock > 10 ? 'bg-emerald-100 text-emerald-800' : ($branchStock > 0 ? 'bg-amber-100 text-amber-800' : 'bg-rose-100 text-rose-800') }}">
-                                    <i class="fas fa-cubes text-[10px]"></i> {{ number_format($branchStock) }} Pcs
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-teal-100 text-teal-800 border border-teal-200">
+                                    <i class="fas fa-boxes-stacked text-[10px]"></i> Total Stock: {{ number_format($b->quantity) }} Pcs
                                 </span>
                             </div>
 
-                            <div class="grid grid-cols-2 gap-3 pt-1">
-                                <div>
-                                    <label class="block text-[11px] font-semibold text-slate-600 mb-1">
-                                        <i class="far fa-calendar-alt text-teal-600 mr-1"></i> Expiry Date
-                                    </label>
-                                    <input type="date" 
-                                           name="batches[{{ $b->id }}][expiry_date]" 
-                                           value="{{ $b->expiry_date ? \Carbon\Carbon::parse($b->expiry_date)->format('Y-m-d') : '' }}" 
-                                           class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg text-xs bg-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500 font-medium">
+                            <!-- Expiry Date Field -->
+                            <div class="max-w-xs">
+                                <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-600 mb-1">
+                                    <i class="far fa-calendar-alt text-teal-600 mr-1"></i> Expiry Date
+                                </label>
+                                <input type="date"
+                                       name="batches[{{ $b->id }}][expiry_date]"
+                                       value="{{ $b->expiry_date ? \Carbon\Carbon::parse($b->expiry_date)->format('Y-m-d') : '' }}"
+                                       class="w-full px-3 py-1.5 border border-slate-300 rounded-xl text-xs bg-white font-medium focus:ring-2 focus:ring-teal-500">
+                            </div>
+
+                            <!-- Branch Name Wise Stock Allocation Grid -->
+                            <div class="space-y-2 pt-2 border-t border-slate-200/60">
+                                <div class="flex items-center justify-between">
+                                    <p class="text-[11px] font-bold text-slate-700 uppercase tracking-wider">
+                                        <i class="fas fa-store text-teal-600 mr-1"></i> Stock by Branch Name (ব্রাঞ্চ নাম অনুযায়ী স্টক):
+                                    </p>
                                 </div>
-                                <div>
-                                    <label class="block text-[11px] font-semibold text-slate-600 mb-1">
-                                        <i class="fas fa-layer-group text-teal-600 mr-1"></i> Stock (Pcs)
-                                    </label>
-                                    <div class="relative">
-                                        <input type="number" 
-                                               name="batches[{{ $b->id }}][branch_qty]" 
-                                               value="{{ $branchStock }}" 
-                                               min="0" 
-                                               class="w-full pl-2.5 pr-8 py-1.5 border border-slate-300 rounded-lg text-xs text-right font-bold text-slate-800 bg-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
-                                        <span class="absolute right-2.5 top-1.5 text-[11px] font-semibold text-slate-400">Pcs</span>
-                                    </div>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    @foreach($branches as $branch)
+                                        @php
+                                            $brQty = (int)\App\Models\StockBalance::withoutGlobalScopes()
+                                                ->where('product_id', $medicine->id)
+                                                ->where('batch_id', $b->id)
+                                                ->where('branch_id', $branch->id)
+                                                ->sum('qty_on_hand');
+                                        @endphp
+                                        <div class="p-3.5 bg-white rounded-2xl border border-slate-200 shadow-2xs space-y-2.5 hover:border-teal-400 transition">
+                                            <div class="flex items-center justify-between gap-2 border-b border-slate-100 pb-2">
+                                                <div class="flex items-center gap-2">
+                                                    <div class="w-7 h-7 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center text-xs flex-shrink-0 font-bold">
+                                                        <i class="fas fa-building"></i>
+                                                    </div>
+                                                    <h5 class="text-xs font-black text-slate-800 tracking-tight">
+                                                        {{ $branch->name }}
+                                                    </h5>
+                                                </div>
+
+                                            </div>
+                                            <div>
+                                                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                                                    Branch Stock (স্টক পরিমাণ)
+                                                </label>
+                                                <div class="relative">
+                                                    <input type="number"
+                                                           name="batch_branch_stocks[{{ $b->id }}][{{ $branch->id }}]"
+                                                           value="{{ $brQty }}"
+                                                           min="0"
+                                                           class="w-full pl-3 pr-9 py-2 border border-slate-300 rounded-xl text-sm font-black text-right text-slate-800 bg-slate-50/50 focus:bg-white focus:ring-2 focus:ring-teal-500">
+                                                    <span class="absolute right-3 top-2.5 text-xs font-bold text-slate-400">Pcs</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
                                 </div>
                             </div>
                         </div>
                     @endforeach
                 </div>
             @else
-                <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
-                    <p class="text-xs font-semibold text-slate-600">No batches exist. Add initial batch for <strong>{{ $activeBranchName }}</strong>:</p>
+                <div class="p-4 bg-slate-50 border border-slate-200 rounded-2xl space-y-3">
+                    <p class="text-xs font-semibold text-slate-600">No batches exist yet. Add initial batch:</p>
                     <div class="space-y-2.5">
                         <div>
                             <label class="block text-[11px] font-semibold text-slate-600 mb-1">Batch Number</label>
-                            <input type="text" name="new_batch_no" placeholder="Auto-generated if empty" class="w-full px-3 py-1.5 border border-slate-300 rounded-lg text-xs font-mono bg-white">
+                            <input type="text" name="new_batch_no" placeholder="Auto-generated if empty" class="w-full px-3 py-1.5 border border-slate-300 rounded-xl text-xs font-mono bg-white">
                         </div>
                         <div>
                             <label class="block text-[11px] font-semibold text-slate-600 mb-1">Expiry Date</label>
-                            <input type="date" name="new_expiry_date" class="w-full px-3 py-1.5 border border-slate-300 rounded-lg text-xs bg-white">
+                            <input type="date" name="new_expiry_date" class="w-full px-3 py-1.5 border border-slate-300 rounded-xl text-xs bg-white">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-600 mb-1">Target Branch</label>
+                            <select name="new_branch_id" class="w-full px-3 py-1.5 border border-slate-300 rounded-xl text-xs font-semibold bg-white">
+                                @foreach($branches as $br)
+                                    <option value="{{ $br->id }}">{{ $br->name }}</option>
+                                @endforeach
+                            </select>
                         </div>
                         <div>
                             <label class="block text-[11px] font-semibold text-slate-600 mb-1">Initial Stock (Pcs)</label>
                             <div class="relative">
-                                <input type="number" name="new_branch_qty" value="0" min="0" class="w-full pl-3 pr-8 py-1.5 border border-slate-300 rounded-lg text-xs text-right font-bold bg-white">
+                                <input type="number" name="new_branch_qty" value="0" min="0" class="w-full pl-3 pr-8 py-1.5 border border-slate-300 rounded-xl text-xs text-right font-bold bg-white">
                                 <span class="absolute right-2.5 top-1.5 text-[11px] font-semibold text-slate-400">Pcs</span>
                             </div>
                         </div>
@@ -256,8 +293,8 @@
             @if($imgUrl)
                 <div class="mb-4">
                     <p class="text-xs font-medium text-slate-500 mb-1.5">Current Medicine Image:</p>
-                    <img src="{{ $imgUrl }}" 
-                         alt="{{ $medicine->name }}" 
+                    <img src="{{ $imgUrl }}"
+                         alt="{{ $medicine->name }}"
                          onclick="openImagePreview('{{ $imgUrl }}', '{{ addslashes($medicine->name) }}')"
                          title="Click to view large image"
                          class="h-28 w-28 object-cover rounded-xl border border-slate-200 shadow-sm cursor-pointer hover:scale-105 hover:ring-2 hover:ring-teal-500 transition-all duration-150">

@@ -371,12 +371,131 @@
                 <!-- Right side -->
                 <div class="flex items-center gap-2">
 
-                    <!-- Notification -->
-                    <button class="relative p-2 rounded-lg text-slate-500 hover:bg-slate-100 transition">
-                        <i class="fas fa-bell" style="font-size:17px;"></i>
-                        <span
-                            class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
-                    </button>
+                    <!-- Real-Time Notification & Stock/Expiry Alerts Dropdown -->
+                    <div class="relative" x-data="{ notificationOpen: false }">
+                        <button @click="notificationOpen = !notificationOpen" 
+                                class="relative p-2.5 rounded-xl text-slate-500 hover:bg-slate-100 hover:text-slate-800 transition focus:outline-none"
+                                title="Notifications & Stock Alerts">
+                            <i class="fas fa-bell text-lg"></i>
+                            @if(($totalAlertCount ?? 0) > 0)
+                                <span class="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-rose-600 text-[10px] font-extrabold text-white shadow-sm ring-2 ring-white animate-pulse">
+                                    {{ $totalAlertCount > 99 ? '99+' : $totalAlertCount }}
+                                </span>
+                            @endif
+                        </button>
+
+                        <!-- Dropdown Panel -->
+                        <div x-show="notificationOpen" 
+                             @click.outside="notificationOpen = false" 
+                             x-cloak 
+                             x-transition:enter="transition ease-out duration-150"
+                             x-transition:enter-start="opacity-0 scale-95"
+                             x-transition:enter-end="opacity-100 scale-100"
+                             x-transition:leave="transition ease-in duration-100"
+                             x-transition:leave-start="opacity-100 scale-100"
+                             x-transition:leave-end="opacity-0 scale-95"
+                             class="absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-3xl shadow-2xl border border-slate-200/90 z-50 overflow-hidden">
+
+                            <!-- Header -->
+                            <div class="px-5 py-4 bg-slate-900 text-white flex items-center justify-between border-b border-slate-800">
+                                <div class="flex items-center gap-2.5">
+                                    <div class="w-8 h-8 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center text-sm font-bold border border-rose-500/30">
+                                        <i class="fas fa-bell"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-sm font-bold text-white">System Notifications</h4>
+                                        <p class="text-[11px] text-slate-400">Stock & Expiry Alerts</p>
+                                    </div>
+                                </div>
+                                <span class="px-2.5 py-1 rounded-full bg-rose-500/20 text-rose-300 text-xs font-bold border border-rose-500/30">
+                                    {{ $totalAlertCount ?? 0 }} Alerts
+                                </span>
+                            </div>
+
+                            <!-- List Container -->
+                            <div class="max-h-96 overflow-y-auto divide-y divide-slate-100">
+                                @if(($totalAlertCount ?? 0) === 0)
+                                    <div class="p-8 text-center bg-slate-50/50">
+                                        <div class="w-12 h-12 mx-auto mb-2 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl shadow-xs">
+                                            <i class="fas fa-shield-check"></i>
+                                        </div>
+                                        <h5 class="text-xs font-bold text-slate-700">All Systems Normal!</h5>
+                                        <p class="text-[11px] text-slate-400 mt-0.5">No low stock items or expired medicine batches found.</p>
+                                    </div>
+                                @else
+                                    <!-- 1. Expired Medicine Alerts -->
+                                    @foreach($expiredBatches ?? [] as $b)
+                                        <a href="{{ route('admin.stock.expiry') }}" class="p-3.5 hover:bg-rose-50/70 transition flex items-start gap-3 group">
+                                            <div class="w-8 h-8 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center flex-shrink-0 text-xs mt-0.5 group-hover:bg-rose-600 group-hover:text-white transition">
+                                                <i class="fas fa-calendar-xmark"></i>
+                                            </div>
+                                            <div class="flex-1 min-w-0">
+                                                <div class="flex items-center justify-between gap-2">
+                                                    <p class="text-xs font-extrabold text-slate-800 truncate group-hover:text-rose-700 transition">
+                                                        {{ $b->product->name ?? 'Unknown Medicine' }}
+                                                    </p>
+                                                    <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-rose-100 text-rose-800 uppercase flex-shrink-0">Expired</span>
+                                                </div>
+                                                <p class="text-[11px] text-slate-500 mt-0.5">
+                                                    Batch: <strong class="font-mono text-slate-700">{{ $b->batch_no }}</strong> • Expired {{ \Carbon\Carbon::parse($b->expiry_date)->format('d M Y') }}
+                                                </p>
+                                            </div>
+                                        </a>
+                                    @endforeach
+
+                                    <!-- 2. Low Stock Alerts -->
+                                    @foreach($lowStockProducts ?? [] as $p)
+                                        <a href="{{ route('admin.stock.low') }}" class="p-3.5 hover:bg-amber-50/70 transition flex items-start gap-3 group">
+                                            <div class="w-8 h-8 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center flex-shrink-0 text-xs mt-0.5 group-hover:bg-amber-600 group-hover:text-white transition">
+                                                <i class="fas fa-triangle-exclamation"></i>
+                                            </div>
+                                            <div class="flex-1 min-w-0">
+                                                <div class="flex items-center justify-between gap-2">
+                                                    <p class="text-xs font-extrabold text-slate-800 truncate group-hover:text-amber-800 transition">
+                                                        {{ $p->name }}
+                                                    </p>
+                                                    <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 uppercase flex-shrink-0">Low Stock</span>
+                                                </div>
+                                                <p class="text-[11px] text-slate-500 mt-0.5">
+                                                    Stock running out! Minimum required: <strong class="text-slate-700">{{ $p->min_stock }} Pcs</strong>
+                                                </p>
+                                            </div>
+                                        </a>
+                                    @endforeach
+
+                                    <!-- 3. Near Expiry Alerts -->
+                                    @foreach($nearExpiryBatches ?? [] as $b)
+                                        <a href="{{ route('admin.stock.expiry') }}" class="p-3.5 hover:bg-orange-50/70 transition flex items-start gap-3 group">
+                                            <div class="w-8 h-8 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center flex-shrink-0 text-xs mt-0.5 group-hover:bg-orange-600 group-hover:text-white transition">
+                                                <i class="fas fa-hourglass-half"></i>
+                                            </div>
+                                            <div class="flex-1 min-w-0">
+                                                <div class="flex items-center justify-between gap-2">
+                                                    <p class="text-xs font-extrabold text-slate-800 truncate group-hover:text-orange-700 transition">
+                                                        {{ $b->product->name ?? 'Unknown Medicine' }}
+                                                    </p>
+                                                    <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-orange-100 text-orange-800 uppercase flex-shrink-0">Near Expiry</span>
+                                                </div>
+                                                <p class="text-[11px] text-slate-500 mt-0.5">
+                                                    Batch: <strong class="font-mono text-slate-700">{{ $b->batch_no }}</strong> • Expiring {{ \Carbon\Carbon::parse($b->expiry_date)->format('d M Y') }}
+                                                </p>
+                                            </div>
+                                        </a>
+                                    @endforeach
+                                @endif
+                            </div>
+
+                            <!-- Footer Links -->
+                            <div class="p-3 bg-slate-50 border-t border-slate-100 flex items-center justify-between text-xs font-bold">
+                                <a href="{{ route('admin.stock.low') }}" class="text-amber-700 hover:text-amber-900 transition flex items-center gap-1">
+                                    <i class="fas fa-boxes-stacked text-[11px]"></i> Low Stock Page
+                                </a>
+                                <a href="{{ route('admin.stock.expiry') }}" class="text-rose-600 hover:text-rose-800 transition flex items-center gap-1">
+                                    <i class="fas fa-clock-rotate-left text-[11px]"></i> Expiry Alerts Page
+                                </a>
+                            </div>
+                        </div>
+                    </div>
 
                     @if (auth()->check() && auth()->user()->hasRole('Super Admin'))
                         <!-- Branch Switcher -->

@@ -27,7 +27,7 @@
                     <th class="px-5 py-4 text-left">Medicine</th>
                     <th class="px-5 py-4 text-right">Current Stock</th>
                     <th class="px-5 py-4 text-right">Min Stock</th>
-                    <th class="px-5 py-4 text-right">Reorder Qty</th>
+                    {{-- <th class="px-5 py-4 text-right">Reorder Qty</th> --}}
                     <th class="px-5 py-4 text-center">Urgency</th>
                 </tr>
             </thead>
@@ -41,7 +41,7 @@
                     </td>
                     <td class="px-5 py-3.5 text-right font-bold {{ $qty == 0 ? 'text-red-600' : 'text-orange-600' }} text-lg">{{ $qty }}</td>
                     <td class="px-5 py-3.5 text-right text-slate-600">{{ $p->min_stock }}</td>
-                    <td class="px-5 py-3.5 text-right font-semibold text-blue-600">{{ max(0, $p->min_stock * 2 - $qty) }}</td>
+                    {{-- <td class="px-5 py-3.5 text-right font-semibold text-blue-600">{{ max(0, $p->min_stock - $qty) }}</td> --}}
                     <td class="px-5 py-3.5 text-center">
                         @if($qty == 0)
                         <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700">🔴 Critical</span>

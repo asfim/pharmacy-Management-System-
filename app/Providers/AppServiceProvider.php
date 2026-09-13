@@ -3,8 +3,13 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use App\Models\Batch;
+use App\Models\Product;
+use Carbon\Carbon;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,6 +28,65 @@ class AppServiceProvider extends ServiceProvider
     {
         Gate::before(function ($user, $ability) {
             return $user->hasRole('Super Admin') ? true : null;
+        });
+
+        // Share stock alert & notification metrics with admin layout header
+        View::composer('admin.layouts.app', function ($view) {
+            if (!Auth::check()) {
+                return;
+            }
+
+            try {
+                $today = Carbon::today();
+
+                // 1. Expired Batches (already expired)
+                $expiredBatches = Batch::with('product')
+                    ->where('expiry_date', '<', $today)
+                    ->where('quantity', '>', 0)
+                    ->latest('expiry_date')
+                    ->take(4)
+                    ->get();
+                $expiredCount = Batch::where('expiry_date', '<', $today)->where('quantity', '>', 0)->count();
+
+                // 2. Near Expiry Batches (within 60 days)
+                $nearExpiryBatches = Batch::with('product')
+                    ->whereBetween('expiry_date', [$today, $today->copy()->addDays(60)])
+                    ->where('quantity', '>', 0)
+                    ->orderBy('expiry_date')
+                    ->take(4)
+                    ->get();
+                $nearExpiryCount = Batch::whereBetween('expiry_date', [$today, $today->copy()->addDays(60)])->where('quantity', '>', 0)->count();
+
+                // 3. Low Stock Medicines (where total stock <= min_stock or no stock)
+                $lowStockProducts = Product::where('status', 'active')
+                    ->where(function($q) {
+                        $q->whereColumn('min_stock', '>=', DB::raw('(SELECT COALESCE(SUM(quantity), 0) FROM batches WHERE batches.product_id = products.id)'))
+                          ->orWhereDoesntHave('batches', fn($b) => $b->where('quantity', '>', 0));
+                    })
+                    ->take(4)
+                    ->get();
+
+                $lowStockCount = Product::where('status', 'active')
+                    ->where(function($q) {
+                        $q->whereColumn('min_stock', '>=', DB::raw('(SELECT COALESCE(SUM(quantity), 0) FROM batches WHERE batches.product_id = products.id)'))
+                          ->orWhereDoesntHave('batches', fn($b) => $b->where('quantity', '>', 0));
+                    })
+                    ->count();
+
+                $totalAlertCount = $expiredCount + $nearExpiryCount + $lowStockCount;
+
+                $view->with(compact(
+                    'expiredBatches',
+                    'expiredCount',
+                    'nearExpiryBatches',
+                    'nearExpiryCount',
+                    'lowStockProducts',
+                    'lowStockCount',
+                    'totalAlertCount'
+                ));
+            } catch (\Exception $e) {
+                // Safeguard against missing DB tables during setup
+            }
         });
     }
 }

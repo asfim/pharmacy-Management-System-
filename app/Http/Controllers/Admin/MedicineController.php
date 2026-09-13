@@ -196,44 +196,88 @@ class MedicineController extends Controller
             );
         }
 
-        $currentBranchId = session('selected_branch_id', auth()->user()->branch_id ?? 1);
-
-        if ($request->has('batches')) {
-            foreach ($request->batches as $batchId => $batchData) {
+        // 1. Handle Multi-Branch Stock Editing (Super Admin / All Branches mode)
+        if ($request->has('batch_branch_stocks')) {
+            foreach ($request->batch_branch_stocks as $batchId => $branchMap) {
                 $b = Batch::where('id', $batchId)->where('product_id', $medicine->id)->first();
-                if ($b) {
-                    if (!empty($batchData['expiry_date'])) {
-                        $b->expiry_date = $batchData['expiry_date'];
-                        $b->save();
-                    }
+                if (!$b) continue;
 
-                    if (isset($batchData['branch_qty']) && $batchData['branch_qty'] !== '') {
-                        $newQty = max(0, (int)$batchData['branch_qty']);
-                        
-                        $updated = \App\Models\StockBalance::withoutGlobalScopes()
-                            ->where('branch_id', $currentBranchId)
-                            ->where('product_id', $medicine->id)
-                            ->where('batch_id', $b->id)
-                            ->update(['qty_on_hand' => $newQty]);
+                if (!empty($request->batches[$batchId]['expiry_date'])) {
+                    $b->expiry_date = $request->batches[$batchId]['expiry_date'];
+                }
 
-                        if (!$updated) {
-                            \App\Models\StockBalance::withoutGlobalScopes()->create([
-                                'branch_id'   => $currentBranchId,
-                                'product_id'  => $medicine->id,
-                                'batch_id'    => $b->id,
-                                'qty_on_hand' => $newQty,
-                            ]);
-                        }
+                $totalQty = 0;
+                foreach ($branchMap as $branchId => $qtyVal) {
+                    $newQty = max(0, (int)$qtyVal);
+                    $totalQty += $newQty;
+
+                    $existingBalances = \App\Models\StockBalance::withoutGlobalScopes()
+                        ->where('branch_id', $branchId)
+                        ->where('product_id', $medicine->id)
+                        ->where('batch_id', $b->id)
+                        ->get();
+
+                    if ($existingBalances->count() > 1) {
+                        $first = $existingBalances->first();
+                        $first->update(['qty_on_hand' => $newQty]);
+                        $extraIds = $existingBalances->pluck('id')->slice(1);
+                        \App\Models\StockBalance::withoutGlobalScopes()->whereIn('id', $extraIds)->delete();
+                    } else {
+                        \App\Models\StockBalance::withoutGlobalScopes()->updateOrCreate([
+                            'branch_id'  => $branchId,
+                            'product_id' => $medicine->id,
+                            'batch_id'   => $b->id,
+                        ], [
+                            'qty_on_hand' => $newQty
+                        ]);
                     }
                 }
+
+                $b->quantity = $totalQty;
+                $b->save();
+            }
+        } 
+        // 2. Handle Single-Branch Stock Editing
+        elseif ($request->has('batches')) {
+            $currentBranchId = session('selected_branch_id', auth()->user()->branch_id ?? 1);
+            if ($currentBranchId === 'all') {
+                $currentBranchId = 1;
+            }
+
+            foreach ($request->batches as $batchId => $batchData) {
+                $b = Batch::where('id', $batchId)->where('product_id', $medicine->id)->first();
+                if (!$b) continue;
+
+                if (!empty($batchData['expiry_date'])) {
+                    $b->expiry_date = $batchData['expiry_date'];
+                }
+
+                if (isset($batchData['branch_qty']) && $batchData['branch_qty'] !== '') {
+                    $newQty = max(0, (int)$batchData['branch_qty']);
+                    
+                    \App\Models\StockBalance::withoutGlobalScopes()->updateOrCreate([
+                        'branch_id'  => $currentBranchId,
+                        'product_id' => $medicine->id,
+                        'batch_id'   => $b->id,
+                    ], [
+                        'qty_on_hand' => $newQty
+                    ]);
+                }
+
+                $b->quantity = \App\Models\StockBalance::withoutGlobalScopes()->where('batch_id', $b->id)->sum('qty_on_hand');
+                $b->save();
             }
         }
 
+        // 3. Handle Add New Batch
         if ($request->filled('new_branch_qty') || $request->filled('new_batch_no') || $request->filled('new_expiry_date')) {
             $newQty = max(0, (int)($request->new_branch_qty ?? 0));
             $batchNo = $request->filled('new_batch_no') ? $request->new_batch_no : ('B' . sprintf('%05d', rand(100, 99999)));
             $expiryDate = $request->filled('new_expiry_date') ? $request->new_expiry_date : now()->addMonths(24)->format('Y-m-d');
-            $targetBranchId = $request->new_branch_id ?: $currentBranchId;
+            $targetBranchId = $request->new_branch_id ?: session('selected_branch_id', auth()->user()->branch_id ?? 1);
+            if ($targetBranchId === 'all') {
+                $targetBranchId = 1;
+            }
 
             $newBatch = Batch::create([
                 'product_id'     => $medicine->id,
@@ -258,7 +302,7 @@ class MedicineController extends Controller
             );
         }
 
-        return redirect()->route('admin.medicines.index')->with('success', 'Medicine and batch stock updated successfully.');
+        return redirect()->route('admin.medicines.index')->with('success', 'Medicine and branch stock details updated successfully.');
     }
 
     public function destroy(Product $medicine)
