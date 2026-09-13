@@ -36,7 +36,7 @@
                     <span class="absolute top-1 right-1 flex items-center justify-center w-4 h-4 text-[10px] font-bold text-white bg-red-500 rounded-full">3</span>
                 </button>
 
-                @if(auth()->check() && auth()->user()->hasAnyRole(['Super Admin', 'Admin']))
+                @if(auth()->check() && auth()->user()->hasRole('Super Admin'))
                 <!-- Branch Switcher -->
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">

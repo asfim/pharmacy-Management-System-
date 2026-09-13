@@ -42,6 +42,7 @@ class User extends Authenticatable
 	protected $table = 'users';
 
 	protected $casts = [
+		'branch_id' => 'int',
 		'employee_id' => 'int',
 		'email_verified_at' => 'datetime',
 		'last_login_at' => 'datetime'
@@ -53,6 +54,7 @@ class User extends Authenticatable
 	];
 
 	protected $fillable = [
+		'branch_id',
 		'employee_id',
 		'name',
 		'email',
@@ -62,6 +64,11 @@ class User extends Authenticatable
 		'last_login_at',
 		'remember_token'
 	];
+
+	public function branch()
+	{
+		return $this->belongsTo(Branch::class);
+	}
 
 	public function employee()
 	{

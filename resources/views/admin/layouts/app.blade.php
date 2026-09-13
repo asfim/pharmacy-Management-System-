@@ -378,8 +378,7 @@
                             class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
                     </button>
 
-                    @if (auth()->check() &&
-                            auth()->user()->hasAnyRole(['Super Admin', 'Admin']))
+                    @if (auth()->check() && auth()->user()->hasRole('Super Admin'))
                         <!-- Branch Switcher -->
                         <div class="relative" x-data="{ branchOpen: false }">
                             <button @click="branchOpen = !branchOpen"

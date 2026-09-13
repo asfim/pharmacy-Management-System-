@@ -16,21 +16,22 @@ class BranchScope implements Scope
     {
         if (Auth::check()) {
             $user = Auth::user();
+            $selectedBranchId = session('selected_branch_id');
 
-            // If user is a super admin or admin, they can see everything unless they selected a specific branch
-            if ($user->hasAnyRole(['Super Admin', 'Admin'])) {
-                $selectedBranchId = session('selected_branch_id');
-                
-                if ($selectedBranchId && $selectedBranchId !== 'all') {
-                    $builder->where($model->getTable() . '.branch_id', $selectedBranchId);
-                }
-                
+            // 1. If user is explicitly assigned to a branch (and not Super Admin switching), enforce their branch
+            if (!empty($user->branch_id) && !$user->hasRole('Super Admin')) {
+                $builder->where($model->getTable() . '.branch_id', $user->branch_id);
                 return;
             }
 
-            // For regular users, force query to their assigned branch
-            if ($user->employee && $user->employee->branch_id) {
+            if (!empty($user->employee->branch_id) && !$user->hasRole('Super Admin')) {
                 $builder->where($model->getTable() . '.branch_id', $user->employee->branch_id);
+                return;
+            }
+
+            // 2. For Super Admin / Global Admin, check session branch selection
+            if ($selectedBranchId && $selectedBranchId !== 'all') {
+                $builder->where($model->getTable() . '.branch_id', $selectedBranchId);
             }
         }
     }

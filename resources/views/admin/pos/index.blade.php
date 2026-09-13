@@ -38,9 +38,15 @@
 @section('content')
 @php
     $selectedBranchId = session('selected_branch_id');
-    $currentBranch = ($selectedBranchId && $selectedBranchId !== 'all') 
-        ? \App\Models\Branch::find($selectedBranchId) 
-        : (auth()->user()->employee->branch ?? auth()->user()->branch ?? \App\Models\Branch::first());
+    $userBranch = auth()->user()->branch ?? (auth()->user()->employee->branch ?? null);
+
+    if ($userBranch && !auth()->user()->hasRole('Super Admin')) {
+        $currentBranch = $userBranch;
+    } elseif ($selectedBranchId && $selectedBranchId !== 'all') {
+        $currentBranch = \App\Models\Branch::find($selectedBranchId);
+    } else {
+        $currentBranch = $userBranch ?: \App\Models\Branch::first();
+    }
 @endphp
 
 <div class="flex gap-5 h-[calc(100vh-9rem)]">

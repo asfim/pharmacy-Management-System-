@@ -72,9 +72,15 @@ class PosController extends Controller
             $paid     = $request->paid ?? 0;
 
             $selectedBranchId = session('selected_branch_id');
-            $branchId = ($selectedBranchId && $selectedBranchId !== 'all') 
-                ? $selectedBranchId 
-                : (auth()->user()->employee->branch_id ?? auth()->user()->branch_id ?? 1);
+            $userBranchId = auth()->user()->branch_id ?? (auth()->user()->employee->branch_id ?? null);
+
+            if ($userBranchId && !auth()->user()->hasRole('Super Admin')) {
+                $branchId = $userBranchId;
+            } elseif ($selectedBranchId && $selectedBranchId !== 'all') {
+                $branchId = $selectedBranchId;
+            } else {
+                $branchId = $userBranchId ?: 1;
+            }
 
             $sale = Sale::create([
                 'invoice_no'     => 'INV-' . date('Ymd') . '-' . str_pad(Sale::whereDate('created_at', today())->count() + 1, 4, '0', STR_PAD_LEFT),

@@ -21,6 +21,7 @@
             <thead class="bg-slate-50 border-b border-slate-200 text-xs text-slate-500 uppercase">
                 <tr>
                     <th class="px-5 py-4">Name</th>
+                    <th class="px-5 py-4">Branch</th>
                     <th class="px-5 py-4">Email</th>
                     <th class="px-5 py-4">Role(s)</th>
                     <th class="px-5 py-4">Status</th>
@@ -31,6 +32,17 @@
                 @forelse($users as $u)
                 <tr class="hover:bg-slate-50 transition">
                     <td class="px-5 py-3.5 font-semibold text-slate-800">{{ $u->name }}</td>
+                    <td class="px-5 py-3.5">
+                        @if($u->branch)
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-teal-50 text-teal-700 border border-teal-200/60 rounded-full text-xs font-semibold">
+                            <i class="fas fa-store text-[10px]"></i> {{ $u->branch->name }}
+                        </span>
+                        @else
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-purple-50 text-purple-700 border border-purple-200/60 rounded-full text-xs font-semibold">
+                            <i class="fas fa-globe text-[10px]"></i> All / Global
+                        </span>
+                        @endif
+                    </td>
                     <td class="px-5 py-3.5 text-slate-600 font-mono text-xs">{{ $u->email }}</td>
                     <td class="px-5 py-3.5">
                         <div class="flex flex-wrap gap-1">
@@ -49,21 +61,28 @@
                         </span>
                     </td>
                     <td class="px-5 py-3.5 text-right">
-                        @if($u->id !== auth()->id())
-                        @can('delete users')
-                        <form action="{{ route('admin.users.destroy', $u) }}" method="POST" onsubmit="return confirm('Delete this user account?')">
-                            @csrf @method('DELETE')
-                            <button class="p-2 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition" title="Delete">
-                                <i class="fas fa-trash text-xs"></i>
-                            </button>
-                        </form>
-                        @endcan
-                        @endif
+                        <div class="flex justify-end items-center gap-2">
+                            @can('edit users')
+                            <a href="{{ route('admin.users.edit', $u) }}" class="p-2 text-indigo-600 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition" title="Edit User">
+                                <i class="fas fa-pen text-xs"></i>
+                            </a>
+                            @endcan
+                            @if($u->id !== auth()->id())
+                            @can('delete users')
+                            <form action="{{ route('admin.users.destroy', $u) }}" method="POST" onsubmit="return confirm('Delete this user account?')">
+                                @csrf @method('DELETE')
+                                <button class="p-2 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition" title="Delete">
+                                    <i class="fas fa-trash text-xs"></i>
+                                </button>
+                            </form>
+                            @endcan
+                            @endif
+                        </div>
                     </td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="5" class="px-5 py-12 text-center text-slate-400">
+                    <td colspan="6" class="px-5 py-12 text-center text-slate-400">
                         <i class="fas fa-users text-3xl mb-2 block"></i>
                         No users found.
                     </td>

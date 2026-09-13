@@ -20,15 +20,17 @@ trait BelongsToBranch
             if (Auth::check()) {
                 $user = Auth::user();
 
-                // If branch_id is not already set
+                // If branch_id is not already explicitly set on the model
                 if (empty($model->branch_id)) {
-                    if ($user->hasAnyRole(['Super Admin', 'Admin'])) {
-                        $selectedBranchId = session('selected_branch_id');
-                        if ($selectedBranchId && $selectedBranchId !== 'all') {
-                            $model->branch_id = $selectedBranchId;
-                        }
-                    } else if ($user->employee && $user->employee->branch_id) {
-                        $model->branch_id = $user->employee->branch_id;
+                    $selectedBranchId = session('selected_branch_id');
+                    $userBranchId = $user->branch_id ?? ($user->employee->branch_id ?? null);
+
+                    if ($userBranchId && !$user->hasRole('Super Admin')) {
+                        $model->branch_id = $userBranchId;
+                    } elseif ($selectedBranchId && $selectedBranchId !== 'all') {
+                        $model->branch_id = $selectedBranchId;
+                    } else {
+                        $model->branch_id = $userBranchId ?: 1;
                     }
                 }
             }
