@@ -6,9 +6,11 @@
         <h2 class="text-2xl font-bold text-slate-800">Sales Returns</h2>
         <p class="text-sm text-slate-500 mt-1">Manage customer returned items and refunds</p>
     </div>
+    @can('create sale_returns')
     <a href="{{ route('admin.sale-returns.create') }}" class="inline-flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition shadow-sm">
         <i class="fas fa-plus"></i> New Sale Return
     </a>
+    @endcan
 </div>
 
 @include('admin.layouts.alerts')
@@ -54,6 +56,7 @@
                     </td>
                     <td class="px-5 py-3.5 text-right">
                         <div class="flex justify-end gap-1">
+                            @can('delete sale_returns')
                             <form action="{{ route('admin.sale-returns.destroy', $r) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this sale return?')">
                                 @csrf
                                 @method('DELETE')
@@ -61,6 +64,7 @@
                                     <i class="fas fa-trash text-xs"></i>
                                 </button>
                             </form>
+                            @endcan
                         </div>
                     </td>
                 </tr>

@@ -19,7 +19,8 @@ class EmployeeController extends Controller
     public function create()
     {
         $roles = $this->roles;
-        return view('admin.employees.create', compact('roles'));
+        $branches = \App\Models\Branch::all();
+        return view('admin.employees.create', compact('roles', 'branches'));
     }
 
     public function store(Request $request)
@@ -31,9 +32,9 @@ class EmployeeController extends Controller
             'joining_date' => 'required|date',
             'salary'       => 'required|numeric|min:0',
             'status'       => 'required|in:active,inactive',
+            'branch_id'    => 'required|exists:branches,id',
         ]);
         $data = $request->all();
-        $data['branch_id'] = auth()->user()->branch_id ?? 1;
         Employee::create($data);
         return redirect()->route('admin.employees.index')->with('success', 'Employee added.');
     }
@@ -46,12 +47,13 @@ class EmployeeController extends Controller
     public function edit(Employee $employee)
     {
         $roles = $this->roles;
-        return view('admin.employees.edit', compact('employee', 'roles'));
+        $branches = \App\Models\Branch::all();
+        return view('admin.employees.edit', compact('employee', 'roles', 'branches'));
     }
 
     public function update(Request $request, Employee $employee)
     {
-        $request->validate(['name' => 'required', 'phone' => 'required', 'salary' => 'required|numeric']);
+        $request->validate(['name' => 'required', 'phone' => 'required', 'salary' => 'required|numeric', 'branch_id' => 'required|exists:branches,id']);
         $employee->update($request->all());
         return redirect()->route('admin.employees.index')->with('success', 'Employee updated.');
     }

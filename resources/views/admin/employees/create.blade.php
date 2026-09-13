@@ -45,6 +45,14 @@
                     <option value="inactive">Inactive</option>
                 </select>
             </div>
+            <div>
+                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Branch *</label>
+                <select name="branch_id" required class="w-full px-4 py-2.5 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-teal-500">
+                    @foreach($branches as $branch)
+                        <option value="{{ $branch->id }}" {{ old('branch_id') == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
+                    @endforeach
+                </select>
+            </div>
             <div class="sm:col-span-2">
                 <label class="block text-sm font-semibold text-slate-700 mb-1.5">Address</label>
                 <textarea name="address" rows="3" class="w-full px-4 py-2.5 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-teal-500">{{ old('address') }}</textarea>

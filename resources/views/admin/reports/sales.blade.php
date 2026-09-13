@@ -45,6 +45,7 @@
             <thead class="bg-slate-50 border-b border-slate-200 text-xs text-slate-500 uppercase">
                 <tr>
                     <th class="px-5 py-4 text-left">Invoice</th>
+                    <th class="px-5 py-4 text-left">Branch</th>
                     <th class="px-5 py-4 text-left">Customer</th>
                     <th class="px-5 py-4 text-left">Date</th>
                     <th class="px-5 py-4 text-right">Subtotal</th>

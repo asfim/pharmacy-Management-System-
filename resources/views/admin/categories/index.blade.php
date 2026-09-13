@@ -52,6 +52,7 @@
         </button>
 
         {{-- Add Category --}}
+        @can('create categories')
         <a href="{{ route('admin.categories.create') }}"
            class="bg-teal-600 hover:bg-teal-700 text-white font-medium py-2 px-4 rounded-lg flex items-center transition text-sm shadow-sm">
             <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -59,6 +60,7 @@
             </svg>
             Add Category
         </a>
+        @endcan
     </div>
 </div>
 

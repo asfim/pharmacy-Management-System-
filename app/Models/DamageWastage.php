@@ -8,6 +8,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\BelongsToBranch;
 
 /**
  * Class DamageWastage
@@ -32,6 +33,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class DamageWastage extends Model
 {
+	use BelongsToBranch;
+
 	protected $table = 'damage_wastage';
 
 	protected $casts = [
@@ -70,3 +73,4 @@ class DamageWastage extends Model
 		return $this->belongsTo(Product::class);
 	}
 }
+

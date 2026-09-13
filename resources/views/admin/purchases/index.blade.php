@@ -3,9 +3,11 @@
 @section('content')
 <div class="flex justify-between items-center mb-6">
     <div><h2 class="text-2xl font-bold text-slate-800">Purchase History</h2></div>
+    @can('create purchases')
     <a href="{{ route('admin.purchases.create') }}" class="inline-flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition shadow-sm">
         <i class="fas fa-plus"></i> New Purchase
     </a>
+    @endcan
 </div>
 @include('admin.layouts.alerts')
 <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
@@ -14,6 +16,7 @@
             <thead class="bg-slate-50 border-b border-slate-200 text-xs text-slate-500 uppercase tracking-wide">
                 <tr>
                     <th class="px-5 py-4 text-left">Invoice No</th>
+                    <th class="px-5 py-4 text-left">Branch</th>
                     <th class="px-5 py-4 text-left">Supplier</th>
                     <th class="px-5 py-4 text-left">Date</th>
                     <th class="px-5 py-4 text-right">Total</th>
@@ -27,6 +30,11 @@
                 @forelse($purchases as $p)
                 <tr class="hover:bg-slate-50 transition">
                     <td class="px-5 py-3.5 font-mono font-semibold text-slate-700">{{ $p->invoice_no }}</td>
+                    <td class="px-5 py-3.5">
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-teal-50 text-teal-700 border border-teal-200/60 rounded-full text-xs font-semibold">
+                            <i class="fas fa-store text-[10px]"></i> {{ $p->branch->name ?? 'Main Branch' }}
+                        </span>
+                    </td>
                     <td class="px-5 py-3.5 text-slate-700">{{ $p->supplier->company_name ?? '-' }}</td>
                     <td class="px-5 py-3.5 text-slate-500">{{ \Carbon\Carbon::parse($p->purchase_date)->format('d M Y') }}</td>
                     <td class="px-5 py-3.5 text-right font-bold text-slate-800">৳{{ number_format($p->total, 2) }}</td>
@@ -45,7 +53,7 @@
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="8" class="px-5 py-10 text-center text-slate-400">No purchases found.</td></tr>
+                <tr><td colspan="9" class="px-5 py-10 text-center text-slate-400">No purchases found.</td></tr>
                 @endforelse
             </tbody>
         </table>

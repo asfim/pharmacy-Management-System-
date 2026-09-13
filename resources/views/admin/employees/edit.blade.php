@@ -36,6 +36,14 @@
                     <option value="inactive" {{ old('status', $employee->status)==='inactive'?'selected':'' }}>Inactive</option>
                 </select>
             </div>
+            <div>
+                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Branch *</label>
+                <select name="branch_id" required class="w-full px-4 py-2.5 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-teal-500">
+                    @foreach($branches as $branch)
+                        <option value="{{ $branch->id }}" {{ old('branch_id', $employee->branch_id) == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
+                    @endforeach
+                </select>
+            </div>
         </div>
         <div class="flex justify-end pt-4 border-t border-slate-100">
             <button type="submit" class="bg-teal-600 hover:bg-teal-700 text-white font-semibold text-sm px-6 py-2.5 rounded-xl transition">Update Employee</button>

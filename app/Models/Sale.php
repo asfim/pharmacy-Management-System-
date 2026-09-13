@@ -9,6 +9,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\BelongsToBranch;
 
 /**
  * Class Sale
@@ -40,6 +41,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Sale extends Model
 {
+	use BelongsToBranch;
+
 	protected $table = 'sales';
 
 	protected $casts = [
@@ -105,3 +108,4 @@ class Sale extends Model
 		return $this->hasMany(SalesReturn::class);
 	}
 }
+

@@ -35,6 +35,7 @@
             <thead class="bg-slate-50 border-b border-slate-200 text-xs text-slate-500 uppercase">
                 <tr>
                     <th class="px-5 py-4 text-left">Invoice No</th>
+                    <th class="px-5 py-4 text-left">Branch</th>
                     <th class="px-5 py-4 text-left">Supplier</th>
                     <th class="px-5 py-4 text-left">Date</th>
                     <th class="px-5 py-4 text-right">Total</th>
@@ -47,6 +48,11 @@
                 @forelse($purchases as $p)
                 <tr class="hover:bg-slate-50 transition">
                     <td class="px-5 py-3.5 font-mono text-slate-700">{{ $p->invoice_no }}</td>
+                    <td class="px-5 py-3.5">
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-teal-50 text-teal-700 border border-teal-200/60 rounded-full text-xs font-semibold">
+                            <i class="fas fa-store text-[10px]"></i> {{ $p->branch->name ?? 'Main Branch' }}
+                        </span>
+                    </td>
                     <td class="px-5 py-3.5">{{ $p->supplier->company_name ?? '-' }}</td>
                     <td class="px-5 py-3.5 text-slate-500 text-xs">{{ \Carbon\Carbon::parse($p->purchase_date)->format('d M Y') }}</td>
                     <td class="px-5 py-3.5 text-right font-bold text-slate-800">৳{{ number_format($p->total, 2) }}</td>
@@ -57,7 +63,7 @@
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="7" class="px-5 py-10 text-center text-slate-400">No purchases found for selected period.</td></tr>
+                <tr><td colspan="8" class="px-5 py-10 text-center text-slate-400">No purchases found for selected period.</td></tr>
                 @endforelse
             </tbody>
         </table>

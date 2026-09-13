@@ -8,6 +8,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\BelongsToBranch;
 
 /**
  * Class StockBalance
@@ -32,6 +33,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class StockBalance extends Model
 {
+	use BelongsToBranch;
+
 	protected $table = 'stock_balances';
 
 	protected $casts = [
@@ -74,3 +77,4 @@ class StockBalance extends Model
 		return $this->belongsTo(Product::class);
 	}
 }
+

@@ -36,12 +36,14 @@
                         </span>
                     </td>
                     <td class="px-5 py-3.5 text-right">
+                        @can('delete prescriptions')
                         <form action="{{ route('admin.prescriptions.destroy', $p) }}" method="POST" onsubmit="return confirm('Delete this prescription?')">
                             @csrf @method('DELETE')
                             <button class="p-2 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition" title="Delete">
                                 <i class="fas fa-trash text-xs"></i>
                             </button>
                         </form>
+                        @endcan
                     </td>
                 </tr>
                 @empty

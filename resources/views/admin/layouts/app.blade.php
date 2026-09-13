@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -25,18 +26,36 @@
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'] }
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif']
+                    }
                 }
             }
         }
     </script>
 
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        [x-cloak] { display: none !important; }
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: #1e293b; }
-        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 10px; }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        [x-cloak] {
+            display: none !important;
+        }
+
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 10px;
+        }
+
         .sidebar-link {
             display: flex;
             align-items: center;
@@ -50,20 +69,24 @@
             text-decoration: none;
             gap: 0.75rem;
         }
+
         .sidebar-link:hover {
             background-color: #1e293b;
             color: #fff;
         }
+
         .sidebar-link.active {
             background-color: #0d9488;
             color: #fff;
         }
+
         .sidebar-link i {
             width: 18px;
             text-align: center;
             flex-shrink: 0;
             font-size: 0.875rem;
         }
+
         .sidebar-section {
             padding: 1.25rem 1rem 0.375rem;
             font-size: 0.65rem;
@@ -76,385 +99,460 @@
 
     @stack('styles')
 </head>
+
 <body class="bg-slate-100 antialiased" x-data="{ sidebarOpen: true, dropdownOpen: false }">
 
-<div class="flex h-screen overflow-hidden">
+    <div class="flex h-screen overflow-hidden">
 
-    <!-- ==================== SIDEBAR ==================== -->
-    <aside class="fixed inset-y-0 left-0 z-50 w-64 bg-slate-900 shadow-2xl flex flex-col transition-transform duration-300 ease-in-out"
-           :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'">
+        <!-- ==================== SIDEBAR ==================== -->
+        <aside
+            class="fixed inset-y-0 left-0 z-50 w-64 bg-slate-900 shadow-2xl flex flex-col transition-transform duration-300 ease-in-out"
+            :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'">
 
-        <!-- Logo -->
-        <div class="flex items-center justify-between h-16 px-4 bg-slate-950 border-b border-slate-800 flex-shrink-0">
-            <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2.5">
-                <div class="w-8 h-8 bg-teal-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <i class="fas fa-pills text-white" style="font-size:14px;"></i>
-                </div>
-                <span class="text-white font-bold text-base tracking-wide">Pharma<span class="text-teal-400">Sys</span></span>
-            </a>
-        </div>
-
-        <!-- Nav -->
-        <nav class="flex-1 overflow-y-auto py-3 px-3">
-
-            <!-- Dashboard -->
-            <a href="{{ route('admin.dashboard') }}"
-               class="sidebar-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-                <i class="fas fa-gauge-high"></i>
-                <span>Dashboard</span>
-            </a>
-
-            <!-- PRODUCTS -->
-            <p class="sidebar-section">Products</p>
-
-            @can('view medicines')
-            <a href="{{ route('admin.medicines.index') }}"
-               class="sidebar-link {{ request()->routeIs('admin.medicines*') ? 'active' : '' }}">
-                <i class="fas fa-capsules"></i>
-                <span>Medicines</span>
-            </a>
-            @endcan
-            @can('view categories')
-            <a href="{{ route('admin.categories.index') }}"
-               class="sidebar-link {{ request()->routeIs('admin.categories*') ? 'active' : '' }}">
-                <i class="fas fa-layer-group"></i>
-                <span>Categories</span>
-            </a>
-            @endcan
-            @can('view generics')
-            <a href="{{ route('admin.generics.index') }}"
-               class="sidebar-link {{ request()->routeIs('admin.generics*') ? 'active' : '' }}">
-                <i class="fas fa-dna"></i>
-                <span>Generics</span>
-            </a>
-            @endcan
-            @can('view manufacturers')
-            <a href="{{ route('admin.manufacturers.index') }}"
-               class="sidebar-link {{ request()->routeIs('admin.manufacturers*') ? 'active' : '' }}">
-                <i class="fas fa-industry"></i>
-                <span>Manufacturers</span>
-            </a>
-            @endcan
-
-            <!-- INVENTORY -->
-            <p class="sidebar-section">Inventory</p>
-
-            @can('view batches')
-            <a href="{{ route('admin.batches.index') }}"
-               class="sidebar-link {{ request()->routeIs('admin.batches*') ? 'active' : '' }}">
-                <i class="fas fa-boxes-stacked"></i>
-                <span>Batches & Expiry</span>
-            </a>
-            @endcan
-            @can('view stock')
-            <a href="{{ route('admin.stock.index') }}"
-               class="sidebar-link {{ request()->routeIs('admin.stock*') ? 'active' : '' }}">
-                <i class="fas fa-warehouse"></i>
-                <span>Stock & Inventory</span>
-            </a>
-            @endcan
-
-            <!-- SALES & POS -->
-            <p class="sidebar-section">Sales & POS</p>
-
-            @can('view pos')
-            <a href="{{ route('admin.pos.index') }}"
-               class="sidebar-link {{ request()->routeIs('admin.pos*') ? 'active' : '' }}">
-                <i class="fas fa-cash-register"></i>
-                <span>POS System</span>
-            </a>
-            @endcan
-            @can('view sales')
-            <a href="{{ route('admin.sales.index') }}"
-               class="sidebar-link {{ request()->routeIs('admin.sales*') ? 'active' : '' }}">
-                <i class="fas fa-file-invoice-dollar"></i>
-                <span>Sales Invoices</span>
-            </a>
-            @endcan
-            @can('view sale_returns')
-            <a href="{{ route('admin.sale-returns.index') }}"
-               class="sidebar-link {{ request()->routeIs('admin.sale-returns*') ? 'active' : '' }}">
-                <i class="fas fa-rotate-left"></i>
-                <span>Sales Returns</span>
-            </a>
-            @endcan
-            @can('view orders')
-            <a href="{{ route('admin.orders.index') }}"
-               class="sidebar-link {{ request()->routeIs('admin.orders*') ? 'active' : '' }}">
-                <i class="fas fa-bag-shopping"></i>
-                <span>Online Orders</span>
-            </a>
-            @endcan
-
-            <!-- PROCUREMENT -->
-            <p class="sidebar-section">Procurement</p>
-
-            @can('view purchases')
-            <a href="{{ route('admin.purchases.index') }}"
-               class="sidebar-link {{ request()->routeIs('admin.purchases*') ? 'active' : '' }}">
-                <i class="fas fa-cart-flatbed"></i>
-                <span>Purchases</span>
-            </a>
-            @endcan
-            @can('view suppliers')
-            <a href="{{ route('admin.suppliers.index') }}"
-               class="sidebar-link {{ request()->routeIs('admin.suppliers*') ? 'active' : '' }}">
-                <i class="fas fa-truck"></i>
-                <span>Suppliers</span>
-            </a>
-            @endcan
-
-            <!-- MANAGEMENT -->
-            <p class="sidebar-section">Management</p>
-
-            @can('view customers')
-            <a href="{{ route('admin.customers.index') }}"
-               class="sidebar-link {{ request()->routeIs('admin.customers*') ? 'active' : '' }}">
-                <i class="fas fa-users"></i>
-                <span>Customers</span>
-            </a>
-            @endcan
-            @can('view doctors')
-            <a href="{{ route('admin.doctors.index') }}"
-               class="sidebar-link {{ request()->routeIs('admin.doctors*') ? 'active' : '' }}">
-                <i class="fas fa-user-doctor"></i>
-                <span>Doctors</span>
-            </a>
-            @endcan
-            @can('view employees')
-            <a href="{{ route('admin.employees.index') }}"
-               class="sidebar-link {{ request()->routeIs('admin.employees*') ? 'active' : '' }}">
-                <i class="fas fa-id-card"></i>
-                <span>Employees</span>
-            </a>
-            @endcan
-            @can('view employees')
-            <a href="{{ route('admin.payrolls.index') }}"
-               class="sidebar-link {{ request()->routeIs('admin.payrolls*') ? 'active' : '' }}">
-                <i class="fas fa-file-invoice-dollar"></i>
-                <span>Payroll</span>
-            </a>
-            @endcan
-            @can('view accounts')
-            <a href="{{ route('admin.accounts.index') }}"
-               class="sidebar-link {{ request()->routeIs('admin.accounts*') ? 'active' : '' }}">
-                <i class="fas fa-chart-line"></i>
-                <span>Accounts & Finance</span>
-            </a>
-            @endcan
-            @can('view expenses')
-            <a href="{{ route('admin.expenses.index') }}"
-               class="sidebar-link {{ request()->routeIs('admin.expenses*') ? 'active' : '' }}">
-                <i class="fas fa-receipt"></i>
-                <span>Expenses</span>
-            </a>
-            @endcan
-            @can('view branches')
-            <a href="{{ route('admin.branches.index') }}"
-               class="sidebar-link {{ request()->routeIs('admin.branches*') ? 'active' : '' }}">
-                <i class="fas fa-code-branch"></i>
-                <span>Branches</span>
-            </a>
-            @endcan
-
-            <!-- REPORTS -->
-            <p class="sidebar-section">Reports</p>
-
-            @can('view reports')
-            <a href="{{ route('admin.reports.sales') }}"
-               class="sidebar-link {{ request()->routeIs('admin.reports.sales') ? 'active' : '' }}">
-                <i class="fas fa-chart-bar"></i>
-                <span>Sales Report</span>
-            </a>
-            <a href="{{ route('admin.reports.profit') }}"
-               class="sidebar-link {{ request()->routeIs('admin.reports.profit') ? 'active' : '' }}">
-                <i class="fas fa-money-bill-trend-up"></i>
-                <span>Profit & Loss</span>
-            </a>
-            <a href="{{ route('admin.reports.expiry') }}"
-               class="sidebar-link {{ request()->routeIs('admin.reports.expiry') ? 'active' : '' }}">
-                <i class="fas fa-calendar-xmark"></i>
-                <span>Expiry Report</span>
-            </a>
-            @endcan
-
-            <!-- ADMIN -->
-            <p class="sidebar-section">Admin</p>
-
-            @can('view users')
-            <a href="{{ route('admin.users.index') }}"
-               class="sidebar-link {{ request()->routeIs('admin.users*') ? 'active' : '' }}">
-                <i class="fas fa-users-gear"></i>
-                <span>Users Management</span>
-            </a>
-            @endcan
-            @can('view roles')
-            <a href="{{ route('admin.roles.index') }}"
-               class="sidebar-link {{ request()->routeIs('admin.roles*') ? 'active' : '' }}">
-                <i class="fas fa-user-shield"></i>
-                <span>Roles & Permissions</span>
-            </a>
-            @endcan
-            @can('view settings')
-            <a href="{{ route('admin.settings.index') }}"
-               class="sidebar-link {{ request()->routeIs('admin.settings*') ? 'active' : '' }}">
-                <i class="fas fa-gear"></i>
-                <span>Settings</span>
-            </a>
-            @endcan
-        </nav>
-
-        <!-- Logout -->
-        <div class="px-3 py-3 border-t border-slate-800 flex-shrink-0">
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button type="submit" class="sidebar-link w-full" style="color:#f87171;">
-                    <i class="fas fa-arrow-right-from-bracket" style="color:#f87171;"></i>
-                    <span>Logout</span>
-                </button>
-            </form>
-        </div>
-    </aside>
-
-    <!-- Mobile Backdrop -->
-    <div x-show="sidebarOpen" @click="sidebarOpen = false"
-         class="fixed inset-0 z-40 bg-black bg-opacity-60 lg:hidden" x-cloak></div>
-
-    <!-- ==================== MAIN ==================== -->
-    <div class="flex flex-col flex-1 min-w-0 transition-all duration-300 lg:ml-64"
-         :class="sidebarOpen ? 'lg:ml-64' : 'lg:ml-0'">
-
-        <!-- TOP HEADER -->
-        <header class="sticky top-0 z-30 flex items-center h-16 px-4 sm:px-6 bg-white border-b border-slate-200 shadow-sm flex-shrink-0">
-
-            <!-- Hamburger -->
-            <button @click="sidebarOpen = !sidebarOpen"
-                class="p-2 rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition mr-3">
-                <i class="fas fa-bars" style="font-size:18px;"></i>
-            </button>
-
-            <!-- Breadcrumb -->
-            <div class="flex items-center gap-2 text-sm text-slate-500">
-                <span class="text-slate-800 font-semibold">{{ $header ?? 'Dashboard' }}</span>
+            <!-- Logo -->
+            <div
+                class="flex items-center justify-between h-16 px-4 bg-slate-950 border-b border-slate-800 flex-shrink-0">
+                <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 bg-teal-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-pills text-white" style="font-size:14px;"></i>
+                    </div>
+                    <span class="text-white font-bold text-base tracking-wide">Pharma<span
+                            class="text-teal-400">Sys</span></span>
+                </a>
             </div>
 
-            <div class="flex-1"></div>
+            <!-- Nav -->
+            <nav class="flex-1 overflow-y-auto py-3 px-3">
 
-            <!-- Right side -->
-            <div class="flex items-center gap-2">
+                <!-- Dashboard -->
+                <a href="{{ route('admin.dashboard') }}"
+                    class="sidebar-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+                    <i class="fas fa-gauge-high"></i>
+                    <span>Dashboard</span>
+                </a>
 
-                <!-- Notification -->
-                <button class="relative p-2 rounded-lg text-slate-500 hover:bg-slate-100 transition">
-                    <i class="fas fa-bell" style="font-size:17px;"></i>
-                    <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+                <!-- PRODUCTS -->
+                <p class="sidebar-section">Products</p>
+
+                @can('view medicines')
+                    <a href="{{ route('admin.medicines.index') }}"
+                        class="sidebar-link {{ request()->routeIs('admin.medicines*') ? 'active' : '' }}">
+                        <i class="fas fa-capsules"></i>
+                        <span>Medicines</span>
+                    </a>
+                @endcan
+                @can('view categories')
+                    <a href="{{ route('admin.categories.index') }}"
+                        class="sidebar-link {{ request()->routeIs('admin.categories*') ? 'active' : '' }}">
+                        <i class="fas fa-layer-group"></i>
+                        <span>Categories</span>
+                    </a>
+                @endcan
+                @can('view generics')
+                    <a href="{{ route('admin.generics.index') }}"
+                        class="sidebar-link {{ request()->routeIs('admin.generics*') ? 'active' : '' }}">
+                        <i class="fas fa-dna"></i>
+                        <span>Generics</span>
+                    </a>
+                @endcan
+                @can('view manufacturers')
+                    <a href="{{ route('admin.manufacturers.index') }}"
+                        class="sidebar-link {{ request()->routeIs('admin.manufacturers*') ? 'active' : '' }}">
+                        <i class="fas fa-industry"></i>
+                        <span>Manufacturers</span>
+                    </a>
+                @endcan
+
+                <!-- INVENTORY -->
+                <p class="sidebar-section">Inventory</p>
+
+                @can('view batches')
+                    <a href="{{ route('admin.batches.index') }}"
+                        class="sidebar-link {{ request()->routeIs('admin.batches*') ? 'active' : '' }}">
+                        <i class="fas fa-boxes-stacked"></i>
+                        <span>Batches & Expiry</span>
+                    </a>
+                @endcan
+                @can('view stock')
+                    <a href="{{ route('admin.stock.index') }}"
+                        class="sidebar-link {{ request()->routeIs('admin.stock*') ? 'active' : '' }}">
+                        <i class="fas fa-warehouse"></i>
+                        <span>Stock & Inventory</span>
+                    </a>
+                @endcan
+
+                <!-- SALES & POS -->
+                <p class="sidebar-section">Sales & POS</p>
+
+                @can('view pos')
+                    <a href="{{ route('admin.pos.index') }}"
+                        class="sidebar-link {{ request()->routeIs('admin.pos*') ? 'active' : '' }}">
+                        <i class="fas fa-cash-register"></i>
+                        <span>POS System</span>
+                    </a>
+                @endcan
+                @can('view sales')
+                    <a href="{{ route('admin.sales.index') }}"
+                        class="sidebar-link {{ request()->routeIs('admin.sales*') ? 'active' : '' }}">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        <span>Sales Invoices</span>
+                    </a>
+                @endcan
+                @can('view sale_returns')
+                    <a href="{{ route('admin.sale-returns.index') }}"
+                        class="sidebar-link {{ request()->routeIs('admin.sale-returns*') ? 'active' : '' }}">
+                        <i class="fas fa-rotate-left"></i>
+                        <span>Sales Returns</span>
+                    </a>
+                @endcan
+                @can('view orders')
+                    <a href="{{ route('admin.orders.index') }}"
+                        class="sidebar-link {{ request()->routeIs('admin.orders*') ? 'active' : '' }}">
+                        <i class="fas fa-bag-shopping"></i>
+                        <span>Online Orders</span>
+                    </a>
+                @endcan
+
+                <!-- PROCUREMENT -->
+                <p class="sidebar-section">Procurement</p>
+
+                @can('view purchases')
+                    <a href="{{ route('admin.purchases.index') }}"
+                        class="sidebar-link {{ request()->routeIs('admin.purchases*') ? 'active' : '' }}">
+                        <i class="fas fa-cart-flatbed"></i>
+                        <span>Purchases</span>
+                    </a>
+                @endcan
+                @can('view suppliers')
+                    <a href="{{ route('admin.suppliers.index') }}"
+                        class="sidebar-link {{ request()->routeIs('admin.suppliers*') ? 'active' : '' }}">
+                        <i class="fas fa-truck"></i>
+                        <span>Suppliers</span>
+                    </a>
+                @endcan
+
+                <!-- MANAGEMENT -->
+                <p class="sidebar-section">Management</p>
+
+                @can('view customers')
+                    <a href="{{ route('admin.customers.index') }}"
+                        class="sidebar-link {{ request()->routeIs('admin.customers*') ? 'active' : '' }}">
+                        <i class="fas fa-users"></i>
+                        <span>Customers</span>
+                    </a>
+                @endcan
+                @can('view doctors')
+                    <a href="{{ route('admin.doctors.index') }}"
+                        class="sidebar-link {{ request()->routeIs('admin.doctors*') ? 'active' : '' }}">
+                        <i class="fas fa-user-doctor"></i>
+                        <span>Doctors</span>
+                    </a>
+                @endcan
+                @can('view employees')
+                    <a href="{{ route('admin.employees.index') }}"
+                        class="sidebar-link {{ request()->routeIs('admin.employees*') ? 'active' : '' }}">
+                        <i class="fas fa-id-card"></i>
+                        <span>Employees</span>
+                    </a>
+                @endcan
+                @can('view employees')
+                    <a href="{{ route('admin.payrolls.index') }}"
+                        class="sidebar-link {{ request()->routeIs('admin.payrolls*') ? 'active' : '' }}">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        <span>Payroll</span>
+                    </a>
+                @endcan
+                @can('view accounts')
+                    <a href="{{ route('admin.accounts.index') }}"
+                        class="sidebar-link {{ request()->routeIs('admin.accounts*') ? 'active' : '' }}">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Accounts & Finance</span>
+                    </a>
+                @endcan
+                @can('view expenses')
+                    <a href="{{ route('admin.expenses.index') }}"
+                        class="sidebar-link {{ request()->routeIs('admin.expenses*') ? 'active' : '' }}">
+                        <i class="fas fa-receipt"></i>
+                        <span>Expenses</span>
+                    </a>
+                @endcan
+                @can('view branches')
+                    <a href="{{ route('admin.branches.index') }}"
+                        class="sidebar-link {{ request()->routeIs('admin.branches*') ? 'active' : '' }}">
+                        <i class="fas fa-code-branch"></i>
+                        <span>Branches</span>
+                    </a>
+                @endcan
+
+                <!-- REPORTS -->
+                <p class="sidebar-section">Reports</p>
+
+                @can('view reports')
+                    <a href="{{ route('admin.reports.sales') }}"
+                        class="sidebar-link {{ request()->routeIs('admin.reports.sales') ? 'active' : '' }}">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Sales Report</span>
+                    </a>
+                    <a href="{{ route('admin.reports.profit') }}"
+                        class="sidebar-link {{ request()->routeIs('admin.reports.profit') ? 'active' : '' }}">
+                        <i class="fas fa-money-bill-trend-up"></i>
+                        <span>Profit & Loss</span>
+                    </a>
+                    <a href="{{ route('admin.reports.expiry') }}"
+                        class="sidebar-link {{ request()->routeIs('admin.reports.expiry') ? 'active' : '' }}">
+                        <i class="fas fa-calendar-xmark"></i>
+                        <span>Expiry Report</span>
+                    </a>
+                @endcan
+
+                <!-- ADMIN -->
+                <p class="sidebar-section">Admin</p>
+
+                @can('view users')
+                    <a href="{{ route('admin.users.index') }}"
+                        class="sidebar-link {{ request()->routeIs('admin.users*') ? 'active' : '' }}">
+                        <i class="fas fa-users-gear"></i>
+                        <span>Users Management</span>
+                    </a>
+                @endcan
+                @can('view roles')
+                    <a href="{{ route('admin.roles.index') }}"
+                        class="sidebar-link {{ request()->routeIs('admin.roles*') ? 'active' : '' }}">
+                        <i class="fas fa-user-shield"></i>
+                        <span>Roles & Permissions</span>
+                    </a>
+                @endcan
+                @can('view settings')
+                    <a href="{{ route('admin.settings.index') }}"
+                        class="sidebar-link {{ request()->routeIs('admin.settings*') ? 'active' : '' }}">
+                        <i class="fas fa-gear"></i>
+                        <span>Settings</span>
+                    </a>
+                @endcan
+            </nav>
+
+            <!-- Logout -->
+            <div class="px-3 py-3 border-t border-slate-800 flex-shrink-0">
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="sidebar-link w-full" style="color:#f87171;">
+                        <i class="fas fa-arrow-right-from-bracket" style="color:#f87171;"></i>
+                        <span>Logout</span>
+                    </button>
+                </form>
+            </div>
+        </aside>
+
+        <!-- Mobile Backdrop -->
+        <div x-show="sidebarOpen" @click="sidebarOpen = false"
+            class="fixed inset-0 z-40 bg-black bg-opacity-60 lg:hidden" x-cloak></div>
+
+        <!-- ==================== MAIN ==================== -->
+        <div class="flex flex-col flex-1 min-w-0 transition-all duration-300 lg:ml-64"
+            :class="sidebarOpen ? 'lg:ml-64' : 'lg:ml-0'">
+
+            <!-- TOP HEADER -->
+            <header
+                class="sticky top-0 z-30 flex items-center h-16 px-4 sm:px-6 bg-white border-b border-slate-200 shadow-sm flex-shrink-0">
+
+                <!-- Hamburger -->
+                <button @click="sidebarOpen = !sidebarOpen"
+                    class="p-2 rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition mr-3">
+                    <i class="fas fa-bars" style="font-size:18px;"></i>
                 </button>
 
-                <!-- User Dropdown -->
-                <div class="relative" x-data="{ open: false }">
-                    <button @click="open = !open"
-                        class="flex items-center gap-2 px-2 py-1.5 rounded-xl hover:bg-slate-100 transition">
-                        <div class="w-8 h-8 bg-teal-600 rounded-full flex items-center justify-center flex-shrink-0">
-                            <span class="text-white text-sm font-bold">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</span>
-                        </div>
-                        <div class="hidden sm:block text-left leading-tight">
-                            <p class="text-sm font-semibold text-slate-700">{{ Auth::user()->name }}</p>
-                            <p class="text-xs text-slate-400">Administrator</p>
-                        </div>
-                        <i class="fas fa-chevron-down text-xs text-slate-400 hidden sm:block"></i>
+                <!-- Breadcrumb -->
+                <div class="flex items-center gap-2 text-sm text-slate-500">
+                    <span class="text-slate-800 font-semibold">{{ $header ?? 'Dashboard' }}</span>
+                </div>
+
+                <div class="flex-1"></div>
+
+                <!-- Right side -->
+                <div class="flex items-center gap-2">
+
+                    <!-- Notification -->
+                    <button class="relative p-2 rounded-lg text-slate-500 hover:bg-slate-100 transition">
+                        <i class="fas fa-bell" style="font-size:17px;"></i>
+                        <span
+                            class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
                     </button>
 
-                    <!-- Dropdown -->
-                    <div x-show="open" @click.away="open = false"
-                         x-transition:enter="transition ease-out duration-100"
-                         x-transition:enter-start="transform opacity-0 scale-95"
-                         x-transition:enter-end="transform opacity-100 scale-100"
-                         x-transition:leave="transition ease-in duration-75"
-                         x-transition:leave-start="transform opacity-100 scale-100"
-                         x-transition:leave-end="transform opacity-0 scale-95"
-                         class="absolute right-0 mt-2 w-52 bg-white rounded-xl shadow-xl border border-slate-100 py-1 z-50"
-                         x-cloak>
-                        <div class="px-4 py-2.5 border-b border-slate-100">
-                            <p class="text-sm font-semibold text-slate-800">{{ Auth::user()->name }}</p>
-                            <p class="text-xs text-slate-400 truncate">{{ Auth::user()->email }}</p>
-                        </div>
-                        <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-600 hover:bg-slate-50 transition">
-                            <i class="fas fa-user text-slate-400 w-4 text-center"></i> My Profile
-                        </a>
-                        <a href="{{ route('admin.settings.index') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-600 hover:bg-slate-50 transition">
-                            <i class="fas fa-gear text-slate-400 w-4 text-center"></i> Settings
-                        </a>
-                        <hr class="my-1 border-slate-100">
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button type="submit" class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition">
-                                <i class="fas fa-arrow-right-from-bracket w-4 text-center"></i> Logout
+                    @if (auth()->check() &&
+                            auth()->user()->hasAnyRole(['Super Admin', 'Admin']))
+                        <!-- Branch Switcher -->
+                        <div class="relative" x-data="{ branchOpen: false }">
+                            <button @click="branchOpen = !branchOpen"
+                                class="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-slate-200 hover:bg-slate-50 transition">
+                                @php
+                                    $selectedBranchId = session('selected_branch_id');
+                                    $selectedBranch =
+                                        $selectedBranchId && $selectedBranchId !== 'all'
+                                            ? \App\Models\Branch::find($selectedBranchId)
+                                            : null;
+                                @endphp
+                                <i class="fas fa-code-branch text-teal-500" style="font-size:14px;"></i>
+                                <div class="hidden sm:block text-left leading-tight">
+                                    <p class="text-[10px] text-slate-400 uppercase tracking-wider">Branch</p>
+                                    <p class="text-xs font-bold text-teal-600">
+                                        {{ $selectedBranch ? $selectedBranch->name : 'All Branches' }}</p>
+                                </div>
+                                <i class="fas fa-chevron-down text-xs text-slate-400"></i>
                             </button>
-                        </form>
+
+                            <div x-show="branchOpen" @click.away="branchOpen = false"
+                                x-transition:enter="transition ease-out duration-100"
+                                x-transition:enter-start="transform opacity-0 scale-95"
+                                x-transition:enter-end="transform opacity-100 scale-100"
+                                x-transition:leave="transition ease-in duration-75"
+                                x-transition:leave-start="transform opacity-100 scale-100"
+                                x-transition:leave-end="transform opacity-0 scale-95"
+                                class="absolute right-0 mt-2 w-52 bg-white rounded-xl shadow-xl border border-slate-100 py-1 z-50"
+                                x-cloak>
+                                <div class="px-4 py-2 border-b border-slate-100">
+                                    <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Switch
+                                        Branch</p>
+                                </div>
+                                <form method="POST" action="{{ route('admin.branches.switch') }}">
+                                    @csrf
+                                    <input type="hidden" name="branch_id" value="all">
+                                    <button type="submit"
+                                        class="w-full flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-50 transition {{ !$selectedBranchId || $selectedBranchId === 'all' ? 'text-teal-600 font-bold bg-teal-50' : 'text-slate-600' }}">
+                                        <i class="fas fa-globe" style="font-size:13px;"></i> All Branches
+                                    </button>
+                                </form>
+                                <div class="border-t border-slate-100"></div>
+                                @foreach (\App\Models\Branch::all() as $branch)
+                                    <form method="POST" action="{{ route('admin.branches.switch') }}">
+                                        @csrf
+                                        <input type="hidden" name="branch_id" value="{{ $branch->id }}">
+                                        <button type="submit"
+                                            class="w-full flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-slate-50 transition {{ $selectedBranchId == $branch->id ? 'text-teal-600 font-bold bg-teal-50' : 'text-slate-600' }}">
+                                            <i class="fas fa-store" style="font-size:13px;"></i> {{ $branch->name }}
+                                        </button>
+                                    </form>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
+
+                    <!-- User Dropdown -->
+                    <div class="relative" x-data="{ open: false }">
+                        <button @click="open = !open"
+                            class="flex items-center gap-2 px-2 py-1.5 rounded-xl hover:bg-slate-100 transition">
+                            <div
+                                class="w-8 h-8 bg-teal-600 rounded-full flex items-center justify-center flex-shrink-0">
+                                <span
+                                    class="text-white text-sm font-bold">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</span>
+                            </div>
+                            <div class="hidden sm:block text-left leading-tight">
+                                <p class="text-sm font-semibold text-slate-700">{{ Auth::user()->name }}</p>
+                                <p class="text-xs text-slate-400">Administrator</p>
+                            </div>
+                            <i class="fas fa-chevron-down text-xs text-slate-400 hidden sm:block"></i>
+                        </button>
+
+                        <!-- Dropdown -->
+                        <div x-show="open" @click.away="open = false"
+                            x-transition:enter="transition ease-out duration-100"
+                            x-transition:enter-start="transform opacity-0 scale-95"
+                            x-transition:enter-end="transform opacity-100 scale-100"
+                            x-transition:leave="transition ease-in duration-75"
+                            x-transition:leave-start="transform opacity-100 scale-100"
+                            x-transition:leave-end="transform opacity-0 scale-95"
+                            class="absolute right-0 mt-2 w-52 bg-white rounded-xl shadow-xl border border-slate-100 py-1 z-50"
+                            x-cloak>
+                            <div class="px-4 py-2.5 border-b border-slate-100">
+                                <p class="text-sm font-semibold text-slate-800">{{ Auth::user()->name }}</p>
+                                <p class="text-xs text-slate-400 truncate">{{ Auth::user()->email }}</p>
+                            </div>
+                            <a href="{{ route('profile.edit') }}"
+                                class="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-600 hover:bg-slate-50 transition">
+                                <i class="fas fa-user text-slate-400 w-4 text-center"></i> My Profile
+                            </a>
+                            <a href="{{ route('admin.settings.index') }}"
+                                class="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-600 hover:bg-slate-50 transition">
+                                <i class="fas fa-gear text-slate-400 w-4 text-center"></i> Settings
+                            </a>
+                            <hr class="my-1 border-slate-100">
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit"
+                                    class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition">
+                                    <i class="fas fa-arrow-right-from-bracket w-4 text-center"></i> Logout
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
+            </header>
+
+            <!-- PAGE CONTENT -->
+            <main class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
+                @yield('content')
+            </main>
+        </div>
+
+    </div>
+
+    <!-- Global Image Lightbox Preview Modal -->
+    <div id="globalImagePreviewModal"
+        class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/80 backdrop-blur-md hidden p-4 transition-all duration-200"
+        onclick="closeGlobalImagePreview(event)">
+        <div class="relative max-w-4xl w-full bg-slate-900 rounded-2xl shadow-2xl overflow-hidden border border-slate-800 animate-in fade-in zoom-in duration-150"
+            onclick="event.stopPropagation()">
+            <!-- Modal Header -->
+            <div class="px-6 py-4 bg-slate-950 text-white flex justify-between items-center border-b border-slate-800">
+                <h3 class="font-bold text-base text-white flex items-center gap-2.5">
+                    <i class="fas fa-image text-teal-400"></i>
+                    <span id="globalPreviewTitleText">Medicine Image Preview</span>
+                </h3>
+                <button onclick="closeGlobalImagePreview()"
+                    class="text-slate-400 hover:text-white p-1.5 rounded-lg transition hover:bg-slate-800">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
             </div>
-        </header>
-
-        <!-- PAGE CONTENT -->
-        <main class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
-            @yield('content')
-        </main>
-    </div>
-
-</div>
-
-<!-- Global Image Lightbox Preview Modal -->
-<div id="globalImagePreviewModal" 
-     class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/80 backdrop-blur-md hidden p-4 transition-all duration-200"
-     onclick="closeGlobalImagePreview(event)">
-    <div class="relative max-w-4xl w-full bg-slate-900 rounded-2xl shadow-2xl overflow-hidden border border-slate-800 animate-in fade-in zoom-in duration-150"
-         onclick="event.stopPropagation()">
-        <!-- Modal Header -->
-        <div class="px-6 py-4 bg-slate-950 text-white flex justify-between items-center border-b border-slate-800">
-            <h3 class="font-bold text-base text-white flex items-center gap-2.5">
-                <i class="fas fa-image text-teal-400"></i>
-                <span id="globalPreviewTitleText">Medicine Image Preview</span>
-            </h3>
-            <button onclick="closeGlobalImagePreview()" class="text-slate-400 hover:text-white p-1.5 rounded-lg transition hover:bg-slate-800">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-            </button>
-        </div>
-        <!-- Modal Body (Image Display) -->
-        <div class="p-6 bg-slate-950 flex justify-center items-center min-h-[320px] max-h-[75vh] overflow-hidden">
-            <img id="globalPreviewSrc" src="" alt="Preview" class="max-h-[68vh] max-w-full object-contain rounded-xl shadow-2xl border border-slate-800 transition-all duration-200">
+            <!-- Modal Body (Image Display) -->
+            <div class="p-6 bg-slate-950 flex justify-center items-center min-h-[320px] max-h-[75vh] overflow-hidden">
+                <img id="globalPreviewSrc" src="" alt="Preview"
+                    class="max-h-[68vh] max-w-full object-contain rounded-xl shadow-2xl border border-slate-800 transition-all duration-200">
+            </div>
         </div>
     </div>
-</div>
 
-<script>
-    function openImagePreview(src, title = 'Medicine Image') {
-        const modal = document.getElementById('globalImagePreviewModal');
-        const img = document.getElementById('globalPreviewSrc');
-        const titleElem = document.getElementById('globalPreviewTitleText');
-        
-        if (img && modal) {
-            img.src = src;
-            if (titleElem) titleElem.textContent = title;
-            modal.classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
+    <script>
+        function openImagePreview(src, title = 'Medicine Image') {
+            const modal = document.getElementById('globalImagePreviewModal');
+            const img = document.getElementById('globalPreviewSrc');
+            const titleElem = document.getElementById('globalPreviewTitleText');
+
+            if (img && modal) {
+                img.src = src;
+                if (titleElem) titleElem.textContent = title;
+                modal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            }
         }
-    }
 
-    function closeGlobalImagePreview(e) {
-        const modal = document.getElementById('globalImagePreviewModal');
-        if (modal) {
-            modal.classList.add('hidden');
-            document.body.style.overflow = 'auto';
+        function closeGlobalImagePreview(e) {
+            const modal = document.getElementById('globalImagePreviewModal');
+            if (modal) {
+                modal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }
         }
-    }
 
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            closeGlobalImagePreview();
-        }
-    });
-</script>
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeGlobalImagePreview();
+            }
+        });
+    </script>
 
-@stack('scripts')
+    @stack('scripts')
 </body>
+
 </html>

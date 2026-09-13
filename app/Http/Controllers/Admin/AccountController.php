@@ -10,7 +10,7 @@ class AccountController extends Controller
 {
     public function index()
     {
-        $accounts = Account::latest()->paginate(20);
+        $accounts = Account::with('branch')->latest()->paginate(20);
         return view('admin.accounts.index', compact('accounts'));
     }
 

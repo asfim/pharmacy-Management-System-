@@ -8,6 +8,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\BelongsToBranch;
 
 /**
  * Class Expense
@@ -31,6 +32,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Expense extends Model
 {
+	use BelongsToBranch;
+
 	protected $table = 'expenses';
 
 	protected $casts = [
@@ -66,3 +69,4 @@ class Expense extends Model
 		return $this->belongsTo(ExpenseCategory::class, 'category_id');
 	}
 }
+

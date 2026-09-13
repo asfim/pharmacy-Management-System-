@@ -13,7 +13,7 @@ class ExpenseController extends Controller
 
     public function index()
     {
-        $expenses = Expense::latest()->paginate(20);
+        $expenses = Expense::with(['branch', 'expense_category', 'account'])->latest()->paginate(20);
         $total = Expense::sum('amount');
         return view('admin.expenses.index', compact('expenses', 'total'));
     }

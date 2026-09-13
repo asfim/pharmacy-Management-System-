@@ -8,10 +8,11 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\BelongsToBranch;
 
 /**
  * Class Attendance
- * 
+ *
  * @property int $id
  * @property int $employee_id
  * @property Carbon $date
@@ -21,13 +22,15 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $note
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * 
+ *
  * @property Employee $employee
  *
  * @package App\Models
  */
 class Attendance extends Model
 {
+	use BelongsToBranch;
+
 	protected $table = 'attendance';
 
 	protected $casts = [
@@ -51,3 +54,4 @@ class Attendance extends Model
 		return $this->belongsTo(Employee::class);
 	}
 }
+

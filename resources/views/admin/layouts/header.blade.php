@@ -36,6 +36,53 @@
                     <span class="absolute top-1 right-1 flex items-center justify-center w-4 h-4 text-[10px] font-bold text-white bg-red-500 rounded-full">3</span>
                 </button>
 
+                @if(auth()->check() && auth()->user()->hasAnyRole(['Super Admin', 'Admin']))
+                <!-- Branch Switcher -->
+                <x-dropdown align="right" width="48">
+                    <x-slot name="trigger">
+                        <button class="flex items-center px-3 py-2 text-sm font-medium leading-4 text-slate-500 transition duration-150 ease-in-out bg-white border border-slate-200 rounded-md hover:text-slate-700 focus:outline-none">
+                            @php
+                                $selectedBranchId = session('selected_branch_id');
+                                $selectedBranch = $selectedBranchId && $selectedBranchId !== 'all' ? \App\Models\Branch::find($selectedBranchId) : null;
+                            @endphp
+                            <div>
+                                <span class="text-xs text-slate-400 block text-left">Branch</span>
+                                <span class="font-bold text-teal-600">
+                                    {{ $selectedBranch ? $selectedBranch->name : 'All Branches' }}
+                                </span>
+                            </div>
+                            <div class="ml-2">
+                                <svg class="w-4 h-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                        </button>
+                    </x-slot>
+
+                    <x-slot name="content">
+                        <form method="POST" action="{{ route('admin.branches.switch') }}">
+                            @csrf
+                            <input type="hidden" name="branch_id" value="all">
+                            <x-dropdown-link href="#" onclick="event.preventDefault(); this.closest('form').submit();" class="{{ !$selectedBranchId || $selectedBranchId === 'all' ? 'font-bold text-teal-600 bg-teal-50' : '' }}">
+                                {{ __('All Branches') }}
+                            </x-dropdown-link>
+                        </form>
+                        
+                        <div class="border-t border-slate-100"></div>
+
+                        @foreach(\App\Models\Branch::all() as $branch)
+                            <form method="POST" action="{{ route('admin.branches.switch') }}">
+                                @csrf
+                                <input type="hidden" name="branch_id" value="{{ $branch->id }}">
+                                <x-dropdown-link href="#" onclick="event.preventDefault(); this.closest('form').submit();" class="{{ $selectedBranchId == $branch->id ? 'font-bold text-teal-600 bg-teal-50' : '' }}">
+                                    {{ $branch->name }}
+                                </x-dropdown-link>
+                            </form>
+                        @endforeach
+                    </x-slot>
+                </x-dropdown>
+                @endif
+
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button class="flex items-center px-3 py-2 text-sm font-medium leading-4 text-slate-500 transition duration-150 ease-in-out bg-white border border-transparent rounded-md hover:text-slate-700 focus:outline-none">

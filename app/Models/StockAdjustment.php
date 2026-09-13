@@ -9,6 +9,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\BelongsToBranch;
 
 /**
  * Class StockAdjustment
@@ -29,6 +30,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class StockAdjustment extends Model
 {
+	use BelongsToBranch;
+
 	protected $table = 'stock_adjustments';
 
 	protected $casts = [
@@ -55,3 +58,4 @@ class StockAdjustment extends Model
 		return $this->hasMany(StockAdjustmentItem::class, 'adjustment_id');
 	}
 }
+

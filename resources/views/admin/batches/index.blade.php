@@ -36,6 +36,7 @@
             Export PDF
         </a>
 
+        @can('create batches')
         <a href="{{ route('admin.batches.create') }}"
            class="bg-teal-600 hover:bg-teal-700 text-white font-medium py-2 px-4 rounded-lg flex items-center transition text-sm shadow-xs">
             <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -43,6 +44,7 @@
             </svg>
             Add Batch
         </a>
+        @endcan
     </div>
 </div>
 

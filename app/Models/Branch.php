@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Branch
- * 
+ *
  * @property int $id
  * @property string $code
  * @property string $name
@@ -22,7 +22,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $status
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * 
+ *
  * @property Collection|Account[] $accounts
  * @property Collection|AuditLog[] $audit_logs
  * @property Collection|DamageWastage[] $damage_wastages

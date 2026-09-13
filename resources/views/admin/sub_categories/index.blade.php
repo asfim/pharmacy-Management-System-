@@ -10,10 +10,12 @@
             <h2 class="text-2xl font-bold text-slate-800">sub-categories</h2>
             <p class="text-sm text-slate-500">Manage all product sub-categories here.</p>
         </div>
+        @can('create sub_categories')
         <a href="{{ route('admin.sub-categories.create') }}" class="bg-teal-600 hover:bg-teal-700 text-white font-medium py-2 px-4 rounded-lg flex items-center transition shadow-sm">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
             Add subSub Category
         </a>
+        @endcan
     </div>
 
     @if(session('success'))
@@ -65,9 +67,12 @@
                                 @endif
                             </td>
                             <td class="px-6 py-4 flex items-center justify-end space-x-3">
+                                @can('edit sub_categories')
                                 <a href="{{ route('admin.sub-categories.edit', $subSub Category) }}" class="text-indigo-600 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 p-2 rounded-lg transition" title="Edit">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
                                 </a>
+                                @endcan
+                                @can('delete sub_categories')
                                 <form action="{{ route('admin.sub-categories.destroy', $subSub Category) }}" method="POST" class="inline-block" onsubmit="return confirm('Are you sure you want to delete this subSub Category?');">
                                     @csrf
                                     @method('DELETE')
@@ -75,6 +80,7 @@
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                     </button>
                                 </form>
+                                @endcan
                             </td>
                         </tr>
                     @empty

@@ -41,6 +41,9 @@ use App\Http\Controllers\Admin\BranchController;
 
 Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
 
+    // ==================== BRANCH SWITCHER ====================
+    Route::post('branches/switch', [\App\Http\Controllers\Admin\BranchSwitcherController::class, 'switch'])->name('branches.switch');
+
     // ==================== DASHBOARD ====================
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 

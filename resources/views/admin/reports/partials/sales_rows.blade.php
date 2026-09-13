@@ -1,6 +1,11 @@
 @forelse($sales as $s)
 <tr class="hover:bg-slate-50 transition">
     <td class="px-5 py-3.5 font-mono text-slate-700">{{ $s->invoice_no }}</td>
+    <td class="px-5 py-3.5">
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-teal-50 text-teal-700 border border-teal-200/60 rounded-full text-xs font-semibold">
+            <i class="fas fa-store text-[10px]"></i> {{ $s->branch->name ?? 'Main Branch' }}
+        </span>
+    </td>
     <td class="px-5 py-3.5">{{ $s->customer->name ?? 'Walk-in' }}</td>
     <td class="px-5 py-3.5 text-slate-500 text-xs">{{ $s->created_at->format('d M Y') }}</td>
     <td class="px-5 py-3.5 text-right">৳{{ number_format($s->subtotal, 2) }}</td>
@@ -11,6 +16,6 @@
 </tr>
 @empty
 @if(!request()->ajax())
-<tr><td colspan="8" class="px-5 py-10 text-center text-slate-400">No sales found for selected period.</td></tr>
+<tr><td colspan="9" class="px-5 py-10 text-center text-slate-400">No sales found for selected period.</td></tr>
 @endif
 @endforelse

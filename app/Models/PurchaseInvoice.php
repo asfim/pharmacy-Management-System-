@@ -9,6 +9,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\BelongsToBranch;
 
 /**
  * Class PurchaseInvoice
@@ -38,6 +39,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class PurchaseInvoice extends Model
 {
+	use BelongsToBranch;
+
 	protected $table = 'purchase_invoices';
 
 	protected $casts = [
@@ -96,3 +99,4 @@ class PurchaseInvoice extends Model
 		return $this->hasMany(SupplierPayment::class, 'purchase_id');
 	}
 }
+

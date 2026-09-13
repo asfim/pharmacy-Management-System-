@@ -8,6 +8,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\BelongsToBranch;
 
 /**
  * Class StockLedger
@@ -35,6 +36,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class StockLedger extends Model
 {
+	use BelongsToBranch;
+
 	protected $table = 'stock_ledger';
 
 	protected $casts = [
@@ -78,3 +81,4 @@ class StockLedger extends Model
 		return $this->belongsTo(Product::class);
 	}
 }
+

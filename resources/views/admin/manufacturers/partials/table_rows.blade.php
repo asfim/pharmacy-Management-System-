@@ -22,6 +22,7 @@
     </td>
     <td class="px-4 py-3">
         <div class="flex items-center justify-end space-x-2">
+            @can('edit manufacturers')
             <a href="{{ route('admin.manufacturers.edit', $item) }}"
                class="text-indigo-600 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 p-2 rounded-lg transition" title="Edit">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -29,6 +30,8 @@
                           d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
                 </svg>
             </a>
+            @endcan
+            @can('delete manufacturers')
             <form action="{{ route('admin.manufacturers.destroy', $item) }}" method="POST" class="inline-block"
                   onsubmit="return confirm('Delete this manufacturer?');">
                 @csrf @method('DELETE')
@@ -39,6 +42,7 @@
                     </svg>
                 </button>
             </form>
+            @endcan
         </div>
     </td>
 </tr>

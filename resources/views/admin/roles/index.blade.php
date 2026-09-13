@@ -6,9 +6,11 @@
         <h2 class="text-2xl font-bold text-slate-800">Roles & Permissions</h2>
         <p class="text-sm text-slate-500 mt-1">Manage user access levels & module permissions</p>
     </div>
+    @can('create roles')
     <a href="{{ route('admin.roles.create') }}" class="inline-flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition shadow-sm">
         <i class="fas fa-plus"></i> Add New Role
     </a>
+    @endcan
 </div>
 
 @include('admin.layouts.alerts')
@@ -43,10 +45,13 @@
                     </td>
                     <td class="px-5 py-3.5 text-right">
                         <div class="flex justify-end gap-1">
+                            @can('edit roles')
                             <a href="{{ route('admin.roles.edit', $r) }}" class="p-2 text-teal-600 bg-teal-50 hover:bg-teal-100 rounded-lg transition" title="Edit Role & Permissions">
                                 <i class="fas fa-pen-to-square text-xs"></i>
                             </a>
+                            @endcan
                             @if($r->name !== 'Super Admin')
+                            @can('delete roles')
                             <form action="{{ route('admin.roles.destroy', $r) }}" method="POST" onsubmit="return confirm('Delete this role?')">
                                 @csrf
                                 @method('DELETE')
@@ -54,6 +59,7 @@
                                     <i class="fas fa-trash text-xs"></i>
                                 </button>
                             </form>
+                            @endcan
                             @endif
                         </div>
                     </td>

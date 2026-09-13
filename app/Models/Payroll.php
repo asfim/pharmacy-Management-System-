@@ -9,6 +9,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\BelongsToBranch;
 
 /**
  * Class Payroll
@@ -37,6 +38,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Payroll extends Model
 {
+	use BelongsToBranch;
+
 	protected $table = 'payroll';
 
 	protected $casts = [
@@ -82,3 +85,4 @@ class Payroll extends Model
 		return $this->hasMany(SalaryPayment::class);
 	}
 }
+

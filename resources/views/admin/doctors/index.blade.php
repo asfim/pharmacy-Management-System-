@@ -6,9 +6,11 @@
         <h2 class="text-2xl font-bold text-slate-800">Doctors</h2>
         <p class="text-sm text-slate-500 mt-1">Manage prescribing doctors & medical specialists</p>
     </div>
+    @can('create doctors')
     <a href="{{ route('admin.doctors.create') }}" class="inline-flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition shadow-sm">
         <i class="fas fa-user-doctor"></i> Add Doctor
     </a>
+    @endcan
 </div>
 
 @include('admin.layouts.alerts')
@@ -44,12 +46,14 @@
                         </span>
                     </td>
                     <td class="px-5 py-3.5 text-right">
+                        @can('delete doctors')
                         <form action="{{ route('admin.doctors.destroy', $d) }}" method="POST" onsubmit="return confirm('Delete this doctor record?')">
                             @csrf @method('DELETE')
                             <button class="p-2 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition" title="Delete">
                                 <i class="fas fa-trash text-xs"></i>
                             </button>
                         </form>
+                        @endcan
                     </td>
                 </tr>
                 @empty

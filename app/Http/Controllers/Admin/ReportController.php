@@ -20,7 +20,7 @@ class ReportController extends Controller
         $from = $request->from ? Carbon::parse($request->from)->startOfDay() : Carbon::now()->startOfMonth();
         $to   = $request->to   ? Carbon::parse($request->to)->endOfDay()     : Carbon::now()->endOfDay();
 
-        $sales = Sale::with('customer')
+        $sales = Sale::with(['branch', 'customer'])
             ->whereBetween('created_at', [$from, $to])
             ->latest()->paginate(10);
 
@@ -40,7 +40,7 @@ class ReportController extends Controller
         $from = $request->from ? Carbon::parse($request->from)->startOfDay() : Carbon::now()->startOfMonth();
         $to   = $request->to   ? Carbon::parse($request->to)->endOfDay()     : Carbon::now()->endOfDay();
 
-        $purchases = PurchaseInvoice::with('supplier')
+        $purchases = PurchaseInvoice::with(['branch', 'supplier'])
             ->whereBetween('created_at', [$from, $to])
             ->latest()->paginate(20);
 
