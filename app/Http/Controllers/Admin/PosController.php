@@ -121,6 +121,13 @@ class PosController extends Controller
                 if ($batch) {
                     $batch->decrement('quantity', $item['quantity']);
                 }
+
+                // Decrease Branch Stock Balance
+                \App\Models\StockBalance::withoutGlobalScopes()
+                    ->where('branch_id', $sale->branch_id)
+                    ->where('product_id', $item['product_id'])
+                    ->where('batch_id', $item['batch_id'])
+                    ->decrement('qty_on_hand', $item['quantity']);
             }
 
             // Update customer balance if due

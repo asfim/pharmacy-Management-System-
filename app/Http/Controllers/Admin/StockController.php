@@ -14,9 +14,24 @@ class StockController extends Controller
         $perPageRaw = $request->get('per_page', 50);
         $perPage    = $perPageRaw === 'all' ? PHP_INT_MAX : (int) $perPageRaw;
 
+        $selectedBranchId = session('selected_branch_id');
+        $userBranchId = auth()->user()->branch_id ?? (auth()->user()->employee->branch_id ?? null);
+        $activeBranchId = (!empty($userBranchId) && !auth()->user()->hasRole('Super Admin')) 
+            ? $userBranchId 
+            : (($selectedBranchId && $selectedBranchId !== 'all') ? $selectedBranchId : null);
+
+        $subQuery = \Illuminate\Support\Facades\DB::table('stock_balances')
+            ->selectRaw('COALESCE(SUM(qty_on_hand), 0)')
+            ->whereColumn('stock_balances.product_id', 'products.id');
+
+        if ($activeBranchId) {
+            $subQuery->where('stock_balances.branch_id', $activeBranchId);
+        }
+
         $stocks = Product::where('status', 'active')
-            ->withSum('batches', 'quantity')
             ->with('category')
+            ->select('products.*')
+            ->selectSub($subQuery, 'batches_sum_quantity')
             ->when($search, fn($q) => $q->where('name', 'like', "%{$search}%")
                 ->orWhere('strength', 'like', "%{$search}%")
                 ->orWhereHas('category', fn($c) => $c->where('name', 'like', "%{$search}%")))

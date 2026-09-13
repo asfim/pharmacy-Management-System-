@@ -82,6 +82,17 @@ class PurchaseController extends Controller
                 $batch->quantity           = ($batch->quantity ?? 0) + $totalQty;
                 $batch->save();
 
+                \App\Models\StockBalance::withoutGlobalScopes()->updateOrCreate(
+                    [
+                        'branch_id'  => $purchase->branch_id,
+                        'product_id' => $item['product_id'],
+                        'batch_id'   => $batch->id,
+                    ],
+                    [
+                        'qty_on_hand' => DB::raw("qty_on_hand + {$totalQty}")
+                    ]
+                );
+
                 PurchaseItem::create([
                     'purchase_id'         => $purchase->id,
                     'product_id'          => $item['product_id'],
