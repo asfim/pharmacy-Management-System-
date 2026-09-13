@@ -184,7 +184,7 @@
                         <svg class="w-4 h-4 animate-pulse text-amber-300" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"></path></svg>
                         <span>Limited Time Offer</span>
                     </div>
-                    <h2 class="text-3xl md:text-4xl font-extrabold mb-2">Flash Sale — Up to 40% OFF!</h2>
+                    <h2 class="text-3xl md:text-4xl font-extrabold mb-2">Flash Sale — Up to {{ (int)$maxDiscount }}% OFF!</h2>
                     <p class="text-rose-100 text-lg">Get incredible deals on top medicines & health products.</p>
                 </div>
                 
