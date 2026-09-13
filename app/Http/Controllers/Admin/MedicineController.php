@@ -114,7 +114,7 @@ class MedicineController extends Controller
                 ]);
             }
 
-            Batch::create([
+            $batch = Batch::create([
                 'product_id'     => $product->id,
                 'batch_no'       => 'B' . sprintf('%05d', rand(100, 99999)),
                 'expiry_date'    => now()->addMonths(24)->format('Y-m-d'),
@@ -123,6 +123,14 @@ class MedicineController extends Controller
                 'mrp'            => $product->mrp ?: $product->sale_price,
                 'quantity'       => 100,
                 'status'         => 'active',
+            ]);
+
+            \App\Models\StockBalance::withoutGlobalScopes()->updateOrCreate([
+                'branch_id'  => 1,
+                'product_id' => $product->id,
+                'batch_id'   => $batch->id,
+            ], [
+                'qty_on_hand' => 100
             ]);
 
             DB::commit();
@@ -280,15 +288,24 @@ class MedicineController extends Controller
                     ]);
                 }
 
-                Batch::create([
+                $initQty = rand(100, 500);
+                $batch = Batch::create([
                     'product_id'     => $product->id,
                     'batch_no'       => 'B' . sprintf('%05d', rand(100, 99999)),
                     'expiry_date'    => now()->addMonths(rand(12, 36))->format('Y-m-d'),
                     'purchase_price' => $purchasePrice,
                     'sale_price'     => $price,
                     'mrp'            => $price,
-                    'quantity'       => rand(100, 500),
+                    'quantity'       => $initQty,
                     'status'         => 'active',
+                ]);
+
+                \App\Models\StockBalance::withoutGlobalScopes()->updateOrCreate([
+                    'branch_id'  => 1,
+                    'product_id' => $product->id,
+                    'batch_id'   => $batch->id,
+                ], [
+                    'qty_on_hand' => $initQty
                 ]);
 
                 $count++;

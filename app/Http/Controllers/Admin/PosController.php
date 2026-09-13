@@ -22,6 +22,18 @@ class PosController extends Controller
     public function searchMedicine(Request $request)
     {
         $q = $request->q;
+
+        $selectedBranchId = session('selected_branch_id');
+        $userBranchId = auth()->user()->branch_id ?? (auth()->user()->employee->branch_id ?? null);
+        $activeBranchId = ($userBranchId && !auth()->user()->hasRole('Super Admin')) 
+            ? $userBranchId 
+            : (($selectedBranchId && $selectedBranchId !== 'all') ? $selectedBranchId : 1);
+
+        $stockBalances = DB::table('stock_balances')
+            ->where('branch_id', $activeBranchId)
+            ->pluck('qty_on_hand', 'batch_id')
+            ->toArray();
+
         $medicines = Product::where('status', 'active')
             ->where(function($query) use ($q) {
                 $query->where('name', 'like', "%$q%")
@@ -31,19 +43,24 @@ class PosController extends Controller
             ->with('activeBatches')
             ->limit(10)
             ->get()
-            ->map(function($p) {
+            ->map(function($p) use ($stockBalances) {
+                $batches = $p->activeBatches->map(function($b) use ($stockBalances) {
+                    $branchQty = isset($stockBalances[$b->id]) ? (int)$stockBalances[$b->id] : 0;
+                    return [
+                        'id'          => $b->id,
+                        'batch_no'    => $b->batch_no,
+                        'expiry_date' => $b->expiry_date,
+                        'quantity'    => $branchQty,
+                        'sale_price'  => $b->sale_price,
+                    ];
+                })->values();
+
                 return [
                     'id'         => $p->id,
                     'name'       => $p->name,
                     'sale_price' => $p->sale_price,
                     'barcode'    => $p->barcode,
-                    'batches'    => $p->activeBatches->map(fn($b) => [
-                        'id'          => $b->id,
-                        'batch_no'    => $b->batch_no,
-                        'expiry_date' => $b->expiry_date,
-                        'quantity'    => $b->quantity,
-                        'sale_price'  => $b->sale_price,
-                    ])->values(),
+                    'batches'    => $batches,
                 ];
             });
         return response()->json($medicines);

@@ -22,12 +22,14 @@ class PurchaseController extends Controller
     public function create()
     {
         $suppliers = Supplier::where('status', 'active')->orderBy('company_name')->get();
-        return view('admin.purchases.create', compact('suppliers'));
+        $branches  = \App\Models\Branch::where('status', 'active')->orderBy('name')->get();
+        return view('admin.purchases.create', compact('suppliers', 'branches'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
+            'branch_id'      => 'required|exists:branches,id',
             'supplier_id'    => 'required|exists:suppliers,id',
             'invoice_no'     => 'required|string|max:100',
             'purchase_date'  => 'required|date',
@@ -52,7 +54,7 @@ class PurchaseController extends Controller
 
             $purchase = PurchaseInvoice::create([
                 'supplier_id'    => $request->supplier_id,
-                'branch_id'      => auth()->user()->branch_id ?? 1,
+                'branch_id'      => $request->branch_id,
                 'invoice_no'     => $request->invoice_no,
                 'purchase_date'  => $request->purchase_date,
                 'subtotal'       => $subtotal,
@@ -82,16 +84,13 @@ class PurchaseController extends Controller
                 $batch->quantity           = ($batch->quantity ?? 0) + $totalQty;
                 $batch->save();
 
-                \App\Models\StockBalance::withoutGlobalScopes()->updateOrCreate(
-                    [
-                        'branch_id'  => $purchase->branch_id,
-                        'product_id' => $item['product_id'],
-                        'batch_id'   => $batch->id,
-                    ],
-                    [
-                        'qty_on_hand' => DB::raw("qty_on_hand + {$totalQty}")
-                    ]
-                );
+                $stockBalance = \App\Models\StockBalance::withoutGlobalScopes()->firstOrNew([
+                    'branch_id'  => $purchase->branch_id,
+                    'product_id' => $item['product_id'],
+                    'batch_id'   => $batch->id,
+                ]);
+                $stockBalance->qty_on_hand = ($stockBalance->qty_on_hand ?? 0) + $totalQty;
+                $stockBalance->save();
 
                 PurchaseItem::create([
                     'purchase_id'         => $purchase->id,
