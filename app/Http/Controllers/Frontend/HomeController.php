@@ -9,6 +9,7 @@ class HomeController extends Controller
 {
     public function index()
     {
-        return view('frontend.home.index');
+        $categories = \App\Models\Category::where('status', 'active')->withCount('products')->get();
+        return view('frontend.home.index', compact('categories'));
     }
 }

@@ -1,5 +1,10 @@
 @extends('frontend.layouts.app')
 
+@push('styles')
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+@endpush
+
 @section('content')
 
 <!-- ============================================
@@ -73,75 +78,14 @@
                 </div>
             </div>
 
-            <!-- Right Side — Glassmorphism Card -->
+            <!-- Right Side — Hero Image -->
             <div class="hidden lg:block relative">
                 <div class="relative z-10">
-                    <!-- Main glass card -->
-                    <div class="glass rounded-3xl p-8 shadow-2xl animate-float-slow">
-                        <div class="flex items-center space-x-4 mb-6">
-                            <div class="w-14 h-14 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-2xl flex items-center justify-center shadow-lg text-2xl">💊</div>
-                            <div>
-                                <h3 class="text-white font-bold text-lg">Quick Medicine Finder</h3>
-                                <p class="text-emerald-200/70 text-sm">Find any medicine in seconds</p>
-                            </div>
-                        </div>
-                        <!-- Simulated search results -->
-                        <div class="space-y-3">
-                            <div class="bg-white/10 rounded-xl p-3 flex items-center space-x-3 hover:bg-white/15 transition cursor-pointer">
-                                <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-lg">💊</div>
-                                <div class="flex-1">
-                                    <div class="text-white text-sm font-semibold">Napa Extra 500mg</div>
-                                    <div class="text-emerald-200/60 text-xs">Paracetamol • Square Pharma</div>
-                                </div>
-                                <span class="text-white font-bold text-sm">৳5.50</span>
-                            </div>
-                            <div class="bg-white/10 rounded-xl p-3 flex items-center space-x-3 hover:bg-white/15 transition cursor-pointer">
-                                <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-lg">💛</div>
-                                <div class="flex-1">
-                                    <div class="text-white text-sm font-semibold">Sergel 20mg</div>
-                                    <div class="text-emerald-200/60 text-xs">Omeprazole • Healthcare</div>
-                                </div>
-                                <span class="text-white font-bold text-sm">৳6.00</span>
-                            </div>
-                            <div class="bg-white/10 rounded-xl p-3 flex items-center space-x-3 hover:bg-white/15 transition cursor-pointer">
-                                <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-lg">🩹</div>
-                                <div class="flex-1">
-                                    <div class="text-white text-sm font-semibold">Seclo 20mg</div>
-                                    <div class="text-emerald-200/60 text-xs">Omeprazole • Square Pharma</div>
-                                </div>
-                                <span class="text-white font-bold text-sm">৳4.50</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Floating mini card -->
-                    <div class="absolute -top-6 -right-6 glass rounded-2xl px-5 py-3 shadow-xl animate-float delay-500">
-                        <div class="flex items-center space-x-2">
-                            <div class="w-8 h-8 bg-emerald-400 rounded-full flex items-center justify-center text-white">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                            </div>
-                            <div>
-                                <div class="text-white text-xs font-bold">Order Delivered!</div>
-                                <div class="text-emerald-200/60 text-[10px]">2 mins ago</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Another floating card -->
-                    <div class="absolute -bottom-4 -left-8 glass rounded-2xl px-5 py-3 shadow-xl animate-float-reverse delay-300">
-                        <div class="flex items-center space-x-3">
-                            <div class="flex -space-x-2">
-                                <div class="w-7 h-7 rounded-full bg-gradient-to-r from-rose-400 to-pink-500 border-2 border-white/20 flex items-center justify-center text-[10px] text-white font-bold">A</div>
-                                <div class="w-7 h-7 rounded-full bg-gradient-to-r from-blue-400 to-indigo-500 border-2 border-white/20 flex items-center justify-center text-[10px] text-white font-bold">R</div>
-                                <div class="w-7 h-7 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 border-2 border-white/20 flex items-center justify-center text-[10px] text-white font-bold">S</div>
-                            </div>
-                            <div>
-                                <div class="text-white text-xs font-bold">50K+ Trust Us</div>
-                                <div class="flex text-amber-400 text-[10px]">★★★★★</div>
-                            </div>
-                        </div>
-                    </div>
+                    <img src="{{ asset('assets/images/hero_illustration.jpg') }}" alt="PharmaSys App Illustration" class="w-full max-w-lg mx-auto rounded-3xl shadow-2xl">
                 </div>
+                
+                <!-- Floating decorative glow behind the image -->
+                <div class="absolute inset-0 bg-gradient-to-tr from-emerald-400 to-teal-400 rounded-full blur-3xl opacity-30 -z-10"></div>
             </div>
         </div>
     </div>
@@ -192,30 +136,30 @@
             <p class="text-slate-500 mt-4 max-w-xl mx-auto">Browse through our wide range of healthcare categories to find exactly what you need.</p>
         </div>
 
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-5">
-            @php
-                $categories = [
-                    ['emoji' => '💊', 'name' => 'Prescription', 'count' => '2,500+', 'gradient' => 'from-emerald-500 to-teal-500'],
-                    ['emoji' => '🏥', 'name' => 'OTC Medicines', 'count' => '1,800+', 'gradient' => 'from-blue-500 to-indigo-500'],
-                    ['emoji' => '💛', 'name' => 'Vitamins', 'count' => '900+', 'gradient' => 'from-amber-500 to-orange-500'],
-                    ['emoji' => '👶', 'name' => 'Baby Care', 'count' => '600+', 'gradient' => 'from-pink-500 to-rose-500'],
-                    ['emoji' => '✨', 'name' => 'Personal Care', 'count' => '1,200+', 'gradient' => 'from-violet-500 to-purple-500'],
-                    ['emoji' => '🩺', 'name' => 'Devices', 'count' => '350+', 'gradient' => 'from-cyan-500 to-sky-500'],
-                ];
-            @endphp
-
-            @foreach($categories as $i => $cat)
-            <a href="#" class="category-card reveal bg-white rounded-2xl p-5 text-center border border-slate-100 shadow-sm group block" style="animation-delay: {{ $i * 80 }}ms">
-                <div class="category-icon w-16 h-16 mx-auto bg-slate-50 rounded-2xl flex items-center justify-center text-3xl mb-3 border border-slate-100">
-                    {{ $cat['emoji'] }}
+        <div class="swiper categorySwiper relative px-4 py-2" style="padding-left: 2rem; padding-right: 2rem;">
+            <div class="swiper-wrapper">
+                @foreach($categories as $i => $cat)
+                <div class="swiper-slide h-auto">
+                    <a href="#" class="category-card reveal bg-white rounded-2xl p-5 text-center border border-slate-100 shadow-sm group block h-full" style="animation-delay: {{ ($i % 6) * 80 }}ms">
+                        <div class="category-icon w-16 h-16 mx-auto bg-slate-50 rounded-2xl flex items-center justify-center text-3xl mb-3 border border-slate-100 overflow-hidden">
+                            @if($cat->image && file_exists(public_path('storage/' . $cat->image)))
+                                <img src="{{ asset('storage/'.$cat->image) }}" alt="{{ $cat->name }}" class="w-full h-full object-cover">
+                            @else
+                                💊
+                            @endif
+                        </div>
+                        <h3 class="font-bold text-slate-800 text-sm">{{ $cat->name }}</h3>
+                        <p class="text-xs text-slate-400 mt-1">{{ $cat->products_count }} items</p>
+                        <div class="mt-3 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+                            <span class="inline-block text-xs font-bold bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-3 py-1 rounded-full">Browse →</span>
+                        </div>
+                    </a>
                 </div>
-                <h3 class="font-bold text-slate-800 text-sm">{{ $cat['name'] }}</h3>
-                <p class="text-xs text-slate-400 mt-1">{{ $cat['count'] }} items</p>
-                <div class="mt-3 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
-                    <span class="inline-block text-xs font-bold bg-gradient-to-r {{ $cat['gradient'] }} text-white px-3 py-1 rounded-full">Browse →</span>
-                </div>
-            </a>
-            @endforeach
+                @endforeach
+            </div>
+            <!-- Swiper Navigation -->
+            <div class="swiper-button-prev !text-emerald-600 !bg-white !w-10 !h-10 !rounded-full shadow-md after:!text-sm border border-slate-100 hidden md:flex !-left-2"></div>
+            <div class="swiper-button-next !text-emerald-600 !bg-white !w-10 !h-10 !rounded-full shadow-md after:!text-sm border border-slate-100 hidden md:flex !-right-2"></div>
         </div>
     </div>
 </section>
@@ -550,6 +494,33 @@
 </section>
 
 @endsection
+
+@push('scripts')
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var categorySwiper = new Swiper('.categorySwiper', {
+                slidesPerView: 2,
+                spaceBetween: 16,
+                navigation: {
+                    nextEl: '.categorySwiper .swiper-button-next',
+                    prevEl: '.categorySwiper .swiper-button-prev',
+                },
+                breakpoints: {
+                    640: { slidesPerView: 3, spaceBetween: 20 },
+                    768: { slidesPerView: 4, spaceBetween: 20 },
+                    1024: { slidesPerView: 6, spaceBetween: 20 },
+                },
+                autoplay: {
+                    delay: 3000,
+                    disableOnInteraction: false,
+                },
+                loop: false
+            });
+        });
+    </script>
+@endpush
 
 @push('scripts')
 <script>
