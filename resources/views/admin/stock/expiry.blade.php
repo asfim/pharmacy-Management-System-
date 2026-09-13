@@ -34,12 +34,22 @@
                     <th class="px-5 py-4 text-right">Qty</th>
                     <th class="px-5 py-4 text-right">Stock Value</th>
                     <th class="px-5 py-4 text-center">Days Expired</th>
+                    <th class="px-5 py-4 text-center">Action</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-red-50">
                 @foreach($expired as $b)
                 <tr class="hover:bg-red-50 transition">
-                    <td class="px-5 py-3.5 font-semibold text-slate-800">{{ $b->product->name ?? '-' }}</td>
+                    <td class="px-5 py-3.5 font-semibold text-slate-800">
+                        @if($b->product_id)
+                        <a href="{{ route('admin.medicines.show', $b->product_id) }}" class="font-bold text-slate-800 hover:text-teal-600 transition flex items-center gap-1.5 group">
+                            <span>{{ $b->product->name ?? '-' }}</span>
+                            <i class="fas fa-arrow-right text-[10px] opacity-0 group-hover:opacity-100 transition-opacity text-teal-600"></i>
+                        </a>
+                        @else
+                        {{ $b->product->name ?? '-' }}
+                        @endif
+                    </td>
                     <td class="px-5 py-3.5 font-mono text-slate-600">{{ $b->batch_no }}</td>
                     <td class="px-5 py-3.5 text-red-600 font-semibold">{{ \Carbon\Carbon::parse($b->expiry_date)->format('d M Y') }}</td>
                     <td class="px-5 py-3.5 text-right font-bold text-red-700">{{ $b->quantity }}</td>
@@ -48,6 +58,13 @@
                         <span class="px-2.5 py-1 bg-red-100 text-red-700 rounded-full text-xs font-semibold">
                             {{ abs(\Carbon\Carbon::parse($b->expiry_date)->diffInDays(now())) }} days ago
                         </span>
+                    </td>
+                    <td class="px-5 py-3.5 text-center">
+                        @if($b->product_id)
+                        <a href="{{ route('admin.medicines.show', $b->product_id) }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-teal-50 text-teal-700 hover:bg-teal-600 hover:text-white font-semibold text-xs transition shadow-xs">
+                            <i class="fas fa-eye"></i> Details
+                        </a>
+                        @endif
                     </td>
                 </tr>
                 @endforeach
@@ -76,13 +93,23 @@
                     <th class="px-5 py-4 text-right">Qty</th>
                     <th class="px-5 py-4 text-right">Stock Value</th>
                     <th class="px-5 py-4 text-center">Days Left</th>
+                    <th class="px-5 py-4 text-center">Action</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-slate-50">
                 @foreach($near90 as $b)
                 @php $daysLeft = now()->diffInDays(\Carbon\Carbon::parse($b->expiry_date)); @endphp
                 <tr class="hover:bg-yellow-50 transition">
-                    <td class="px-5 py-3.5 font-semibold text-slate-800">{{ $b->product->name ?? '-' }}</td>
+                    <td class="px-5 py-3.5 font-semibold text-slate-800">
+                        @if($b->product_id)
+                        <a href="{{ route('admin.medicines.show', $b->product_id) }}" class="font-bold text-slate-800 hover:text-teal-600 transition flex items-center gap-1.5 group">
+                            <span>{{ $b->product->name ?? '-' }}</span>
+                            <i class="fas fa-arrow-right text-[10px] opacity-0 group-hover:opacity-100 transition-opacity text-teal-600"></i>
+                        </a>
+                        @else
+                        {{ $b->product->name ?? '-' }}
+                        @endif
+                    </td>
                     <td class="px-5 py-3.5 font-mono text-slate-600">{{ $b->batch_no }}</td>
                     <td class="px-5 py-3.5 text-orange-600 font-semibold">{{ \Carbon\Carbon::parse($b->expiry_date)->format('d M Y') }}</td>
                     <td class="px-5 py-3.5 text-right font-bold text-slate-700">{{ $b->quantity }}</td>
@@ -91,6 +118,13 @@
                         <span class="px-2.5 py-1 {{ $daysLeft <= 30 ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700' }} rounded-full text-xs font-semibold">
                             {{ $daysLeft }} days
                         </span>
+                    </td>
+                    <td class="px-5 py-3.5 text-center">
+                        @if($b->product_id)
+                        <a href="{{ route('admin.medicines.show', $b->product_id) }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-teal-50 text-teal-700 hover:bg-teal-600 hover:text-white font-semibold text-xs transition shadow-xs">
+                            <i class="fas fa-eye"></i> Details
+                        </a>
+                        @endif
                     </td>
                 </tr>
                 @endforeach

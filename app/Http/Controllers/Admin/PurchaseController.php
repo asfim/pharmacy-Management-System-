@@ -19,11 +19,17 @@ class PurchaseController extends Controller
         return view('admin.purchases.index', compact('purchases'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
         $suppliers = Supplier::where('status', 'active')->orderBy('company_name')->get();
         $branches  = \App\Models\Branch::where('status', 'active')->orderBy('name')->get();
-        return view('admin.purchases.create', compact('suppliers', 'branches'));
+
+        $selectedProduct = null;
+        if ($request->filled('product_id')) {
+            $selectedProduct = \App\Models\Product::find($request->product_id);
+        }
+
+        return view('admin.purchases.create', compact('suppliers', 'branches', 'selectedProduct'));
     }
 
     public function store(Request $request)

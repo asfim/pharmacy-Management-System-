@@ -372,16 +372,32 @@
                 <div class="flex items-center gap-2">
 
                     <!-- Real-Time Notification & Stock/Expiry Alerts Dropdown -->
-                    <div class="relative" x-data="{ notificationOpen: false }">
-                        <button @click="notificationOpen = !notificationOpen" 
+                    <div class="relative" x-data="{ 
+                        notificationOpen: false, 
+                        unreadCount: {{ $totalAlertCount ?? 0 }},
+                        isRead: false,
+                        markAsRead() {
+                            this.isRead = true;
+                            this.unreadCount = 0;
+                            localStorage.setItem('pharmacy_alerts_read_count', '{{ $totalAlertCount ?? 0 }}');
+                        },
+                        init() {
+                            const lastRead = localStorage.getItem('pharmacy_alerts_read_count');
+                            if (lastRead && parseInt(lastRead) >= {{ $totalAlertCount ?? 0 }}) {
+                                this.isRead = true;
+                                this.unreadCount = 0;
+                            }
+                        }
+                    }">
+                        <button @click="notificationOpen = !notificationOpen; if(notificationOpen) markAsRead();" 
                                 class="relative p-2.5 rounded-xl text-slate-500 hover:bg-slate-100 hover:text-slate-800 transition focus:outline-none"
                                 title="Notifications & Stock Alerts">
                             <i class="fas fa-bell text-lg"></i>
-                            @if(($totalAlertCount ?? 0) > 0)
-                                <span class="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-rose-600 text-[10px] font-extrabold text-white shadow-sm ring-2 ring-white animate-pulse">
-                                    {{ $totalAlertCount > 99 ? '99+' : $totalAlertCount }}
+                            <template x-if="!isRead && unreadCount > 0">
+                                <span class="absolute top-1.5 right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-rose-600 text-[10px] font-extrabold text-white shadow-sm ring-2 ring-white animate-pulse"
+                                      x-text="unreadCount > 99 ? '99+' : unreadCount">
                                 </span>
-                            @endif
+                            </template>
                         </button>
 
                         <!-- Dropdown Panel -->
@@ -407,9 +423,14 @@
                                         <p class="text-[11px] text-slate-400">Stock & Expiry Alerts</p>
                                     </div>
                                 </div>
-                                <span class="px-2.5 py-1 rounded-full bg-rose-500/20 text-rose-300 text-xs font-bold border border-rose-500/30">
-                                    {{ $totalAlertCount ?? 0 }} Alerts
-                                </span>
+                                <div class="flex items-center gap-2">
+                                    <button @click="markAsRead()" class="text-[11px] font-bold text-teal-400 hover:text-teal-300 transition flex items-center gap-1">
+                                        <i class="fas fa-check-double text-[10px]"></i> Mark Read
+                                    </button>
+                                    <span class="px-2.5 py-1 rounded-full bg-rose-500/20 text-rose-300 text-xs font-bold border border-rose-500/30">
+                                        {{ $totalAlertCount ?? 0 }} Alerts
+                                    </span>
+                                </div>
                             </div>
 
                             <!-- List Container -->
@@ -423,9 +444,9 @@
                                         <p class="text-[11px] text-slate-400 mt-0.5">No low stock items or expired medicine batches found.</p>
                                     </div>
                                 @else
-                                    <!-- 1. Expired Medicine Alerts -->
+                                     <!-- 1. Expired Medicine Alerts -->
                                     @foreach($expiredBatches ?? [] as $b)
-                                        <a href="{{ route('admin.stock.expiry') }}" class="p-3.5 hover:bg-rose-50/70 transition flex items-start gap-3 group">
+                                        <a href="{{ $b->product_id ? route('admin.medicines.show', $b->product_id) : route('admin.stock.expiry') }}" class="p-3.5 hover:bg-rose-50/70 transition flex items-start gap-3 group">
                                             <div class="w-8 h-8 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center flex-shrink-0 text-xs mt-0.5 group-hover:bg-rose-600 group-hover:text-white transition">
                                                 <i class="fas fa-calendar-xmark"></i>
                                             </div>
@@ -445,7 +466,7 @@
 
                                     <!-- 2. Low Stock Alerts -->
                                     @foreach($lowStockProducts ?? [] as $p)
-                                        <a href="{{ route('admin.stock.low') }}" class="p-3.5 hover:bg-amber-50/70 transition flex items-start gap-3 group">
+                                        <a href="{{ route('admin.medicines.show', $p->id) }}" class="p-3.5 hover:bg-amber-50/70 transition flex items-start gap-3 group">
                                             <div class="w-8 h-8 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center flex-shrink-0 text-xs mt-0.5 group-hover:bg-amber-600 group-hover:text-white transition">
                                                 <i class="fas fa-triangle-exclamation"></i>
                                             </div>
@@ -465,7 +486,7 @@
 
                                     <!-- 3. Near Expiry Alerts -->
                                     @foreach($nearExpiryBatches ?? [] as $b)
-                                        <a href="{{ route('admin.stock.expiry') }}" class="p-3.5 hover:bg-orange-50/70 transition flex items-start gap-3 group">
+                                        <a href="{{ $b->product_id ? route('admin.medicines.show', $b->product_id) : route('admin.stock.expiry') }}" class="p-3.5 hover:bg-orange-50/70 transition flex items-start gap-3 group">
                                             <div class="w-8 h-8 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center flex-shrink-0 text-xs mt-0.5 group-hover:bg-orange-600 group-hover:text-white transition">
                                                 <i class="fas fa-hourglass-half"></i>
                                             </div>

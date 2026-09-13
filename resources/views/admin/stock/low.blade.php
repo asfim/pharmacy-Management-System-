@@ -27,27 +27,34 @@
                     <th class="px-5 py-4 text-left">Medicine</th>
                     <th class="px-5 py-4 text-right">Current Stock</th>
                     <th class="px-5 py-4 text-right">Min Stock</th>
-                    {{-- <th class="px-5 py-4 text-right">Reorder Qty</th> --}}
                     <th class="px-5 py-4 text-center">Urgency</th>
+                    <th class="px-5 py-4 text-center">Action</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-slate-50">
                 @foreach($products as $p)
-                @php $qty = $p->batches_sum_quantity ?? 0; @endphp
+                @php $qty = $p->current_stock ?? $p->batches_sum_quantity ?? 0; @endphp
                 <tr class="hover:bg-slate-50 transition">
                     <td class="px-5 py-3.5">
-                        <p class="font-semibold text-slate-800">{{ $p->name }}</p>
+                        <a href="{{ route('admin.medicines.show', $p->id) }}" class="font-bold text-slate-800 hover:text-teal-600 transition flex items-center gap-1.5 group">
+                            <span>{{ $p->name }}</span>
+                            <i class="fas fa-arrow-right text-[10px] opacity-0 group-hover:opacity-100 transition-opacity text-teal-600"></i>
+                        </a>
                         <p class="text-xs text-slate-400">{{ $p->generic->name ?? '' }}</p>
                     </td>
                     <td class="px-5 py-3.5 text-right font-bold {{ $qty == 0 ? 'text-red-600' : 'text-orange-600' }} text-lg">{{ $qty }}</td>
-                    <td class="px-5 py-3.5 text-right text-slate-600">{{ $p->min_stock }}</td>
-                    {{-- <td class="px-5 py-3.5 text-right font-semibold text-blue-600">{{ max(0, $p->min_stock - $qty) }}</td> --}}
+                    <td class="px-5 py-3.5 text-right text-slate-600 font-semibold">{{ $p->min_stock }}</td>
                     <td class="px-5 py-3.5 text-center">
                         @if($qty == 0)
-                        <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700">🔴 Critical</span>
+                        <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700">🔴 Out of Stock</span>
                         @else
-                        <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-orange-100 text-orange-700">🟠 Low</span>
+                        <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-orange-100 text-orange-700">🟠 Low Stock</span>
                         @endif
+                    </td>
+                    <td class="px-5 py-3.5 text-center">
+                        <a href="{{ route('admin.medicines.show', $p->id) }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-teal-50 text-teal-700 hover:bg-teal-600 hover:text-white font-semibold text-xs transition shadow-xs">
+                            <i class="fas fa-eye"></i> Details
+                        </a>
                     </td>
                 </tr>
                 @endforeach

@@ -168,8 +168,30 @@ class MedicineController extends Controller
 
     public function show(Product $medicine)
     {
-        $medicine->load(['category', 'brand', 'generic', 'manufacturer', 'batches']);
-        return view('admin.medicines.show', compact('medicine'));
+        $medicine->load([
+            'category', 
+            'brand', 
+            'generic', 
+            'manufacturer', 
+            'unit',
+            'batches' => function($q) {
+                $q->orderBy('expiry_date', 'asc');
+            },
+            'stock_balances' => function($q) {
+                $q->withoutGlobalScopes();
+            },
+            'stock_balances.branch'
+        ]);
+
+        $selectedBranchId = session('selected_branch_id');
+        $userBranchId     = auth()->user()->branch_id ?? null;
+        $activeBranchId   = (!empty($userBranchId) && !auth()->user()->hasRole('Super Admin'))
+            ? $userBranchId
+            : (($selectedBranchId && $selectedBranchId !== 'all') ? $selectedBranchId : null);
+
+        $activeBranch = $activeBranchId ? \App\Models\Branch::find($activeBranchId) : null;
+
+        return view('admin.medicines.show', compact('medicine', 'activeBranch'));
     }
 
     public function edit(Product $medicine)

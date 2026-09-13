@@ -116,15 +116,19 @@
                         <tr class="item-row border-b border-slate-100">
                             <td class="px-2 py-2">
                                 <select name="items[0][product_id]" class="medicine-select w-full px-2 py-2 border border-slate-200 rounded-lg text-sm" required>
-                                    <option value="">Select</option>
+                                    @if(isset($selectedProduct) && $selectedProduct)
+                                        <option value="{{ $selectedProduct->id }}" selected>{{ $selectedProduct->name }}</option>
+                                    @else
+                                        <option value="">Select</option>
+                                    @endif
                                 </select>
                             </td>
-                            <td class="px-2 py-2"><input type="text" name="items[0][batch_no]" required placeholder="Batch" class="w-full px-2 py-2 border border-slate-200 rounded-lg text-sm"></td>
-                            <td class="px-2 py-2"><input type="date" name="items[0][expiry_date]" class="w-full px-2 py-2 border border-slate-200 rounded-lg text-sm"></td>
+                            <td class="px-2 py-2"><input type="text" name="items[0][batch_no]" value="{{ isset($selectedProduct) && $selectedProduct ? ('B'.rand(100,9999)) : '' }}" required placeholder="Batch" class="w-full px-2 py-2 border border-slate-200 rounded-lg text-sm"></td>
+                            <td class="px-2 py-2"><input type="date" name="items[0][expiry_date]" value="{{ date('Y-m-d', strtotime('+2 years')) }}" class="w-full px-2 py-2 border border-slate-200 rounded-lg text-sm"></td>
                             <td class="px-2 py-2"><input type="number" name="items[0][quantity]" value="1" min="1" class="w-full px-2 py-2 border border-slate-200 rounded-lg text-sm text-right qty-input" required></td>
                             <td class="px-2 py-2"><input type="number" name="items[0][free_quantity]" value="0" min="0" class="w-full px-2 py-2 border border-slate-200 rounded-lg text-sm text-right"></td>
-                            <td class="px-2 py-2"><input type="number" name="items[0][purchase_price]" value="0" min="0" step="0.01" class="w-full px-2 py-2 border border-slate-200 rounded-lg text-sm text-right price-input" required></td>
-                            <td class="px-2 py-2"><input type="number" name="items[0][sale_price]" value="0" min="0" step="0.01" class="w-full px-2 py-2 border border-slate-200 rounded-lg text-sm text-right" required></td>
+                            <td class="px-2 py-2"><input type="number" name="items[0][purchase_price]" value="{{ isset($selectedProduct) && $selectedProduct ? $selectedProduct->purchase_price : 0 }}" min="0" step="0.01" class="w-full px-2 py-2 border border-slate-200 rounded-lg text-sm text-right price-input" required></td>
+                            <td class="px-2 py-2"><input type="number" name="items[0][sale_price]" value="{{ isset($selectedProduct) && $selectedProduct ? $selectedProduct->sale_price : 0 }}" min="0" step="0.01" class="w-full px-2 py-2 border border-slate-200 rounded-lg text-sm text-right" required></td>
                             <td class="px-2 py-2 text-right"><span class="row-total font-semibold text-slate-700">0.00</span></td>
                             <td class="px-2 py-2 text-center"><button type="button" class="remove-row text-red-400 hover:text-red-600 p-1"><i class="fas fa-times"></i></button></td>
                         </tr>
@@ -206,6 +210,9 @@ $(document).ready(function() {
         allowClear: true
     });
     initMedicineSelect2('.medicine-select');
+    if (document.querySelector('.item-row')) {
+        updateRowTotal(document.querySelector('.item-row'));
+    }
 });
 
 function initMedicineSelect2(selector) {
