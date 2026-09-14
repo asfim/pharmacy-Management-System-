@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Batch;
 use App\Models\Product;
+use App\Models\Setting;
+use Illuminate\Support\Facades\Schema;
 use Carbon\Carbon;
 
 class AppServiceProvider extends ServiceProvider
@@ -26,6 +28,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        try {
+            if (Schema::hasTable('settings')) {
+                $siteSettings = Setting::pluck('value', 'key')->toArray();
+                View::share('siteSettings', $siteSettings);
+            }
+        } catch (\Exception $e) {
+            // Do nothing if db is not ready
+        }
+
         Gate::before(function ($user, $ability) {
             return $user->hasRole('Super Admin') ? true : null;
         });

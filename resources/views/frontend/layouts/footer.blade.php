@@ -18,12 +18,16 @@
             <!-- Company Info -->
             <div class="lg:col-span-1">
                 <a href="{{ route('home') }}" class="flex items-center space-x-2 mb-5 group">
-                    <div class="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/20 group-hover:shadow-emerald-500/40 transition-shadow">
-                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
-                    </div>
-                    <span class="text-2xl font-extrabold tracking-tight">
-                        <span class="text-emerald-500">PHARMA</span><span class="text-white">SYS</span>
-                    </span>
+                    @if(isset($siteSettings['site_logo']) && $siteSettings['site_logo'])
+                        <img src="{{ asset('storage/' . $siteSettings['site_logo']) }}" class="h-10 w-auto object-contain" alt="Site Logo">
+                    @else
+                        <div class="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/20 group-hover:shadow-emerald-500/40 transition-shadow">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                        </div>
+                        <span class="text-2xl font-extrabold tracking-tight">
+                            <span class="text-emerald-500">{{ isset($siteSettings['site_title']) ? strtok($siteSettings['site_title'], ' ') : 'PHARMA' }}</span><span class="text-white">{{ isset($siteSettings['site_title']) ? substr($siteSettings['site_title'], strpos($siteSettings['site_title'], ' ')) : 'SYS' }}</span>
+                        </span>
+                    @endif
                 </a>
                 <p class="text-sm text-slate-400 mb-6 leading-relaxed">
                     Your trusted digital pharmacy. We provide genuine medicines, fast delivery, and authentic healthcare products at your doorstep across Bangladesh.

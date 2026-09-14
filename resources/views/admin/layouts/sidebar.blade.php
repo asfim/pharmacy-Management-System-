@@ -4,7 +4,11 @@
     
     <!-- Logo -->
     <div class="flex items-center justify-center h-16 bg-slate-950 border-b border-slate-800">
-        <span class="text-xl font-bold text-teal-400 tracking-wider">PHARMA<span class="text-white">SYS</span></span>
+        @if(isset($siteSettings['site_logo']) && $siteSettings['site_logo'])
+            <img src="{{ asset('storage/' . $siteSettings['site_logo']) }}" class="h-10 w-auto object-contain" alt="Site Logo">
+        @else
+            <span class="text-xl font-bold text-teal-400 tracking-wider">{{ isset($siteSettings['site_title']) ? strtok($siteSettings['site_title'], ' ') : 'PHARMA' }}<span class="text-white">{{ isset($siteSettings['site_title']) ? substr($siteSettings['site_title'], strpos($siteSettings['site_title'], ' ')) : 'SYS' }}</span></span>
+        @endif
     </div>
 
     <!-- Navigation Links -->

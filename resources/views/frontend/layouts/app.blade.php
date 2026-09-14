@@ -6,10 +6,14 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="description" content="PharmaSys — Your trusted digital pharmacy. Order genuine medicines online with fast delivery across Bangladesh.">
 
-    <title>{{ config('app.name', 'PharmaSys — Online Pharmacy') }}</title>
+    <title>{{ isset($siteSettings['site_title']) && $siteSettings['site_title'] ? $siteSettings['site_title'] : config('app.name', 'PharmaSys — Online Pharmacy') }}</title>
 
     <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E💊%3C/text%3E%3C/svg%3E">
+    @if(isset($siteSettings['site_favicon']) && $siteSettings['site_favicon'])
+        <link rel="icon" type="image/x-icon" href="{{ asset('storage/' . $siteSettings['site_favicon']) }}">
+    @else
+        <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E💊%3C/text%3E%3C/svg%3E">
+    @endif
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

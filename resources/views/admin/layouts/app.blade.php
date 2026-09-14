@@ -5,7 +5,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ isset($header) ? $header . ' — ' : '' }}{{ config('app.name', 'PharmaSys') }}</title>
+    <title>{{ isset($header) ? $header . ' — ' : '' }}{{ isset($siteSettings['site_title']) && $siteSettings['site_title'] ? $siteSettings['site_title'] : config('app.name', 'PharmaSys') }}</title>
+
+    <!-- Favicon -->
+    @if(isset($siteSettings['site_favicon']) && $siteSettings['site_favicon'])
+        <link rel="icon" type="image/x-icon" href="{{ asset('storage/' . $siteSettings['site_favicon']) }}">
+    @else
+        <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E💊%3C/text%3E%3C/svg%3E">
+    @endif
 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
