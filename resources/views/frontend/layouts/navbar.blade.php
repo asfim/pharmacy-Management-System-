@@ -42,18 +42,10 @@
                         <svg class="w-4 h-4 animate-pulse" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"></path></svg>
                         <span>Flash Sale</span>
                     </a>
-                    <a href="#" class="nav-link-effect px-4 py-2 font-medium text-sm hover:text-emerald-400 transition-colors duration-200">Brands</a>
-                    <a href="#" class="nav-link-effect px-4 py-2 font-medium text-sm hover:text-emerald-400 transition-colors duration-200">Generics</a>
                 </div>
             </div>
             
-            <!-- Upload Prescription CTA -->
-            <div class="flex items-center">
-                <a href="#" class="btn-glow flex items-center space-x-2 bg-gradient-to-r from-rose-500 to-pink-500 px-5 py-2 rounded-full font-semibold text-sm transition-all duration-300 shadow-lg shadow-rose-500/20 hover:shadow-rose-500/40">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-                    <span>Upload Prescription</span>
-                </a>
-            </div>
+
         </div>
     </div>
 </nav>
@@ -89,23 +81,9 @@
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"></path></svg>
                     <span>Flash Sale</span>
                 </a>
-                <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-700 hover:bg-emerald-50 hover:text-emerald-600 transition font-medium">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg>
-                    <span>Brands</span>
-                </a>
-                <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-700 hover:bg-emerald-50 hover:text-emerald-600 transition font-medium">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
-                    <span>Generics</span>
-                </a>
             </nav>
 
-            <!-- Mobile Upload Prescription -->
-            <div class="mt-6 pt-6 border-t border-slate-100">
-                <a href="#" class="flex items-center justify-center space-x-2 w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white py-3 rounded-xl font-semibold shadow-lg">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-                    <span>Upload Prescription</span>
-                </a>
-            </div>
+
 
             <!-- Categories -->
             <div class="mt-6 pt-6 border-t border-slate-100">
