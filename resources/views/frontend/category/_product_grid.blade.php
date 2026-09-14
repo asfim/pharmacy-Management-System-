@@ -1,40 +1,35 @@
 @if($products->count() > 0)
-    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-5">
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
         @foreach($products as $product)
+        @php
+            $primaryImage = $product->product_images->where('is_primary', 1)->first()
+                         ?? $product->product_images->first();
+        @endphp
         <div class="cp-product">
-            <div class="cp-product-img">
-                @if($product->image && file_exists(public_path('storage/' . $product->image)))
-                    <img src="{{ asset('storage/'.$product->image) }}" alt="{{ $product->name }}">
-                @else
-                    💊
-                @endif
+            <a href="{{ route('product.detail', $product->id) }}" class="block">
+                <div class="cp-product-img">
+                    @if($primaryImage && $primaryImage->image_url)
+                        <img src="{{ asset('storage/'.$primaryImage->image_url) }}" alt="{{ $product->name }}">
+                    @else
+                        <svg class="w-16 h-16 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                    @endif
 
-                @if($product->discount > 0)
-                    <div class="cp-discount-tag">-{{ (int)$product->discount }}%</div>
-                @endif
-
-                @if($product->prescription_required)
-                    <div class="cp-rx-tag">Rx</div>
-                @endif
-            </div>
+                    @if($product->discount > 0)
+                        <div class="cp-discount-tag">-{{ (int)$product->discount }}%</div>
+                    @endif
+                    @if($product->prescription_required)
+                        <div class="cp-rx-tag">Rx</div>
+                    @endif
+                </div>
+            </a>
             <div class="cp-product-body">
                 <div class="cp-product-brand">
-                    {{ $product->manufacturer->name ?? ($product->brand->name ?? 'N/A') }}
+                    {{ $product->manufacturer->name ?? ($product->brand->name ?? '') }}
                 </div>
-                <div class="cp-product-name" title="{{ $product->name }}">{{ $product->name }}</div>
-                <div class="cp-product-generic">{{ $product->generic->name ?? '' }}</div>
-
-                <div class="cp-product-meta">
-                    @if($product->strength)
-                        <span>{{ $product->strength }}</span>
-                    @endif
-                    @if($product->dosage_form)
-                        <span>{{ $product->dosage_form }}</span>
-                    @endif
-                    @if($product->pack_size)
-                        <span>{{ $product->pack_size }}</span>
-                    @endif
-                </div>
+                <a href="{{ route('product.detail', $product->id) }}" class="block hover:text-emerald-600 transition-colors">
+                    <div class="cp-product-name" title="{{ $product->name }}">{{ $product->name }}</div>
+                </a>
+                <div class="cp-product-generic">{{ $product->generic->name ?? '' }} {{ $product->strength ?? '' }}</div>
 
                 <div class="cp-price-row">
                     <div>
@@ -43,9 +38,10 @@
                             <span class="cp-price-old">৳{{ number_format($product->mrp, 2) }}</span>
                         @endif
                     </div>
-                    <button class="cp-add-btn" title="Add to Cart">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
-                    </button>
+                    <a href="{{ route('product.detail', $product->id) }}" class="cp-buy-btn">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                        Buy Now
+                    </a>
                 </div>
             </div>
         </div>

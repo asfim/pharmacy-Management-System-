@@ -26,7 +26,7 @@ class HomeController extends Controller
                 $q->where('name', 'like', "%{$search}%")
                   ->orWhere('strength', 'like', "%{$search}%")
                   ->orWhere('dosage_form', 'like', "%{$search}%");
-            })->with(['brand', 'generic', 'manufacturer'])->paginate(20);
+            })->with(['brand', 'generic', 'manufacturer', 'product_images'])->paginate(24);
 
             return response()->json([
                 'html' => view('frontend.category._product_grid', compact('products'))->render(),
@@ -34,9 +34,23 @@ class HomeController extends Controller
             ]);
         }
 
-        $products = $query->with(['brand', 'generic', 'manufacturer'])->paginate(20);
-        $allCategories = \App\Models\Category::where('status', 'active')->withCount('products')->get();
+        $products = $query->with(['brand', 'generic', 'manufacturer', 'product_images'])->paginate(24);
 
-        return view('frontend.category.products', compact('category', 'products', 'allCategories'));
+        return view('frontend.category.products', compact('category', 'products'));
+    }
+
+    public function productDetail(\App\Models\Product $product)
+    {
+        $product->load(['brand', 'generic', 'manufacturer', 'category', 'sub_category', 'unit', 'product_images', 'product_reviews']);
+
+        // Related products from same category
+        $relatedProducts = \App\Models\Product::where('category_id', $product->category_id)
+            ->where('id', '!=', $product->id)
+            ->where('status', 'active')
+            ->with(['product_images', 'manufacturer'])
+            ->limit(4)
+            ->get();
+
+        return view('frontend.product.detail', compact('product', 'relatedProducts'));
     }
 }

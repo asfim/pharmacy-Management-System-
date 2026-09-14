@@ -516,7 +516,9 @@
                     delay: 3000,
                     disableOnInteraction: false,
                 },
-                loop: false
+                loop: false,
+                preventClicks: false,
+                preventClicksPropagation: false
             });
         });
     </script>
