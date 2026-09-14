@@ -42,10 +42,13 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        $role = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'Customer']);
+        $user->assignRole($role);
+
         event(new Registered($user));
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        return redirect(route('customer.dashboard', absolute: false));
     }
 }

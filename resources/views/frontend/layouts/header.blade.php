@@ -74,7 +74,7 @@
                 </button>
 
                 @auth
-                    <a href="{{ route('admin.dashboard') }}" class="flex flex-col items-center p-2 rounded-xl text-slate-500 hover:text-emerald-600 hover:bg-emerald-50 transition-all duration-300 group">
+                    <a href="{{ auth()->user()->hasRole('Customer') ? route('customer.dashboard') : route('admin.dashboard') }}" class="flex flex-col items-center p-2 rounded-xl text-slate-500 hover:text-emerald-600 hover:bg-emerald-50 transition-all duration-300 group">
                         <div class="relative">
                             <svg class="w-6 h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                         </div>
