@@ -238,9 +238,11 @@
                         <tbody class="divide-y divide-slate-50">
                             @forelse($medicine->batches as $batch)
                                 @php
-                                    $expDate = \Carbon\Carbon::parse($batch->expiry_date);
-                                    $isExpired = $expDate->isPast();
-                                    $isNearExpiry = !$isExpired && $expDate->diffInDays(now()) <= 90;
+                                    $expDate = \Carbon\Carbon::parse($batch->expiry_date)->startOfDay();
+                                    $today = now()->startOfDay();
+                                    $isExpired = $expDate->isBefore($today);
+                                    $daysLeft = (int) $today->diffInDays($expDate, false);
+                                    $isNearExpiry = !$isExpired && $daysLeft <= 30 && $daysLeft >= 0;
                                 @endphp
                                 <tr class="hover:bg-slate-50/70 transition">
                                     <td class="px-5 py-4 font-mono font-bold text-slate-700">
@@ -251,12 +253,12 @@
                                     </td>
                                     <td class="px-5 py-4 text-center">
                                         @if($isExpired)
-                                            <span class="px-2.5 py-1 rounded-full text-xs font-extrabold bg-rose-100 text-rose-700">
-                                                🔴 Expired ({{ abs((int)$expDate->diffInDays(now())) }}d ago)
+                                            <span class="px-2.5 py-1 rounded-full text-xs font-extrabold bg-rose-100 text-rose-700 whitespace-nowrap">
+                                                🔴 Expired {{ abs((int)$today->diffInDays($expDate, false)) }} days ago
                                             </span>
                                         @elseif($isNearExpiry)
-                                            <span class="px-2.5 py-1 rounded-full text-xs font-extrabold bg-amber-100 text-amber-800">
-                                                🟡 Near Expiry ({{ (int)$expDate->diffInDays(now()) }}d left)
+                                            <span class="px-2.5 py-1 rounded-full text-xs font-extrabold bg-amber-100 text-amber-800 whitespace-nowrap">
+                                                🟡 Near Expiry ({{ $daysLeft }} days left)
                                             </span>
                                         @else
                                             <span class="px-2.5 py-1 rounded-full text-xs font-extrabold bg-emerald-100 text-emerald-700">

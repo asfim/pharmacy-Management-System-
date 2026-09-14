@@ -56,7 +56,7 @@
                     <td class="px-5 py-3.5 text-right text-slate-700">৳{{ number_format($b->quantity * $b->purchase_price, 2) }}</td>
                     <td class="px-5 py-3.5 text-center">
                         <span class="px-2.5 py-1 bg-red-100 text-red-700 rounded-full text-xs font-semibold">
-                            {{ abs(\Carbon\Carbon::parse($b->expiry_date)->diffInDays(now())) }} days ago
+                            Expired {{ abs(\Carbon\Carbon::parse($b->expiry_date)->diffInDays(now())) }} days ago
                         </span>
                     </td>
                     <td class="px-5 py-3.5 text-center">
@@ -115,8 +115,8 @@
                     <td class="px-5 py-3.5 text-right font-bold text-slate-700">{{ $b->quantity }}</td>
                     <td class="px-5 py-3.5 text-right text-slate-700">৳{{ number_format($b->quantity * $b->purchase_price, 2) }}</td>
                     <td class="px-5 py-3.5 text-center">
-                        <span class="px-2.5 py-1 {{ $daysLeft <= 30 ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700' }} rounded-full text-xs font-semibold">
-                            {{ $daysLeft }} days
+                        <span class="px-2.5 py-1 {{ $daysLeft <= 30 ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700' }} rounded-full text-xs font-semibold whitespace-nowrap">
+                            Expires in {{ $daysLeft }} days
                         </span>
                     </td>
                     <td class="px-5 py-3.5 text-center">
