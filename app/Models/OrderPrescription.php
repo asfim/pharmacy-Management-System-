@@ -30,6 +30,11 @@ class OrderPrescription extends Model
 		'prescription_id' => 'int'
 	];
 
+	protected $fillable = [
+		'order_id',
+		'prescription_id'
+	];
+
 	public function online_order()
 	{
 		return $this->belongsTo(OnlineOrder::class, 'order_id');

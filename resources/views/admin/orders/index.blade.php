@@ -8,7 +8,7 @@
 
 <!-- Status Filter Tabs -->
 <div class="flex gap-2 mb-5 flex-wrap">
-    @foreach(['all','pending','confirmed','processing','shipped','delivered','cancelled'] as $s)
+    @foreach(['all','pending','confirmed','ready','delivered','cancelled'] as $s)
     <a href="{{ request()->fullUrlWithQuery(['status' => $s == 'all' ? '' : $s]) }}"
        class="px-4 py-1.5 rounded-full text-xs font-semibold border {{ request('status', '') == ($s == 'all' ? '' : $s) ? 'bg-teal-600 text-white border-teal-600' : 'border-slate-300 text-slate-600 hover:border-teal-500 hover:text-teal-600' }} transition">
         {{ ucfirst($s) }}
@@ -46,7 +46,21 @@
                     <td class="px-5 py-3.5 text-right font-bold text-slate-800">৳{{ number_format($o->total, 2) }}</td>
                     <td class="px-5 py-3.5 text-center text-xs text-slate-600 capitalize">{{ $o->payment_method ?? '-' }}</td>
                     <td class="px-5 py-3.5 text-center">
-                        <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-{{ $c }}-100 text-{{ $c }}-700 capitalize">{{ $o->status }}</span>
+                        <select onchange="updateOrderStatus({{ $o->id }}, this)" class="text-xs font-bold rounded-lg border-2 border-slate-200 bg-{{ $c }}-50 text-{{ $c }}-700 hover:border-teal-400 focus:ring-4 focus:ring-teal-50 focus:border-teal-500 cursor-pointer shadow-sm transition-all py-1.5 px-3">
+                            @foreach(['pending','confirmed','delivered','cancelled'] as $s)
+                                <option value="{{ $s }}" {{ $o->status == $s ? 'selected' : '' }}>{{ ucfirst($s) }}</option>
+                            @endforeach
+                        </select>
+                        @if($o->prescription_required)
+                            @php
+                                $prescription = $o->order_prescriptions->first()?->prescription;
+                            @endphp
+                            @if($prescription && $prescription->verification_status != 'verified')
+                                <div class="mt-2 text-[10px] font-bold text-rose-600 bg-rose-50 px-2 py-0.5 rounded-full inline-flex items-center gap-1 shadow-sm border border-rose-100">
+                                    <i class="fas fa-exclamation-circle"></i> Match Failed
+                                </div>
+                            @endif
+                        @endif
                     </td>
                     <td class="px-5 py-3.5 text-right">
                         <div class="flex justify-end gap-1">
@@ -65,4 +79,49 @@
     <div class="px-5 py-4 border-t border-slate-100 bg-slate-50">{{ $orders->links() }}</div>
     @endif
 </div>
+
+<script>
+const statusColors = {
+    'pending': 'bg-yellow-50 text-yellow-700',
+    'confirmed': 'bg-blue-50 text-blue-700',
+    'delivered': 'bg-green-50 text-green-700',
+    'cancelled': 'bg-red-50 text-red-700'
+};
+
+function updateOrderStatus(orderId, selectElement) {
+    const status = selectElement.value;
+    
+    fetch(`/admin/orders/${orderId}/status`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify({ status: status })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Remove all color classes
+            Object.values(statusColors).forEach(colorClass => {
+                const classes = colorClass.split(' ');
+                selectElement.classList.remove(...classes);
+            });
+            
+            // Add new color classes
+            if (statusColors[status]) {
+                const newClasses = statusColors[status].split(' ');
+                selectElement.classList.add(...newClasses);
+            }
+        } else {
+            console.error('Failed to update status.');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+</script>
 @endsection

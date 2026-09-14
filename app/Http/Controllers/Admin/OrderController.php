@@ -10,7 +10,9 @@ class OrderController extends Controller
 {
     public function index()
     {
-        $orders = OnlineOrder::with('customer')->latest()->paginate(20);
+        $orders = OnlineOrder::with(['customer', 'order_prescriptions.prescription'])->when(request('status'), function($q) {
+            $q->where('status', request('status'));
+        })->latest()->paginate(20);
         return view('admin.orders.index', compact('orders'));
     }
 
@@ -24,6 +26,11 @@ class OrderController extends Controller
     {
         $request->validate(['status' => 'required|in:pending,confirmed,processing,ready,shipped,delivered,cancelled,returned,refunded']);
         $order->update(['status' => $request->status]);
+        
+        if ($request->ajax()) {
+            return response()->json(['success' => true, 'message' => 'Order status updated to ' . ucfirst($request->status)]);
+        }
+
         return back()->with('success', 'Order status updated to ' . ucfirst($request->status));
     }
 

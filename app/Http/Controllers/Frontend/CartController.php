@@ -166,8 +166,12 @@ class CartController extends Controller
         $customer = $user ? Customer::where('email', $user->email)->first() : null;
 
         $isBuyNow = $request->has('buy_now_id');
+        $prescriptionRequired = collect($cart)->contains(function ($item, $id) {
+            $product = \App\Models\Product::find($id);
+            return $product && $product->prescription_required;
+        });
 
-        return view('frontend.checkout.index', compact('cart', 'subtotal', 'delivery', 'total', 'user', 'customer', 'isBuyNow'));
+        return view('frontend.checkout.index', compact('cart', 'subtotal', 'delivery', 'total', 'user', 'customer', 'isBuyNow', 'prescriptionRequired'));
     }
 
     /**
@@ -191,6 +195,17 @@ class CartController extends Controller
         $subtotal = collect($cart)->sum(fn($i) => $i['price'] * $i['quantity']);
         $delivery = 60;
         $total    = $subtotal + $delivery;
+
+        $prescriptionRequired = collect($cart)->contains(function ($item, $id) {
+            $product = \App\Models\Product::find($id);
+            return $product && $product->prescription_required;
+        });
+
+        if ($prescriptionRequired) {
+            $request->validate([
+                'prescription_file' => 'required|file|mimes:jpeg,png,jpg,pdf|max:5120',
+            ]);
+        }
 
         // Handle customer creation/updates
         $user = Auth::user();
@@ -226,8 +241,10 @@ class CartController extends Controller
             'delivery_charge'       => $delivery,
             'vat'                   => 0,
             'total'                 => $total,
-            'prescription_required' => false,
+            'prescription_required' => $prescriptionRequired,
         ]);
+
+        $orderedProductNames = [];
 
         // Create Order Items
         foreach ($cart as $id => $item) {
@@ -238,6 +255,29 @@ class CartController extends Controller
                 'unit_price' => $item['price'],
                 'total'      => $item['price'] * $item['quantity'],
             ]);
+            $orderedProductNames[] = $item['name'];
+        }
+
+        // Handle Prescription Upload
+        if ($prescriptionRequired && $request->hasFile('prescription_file')) {
+            $path = $request->file('prescription_file')->store('prescriptions', 'public');
+            
+            $prescription = \App\Models\Prescription::create([
+                'prescription_no'     => 'RX-' . strtoupper(uniqid()),
+                'customer_id'         => $customer->id,
+                'prescription_date'   => now(),
+                'image_file'          => $path,
+                'verification_status' => 'pending',
+                'notes'               => 'Pending AI analysis...',
+            ]);
+
+            \App\Models\OrderPrescription::create([
+                'order_id' => $order->id,
+                'prescription_id' => $prescription->id,
+            ]);
+
+            // Run AI OCR Service (Simulated)
+            \App\Services\PrescriptionAIService::process($prescription, $orderedProductNames);
         }
 
         // Clear respective cart

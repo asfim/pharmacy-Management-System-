@@ -81,7 +81,7 @@
 @section('content')
 <div class="co-wrap">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <form action="{{ route('checkout.place') }}" method="POST">
+        <form action="{{ route('checkout.place') }}" method="POST" enctype="multipart/form-data">
             @csrf
             @if(isset($isBuyNow) && $isBuyNow)
                 <input type="hidden" name="is_buy_now" value="1">
@@ -108,8 +108,19 @@
 
                     <div class="co-form-group">
                         <label class="co-label">Delivery Address</label>
-                        <textarea name="address" class="co-input" rows="4" required placeholder="House, Road, Block, Area, City">{{ old('address', $customer->address ?? '') }}</textarea>
+                        <textarea name="address" class="co-input" rows="4" required placeholder="House, Road, Block, Area, City">{{ old('address', $customer->address_line ?? '') }}</textarea>
                     </div>
+                    
+                    @if(isset($prescriptionRequired) && $prescriptionRequired)
+                    <div class="mt-6 p-5 bg-rose-50 border-2 border-rose-200 rounded-xl">
+                        <h3 class="font-bold text-rose-700 flex items-center gap-2 mb-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                            Prescription Required
+                        </h3>
+                        <p class="text-sm text-rose-600 mb-4">One or more medicines in your cart require a valid doctor's prescription. Please upload a clear photo or PDF.</p>
+                        <input type="file" name="prescription_file" accept="image/*,.pdf" required class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-rose-100 file:text-rose-700 hover:file:bg-rose-200 cursor-pointer">
+                    </div>
+                    @endif
 
                     <h2 class="co-title mt-8">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
