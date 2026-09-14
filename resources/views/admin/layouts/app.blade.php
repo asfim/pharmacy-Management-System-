@@ -346,6 +346,11 @@
                     <i class="fas fa-layer-group"></i>
                     <span>Homepage Features</span>
                 </a>
+                <a href="{{ route('admin.testimonials.index') }}"
+                    class="sidebar-link {{ request()->routeIs('admin.testimonials*') ? 'active' : '' }}">
+                    <i class="fas fa-star"></i>
+                    <span>Testimonials</span>
+                </a>
             </nav>
 
             <!-- Logout -->

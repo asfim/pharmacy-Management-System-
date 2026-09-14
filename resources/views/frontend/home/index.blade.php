@@ -371,33 +371,24 @@
             <div class="reveal-left">
                 <div class="inline-flex items-center space-x-2 bg-emerald-100 text-emerald-700 rounded-full px-4 py-1.5 text-sm font-semibold mb-6">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
-                    <span>Why Choose PharmaSys</span>
+                    <span>{{ $siteSettings['why_choose_badge'] ?? 'Why Choose PharmaSys' }}</span>
                 </div>
                 <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 mb-6 leading-tight">
-                    Your Trusted Partner in <span class="gradient-text">Healthcare</span>
+                    {!! $siteSettings['why_choose_title'] ?? 'Your Trusted Partner in <span class="gradient-text">Healthcare</span>' !!}
                 </h2>
                 <p class="text-slate-500 text-lg mb-10 leading-relaxed">
-                    We're committed to making healthcare accessible, affordable, and convenient for everyone across Bangladesh.
+                    {{ $siteSettings['why_choose_desc'] ?? "We're committed to making healthcare accessible, affordable, and convenient for everyone across Bangladesh." }}
                 </p>
 
                 <div class="space-y-6">
-                    @php
-                        $reasons = [
-                            ['icon' => '🔒', 'title' => 'Licensed & Certified', 'desc' => 'Government-approved pharmacy with all valid licenses and certifications.'],
-                            ['icon' => '🚚', 'title' => 'Same-Day Delivery', 'desc' => 'Order before 2 PM and receive your medicines on the same day within Dhaka.'],
-                            ['icon' => '👨‍⚕️', 'title' => 'Expert Pharmacists', 'desc' => 'Our team of qualified pharmacists ensures you get the right medicines every time.'],
-                            ['icon' => '💰', 'title' => 'Best Price Guarantee', 'desc' => 'We match competitor prices and offer exclusive discounts on top brands.'],
-                        ];
-                    @endphp
-
-                    @foreach($reasons as $i => $r)
+                    @foreach($whyChooseFeatures as $r)
                     <div class="flex items-start space-x-4 group">
-                        <div class="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center text-2xl border border-slate-100 group-hover:bg-gradient-to-br group-hover:from-emerald-500 group-hover:to-teal-500 group-hover:border-transparent transition-all duration-300 shrink-0 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-emerald-500/20">
-                            <span class="group-hover:scale-110 transition-transform">{{ $r['icon'] }}</span>
+                        <div class="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center text-2xl border border-slate-100 group-hover:bg-gradient-to-br group-hover:from-{{ $r->color ?? 'emerald' }}-500 group-hover:to-{{ $r->color == 'emerald' ? 'teal' : ($r->color ?? 'emerald') }}-500 group-hover:border-transparent transition-all duration-300 shrink-0 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-{{ $r->color ?? 'emerald' }}-500/20">
+                            <span class="group-hover:scale-110 transition-transform">{!! $r->icon !!}</span>
                         </div>
                         <div>
-                            <h4 class="font-bold text-slate-800 text-base mb-1 group-hover:text-emerald-600 transition-colors">{{ $r['title'] }}</h4>
-                            <p class="text-sm text-slate-500 leading-relaxed">{{ $r['desc'] }}</p>
+                            <h4 class="font-bold text-slate-800 text-base mb-1 group-hover:text-{{ $r->color ?? 'emerald' }}-600 transition-colors">{{ $r->title }}</h4>
+                            <p class="text-sm text-slate-500 leading-relaxed">{{ $r->description }}</p>
                         </div>
                     </div>
                     @endforeach
@@ -407,26 +398,31 @@
             <!-- Right: Stats Cards -->
             <div class="reveal-right relative">
                 <div class="grid grid-cols-2 gap-5">
-                    <div class="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-3xl p-6 text-white shadow-xl shadow-emerald-500/20 card-hover">
-                        <div class="text-4xl mb-3">💊</div>
-                        <div class="text-3xl font-extrabold" data-counter data-target="10000" data-suffix="+">0</div>
-                        <div class="text-emerald-200 text-sm font-medium mt-1">Products Available</div>
-                    </div>
-                    <div class="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-3xl p-6 text-white shadow-xl shadow-blue-500/20 card-hover mt-8">
-                        <div class="text-4xl mb-3">🤝</div>
-                        <div class="text-3xl font-extrabold" data-counter data-target="50000" data-suffix="+">0</div>
-                        <div class="text-blue-200 text-sm font-medium mt-1">Happy Customers</div>
-                    </div>
-                    <div class="bg-gradient-to-br from-amber-500 to-orange-600 rounded-3xl p-6 text-white shadow-xl shadow-amber-500/20 card-hover">
-                        <div class="text-4xl mb-3">🏥</div>
-                        <div class="text-3xl font-extrabold" data-counter data-target="30" data-suffix="+">0</div>
-                        <div class="text-amber-200 text-sm font-medium mt-1">Branches</div>
-                    </div>
-                    <div class="bg-gradient-to-br from-violet-500 to-purple-600 rounded-3xl p-6 text-white shadow-xl shadow-violet-500/20 card-hover mt-8">
-                        <div class="text-4xl mb-3">⭐</div>
-                        <div class="text-3xl font-extrabold">4.9</div>
-                        <div class="text-violet-200 text-sm font-medium mt-1">Average Rating</div>
-                    </div>
+                    @php
+                        $colorMap = [
+                            'emerald' => ['from' => 'emerald-500', 'to' => 'teal-600', 'text' => 'emerald-200', 'shadow' => 'emerald-500/20'],
+                            'blue' => ['from' => 'blue-500', 'to' => 'indigo-600', 'text' => 'blue-200', 'shadow' => 'blue-500/20'],
+                            'amber' => ['from' => 'amber-500', 'to' => 'orange-600', 'text' => 'amber-200', 'shadow' => 'amber-500/20'],
+                            'violet' => ['from' => 'violet-500', 'to' => 'purple-600', 'text' => 'violet-200', 'shadow' => 'violet-500/20'],
+                            'rose' => ['from' => 'rose-500', 'to' => 'red-600', 'text' => 'rose-200', 'shadow' => 'rose-500/20'],
+                            'teal' => ['from' => 'teal-500', 'to' => 'emerald-600', 'text' => 'teal-200', 'shadow' => 'teal-500/20'],
+                        ];
+                    @endphp
+                    @foreach($whyChooseStats as $i => $stat)
+                        @php
+                            $c = $colorMap[$stat->color ?? 'emerald'] ?? $colorMap['emerald'];
+                            $mt = ($i % 2 !== 0) ? 'mt-8' : '';
+                        @endphp
+                        <div class="bg-gradient-to-br from-{{ $c['from'] }} to-{{ $c['to'] }} rounded-3xl p-6 text-white shadow-xl shadow-{{ $c['shadow'] }} card-hover {{ $mt }}">
+                            <div class="text-4xl mb-3">{!! $stat->icon !!}</div>
+                            @if(is_numeric($stat->title) && $stat->title > 10)
+                                <div class="text-3xl font-extrabold" data-counter data-target="{{ $stat->title }}" data-suffix="+">0</div>
+                            @else
+                                <div class="text-3xl font-extrabold">{{ $stat->title }}</div>
+                            @endif
+                            <div class="text-{{ $c['text'] }} text-sm font-medium mt-1">{{ $stat->description }}</div>
+                        </div>
+                    @endforeach
                 </div>
                 <!-- Decorative blob -->
                 <div class="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-emerald-100 rounded-full blur-3xl opacity-40"></div>
@@ -445,41 +441,40 @@
             <p class="text-slate-500 mt-4 max-w-xl mx-auto">Real experiences from real customers who trust PharmaSys for their healthcare needs.</p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            @php
-                $testimonials = [
-                    ['name' => 'Rahim Ahmed', 'role' => 'Regular Customer', 'text' => 'Amazing service! I ordered my prescription medicines and received them within 3 hours. The prices were much lower than local pharmacies. Highly recommended!', 'rating' => 5, 'initial' => 'R', 'gradient' => 'from-emerald-500 to-teal-500'],
-                    ['name' => 'Fatima Khatun', 'role' => 'Verified Buyer', 'text' => 'I was hesitant to order medicines online, but PharmaSys exceeded my expectations. All medicines were genuine with proper packaging and expiry dates clearly visible.', 'rating' => 5, 'initial' => 'F', 'gradient' => 'from-rose-500 to-pink-500'],
-                    ['name' => 'Kamal Hossain', 'role' => 'Loyal Customer', 'text' => 'The prescription upload feature is a game-changer! I just upload my prescription and the team prepares everything. Delivery is always on time. Best pharmacy experience!', 'rating' => 4, 'initial' => 'K', 'gradient' => 'from-blue-500 to-indigo-500'],
-                ];
-            @endphp
+        <div class="swiper testimonials-slider relative px-2 py-6">
+            <div class="swiper-wrapper">
+                @foreach($testimonials as $i => $t)
+                <div class="swiper-slide">
+                    <div class="testimonial-card bg-white rounded-2xl p-7 border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow h-full flex flex-col">
+                        <!-- Stars -->
+                        <div class="flex text-amber-400 mb-4">
+                            @for($s = 0; $s < 5; $s++)
+                                @if($s < (int)($t->icon ?? 5))
+                                    <span class="text-sm">★</span>
+                                @else
+                                    <span class="text-sm text-slate-300">★</span>
+                                @endif
+                            @endfor
+                        </div>
 
-            @foreach($testimonials as $i => $t)
-            <div class="testimonial-card reveal bg-white rounded-2xl p-7 border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow" style="animation-delay: {{ $i * 150 }}ms">
-                <!-- Stars -->
-                <div class="flex text-amber-400 mb-4">
-                    @for($s = 0; $s < 5; $s++)
-                        @if($s < $t['rating'])
-                            <span class="text-sm">★</span>
-                        @else
-                            <span class="text-sm text-slate-300">★</span>
-                        @endif
-                    @endfor
-                </div>
+                        <p class="text-slate-600 text-sm leading-relaxed mb-6 flex-grow">"{{ $t->description }}"</p>
 
-                <p class="text-slate-600 text-sm leading-relaxed mb-6">"{{ $t['text'] }}"</p>
-
-                <div class="flex items-center space-x-3 pt-4 border-t border-slate-100">
-                    <div class="w-10 h-10 rounded-full bg-gradient-to-r {{ $t['gradient'] }} flex items-center justify-center text-white font-bold text-sm shadow-md">
-                        {{ $t['initial'] }}
-                    </div>
-                    <div>
-                        <div class="font-bold text-slate-800 text-sm">{{ $t['name'] }}</div>
-                        <div class="text-xs text-slate-400">{{ $t['role'] }}</div>
+                        <div class="flex items-center space-x-3 pt-4 border-t border-slate-100">
+                            <div class="w-10 h-10 rounded-full bg-{{ $t->color ?? 'emerald' }}-100 flex items-center justify-center text-{{ $t->color ?? 'emerald' }}-600 font-bold text-sm shadow-sm border border-{{ $t->color ?? 'emerald' }}-200">
+                                {{ substr($t->title, 0, 1) }}
+                            </div>
+                            <div>
+                                <div class="font-bold text-slate-800 text-sm">{{ $t->title }}</div>
+                                <div class="text-xs text-slate-400">Verified Customer</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+                @endforeach
             </div>
-            @endforeach
+            
+            <!-- Pagination & Navigation -->
+            <div class="swiper-pagination !-bottom-2"></div>
         </div>
     </div>
 </section>
@@ -552,6 +547,25 @@
                     delay: 4000,
                     disableOnInteraction: false,
                 },
+            });
+
+            var testimonialsSwiper = new Swiper('.testimonials-slider', {
+                slidesPerView: 1,
+                spaceBetween: 24,
+                pagination: {
+                    el: '.testimonials-slider .swiper-pagination',
+                    clickable: true,
+                },
+                breakpoints: {
+                    768: { slidesPerView: 2 },
+                    1024: { slidesPerView: 3 },
+                    1280: { slidesPerView: 4 },
+                },
+                autoplay: {
+                    delay: 3500,
+                    disableOnInteraction: false,
+                },
+                loop: true,
             });
         });
     </script>

@@ -162,8 +162,9 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::get('settings/pos', [SettingController::class, 'pos'])->name('settings.pos');
 
     // ==================== FRONTEND / CMS ====================
-    Route::resource('sliders', SliderController::class);
-    Route::resource('cms', CmsController::class);
+    Route::resource('sliders', \App\Http\Controllers\Admin\SliderController::class);
+    Route::resource('cms', \App\Http\Controllers\Admin\CmsController::class);
+    Route::resource('testimonials', \App\Http\Controllers\Admin\TestimonialController::class);
 
     // AJAX endpoints
     Route::get('ajax/subcategories', function () {

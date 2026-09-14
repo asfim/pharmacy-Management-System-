@@ -36,8 +36,11 @@ class HomeController extends Controller
             ->get();
         $sliders = \App\Models\Slider::where('status', 'active')->orderBy('order')->get();
         $cmsFeatures = \App\Models\Cms::where('section', 'feature_strip')->where('status', 'active')->orderBy('order')->get();
+        $whyChooseFeatures = \App\Models\Cms::where('section', 'why_choose_us')->where('status', 'active')->orderBy('order')->get();
+        $whyChooseStats = \App\Models\Cms::where('section', 'why_choose_stats')->where('status', 'active')->orderBy('order')->get();
+        $testimonials = \App\Models\Cms::where('section', 'testimonials')->where('status', 'active')->orderBy('order')->get();
 
-        return view('frontend.home.index', compact('categories', 'maxDiscount', 'discountedProducts', 'sliders', 'cmsFeatures'));
+        return view('frontend.home.index', compact('categories', 'maxDiscount', 'discountedProducts', 'sliders', 'cmsFeatures', 'whyChooseFeatures', 'whyChooseStats', 'testimonials'));
     }
 
     public function categoryProducts(\App\Models\Category $category)

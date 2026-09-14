@@ -25,6 +25,14 @@
 
         <div class="space-y-5">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Section <span class="text-rose-500">*</span></label>
+                    <select name="section" class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-500 transition-all bg-slate-50" required>
+                        <option value="feature_strip" {{ old('section') == 'feature_strip' ? 'selected' : '' }}>Feature Strip (4 Boxes below Hero)</option>
+                        <option value="why_choose_us" {{ old('section') == 'why_choose_us' ? 'selected' : '' }}>Why Choose Us (List with icons)</option>
+                        <option value="why_choose_stats" {{ old('section') == 'why_choose_stats' ? 'selected' : '' }}>Why Choose Us Stats (Right side 4 boxes)</option>
+                    </select>
+                </div>
                 <div>
                     <label class="block text-sm font-bold text-slate-700 mb-2">Title <span class="text-rose-500">*</span></label>
                     <input type="text" name="title" value="{{ old('title') }}" class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-500 transition-all bg-slate-50" required placeholder="e.g. Genuine Medicines">

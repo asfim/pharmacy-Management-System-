@@ -28,6 +28,7 @@
                     <thead class="text-xs font-semibold uppercase text-slate-500 bg-slate-50 border-t border-b border-slate-200">
                         <tr>
                             <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap"><div class="font-semibold text-left">Order</div></th>
+                            <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap"><div class="font-semibold text-left">Section</div></th>
                             <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap"><div class="font-semibold text-left">Icon</div></th>
                             <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap"><div class="font-semibold text-left">Title</div></th>
                             <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap"><div class="font-semibold text-left">Color</div></th>
@@ -40,6 +41,9 @@
                         <tr>
                             <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
                                 <div class="text-left font-medium text-sky-500">{{ $f->order }}</div>
+                            </td>
+                            <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                                <span class="bg-slate-100 text-slate-600 px-2 py-1 rounded text-xs font-bold">{{ str_replace('_', ' ', Str::title($f->section)) }}</span>
                             </td>
                             <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
                                 <div class="w-10 h-10 shrink-0 flex items-center justify-center bg-{{ $f->color }}-100 text-{{ $f->color }}-600 rounded">

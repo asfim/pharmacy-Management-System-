@@ -94,30 +94,6 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-                <div class="p-4 border border-slate-200 rounded-xl bg-slate-50">
-                    <h4 class="font-bold text-sm mb-3">Stat 1</h4>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Number</label>
-                    <input type="text" name="hero_stat1_num" value="{{ $siteSettings['hero_stat1_num'] ?? '10000' }}" class="w-full px-3 py-2 mb-3 border border-slate-200 rounded text-sm">
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Label</label>
-                    <input type="text" name="hero_stat1_label" value="{{ $siteSettings['hero_stat1_label'] ?? 'Products' }}" class="w-full px-3 py-2 border border-slate-200 rounded text-sm">
-                </div>
-                <div class="p-4 border border-slate-200 rounded-xl bg-slate-50">
-                    <h4 class="font-bold text-sm mb-3">Stat 2</h4>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Number</label>
-                    <input type="text" name="hero_stat2_num" value="{{ $siteSettings['hero_stat2_num'] ?? '50000' }}" class="w-full px-3 py-2 mb-3 border border-slate-200 rounded text-sm">
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Label</label>
-                    <input type="text" name="hero_stat2_label" value="{{ $siteSettings['hero_stat2_label'] ?? 'Happy Customers' }}" class="w-full px-3 py-2 border border-slate-200 rounded text-sm">
-                </div>
-                <div class="p-4 border border-slate-200 rounded-xl bg-slate-50">
-                    <h4 class="font-bold text-sm mb-3">Stat 3</h4>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Number</label>
-                    <input type="text" name="hero_stat3_num" value="{{ $siteSettings['hero_stat3_num'] ?? '30' }}" class="w-full px-3 py-2 mb-3 border border-slate-200 rounded text-sm">
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Label</label>
-                    <input type="text" name="hero_stat3_label" value="{{ $siteSettings['hero_stat3_label'] ?? 'Branches' }}" class="w-full px-3 py-2 border border-slate-200 rounded text-sm">
-                </div>
-            </div>
-
             <div>
                 <label class="block text-sm font-bold text-slate-700 mb-2">Hero Image</label>
                 <div class="flex items-center gap-6 p-4 border border-slate-200 rounded-xl bg-slate-50">
@@ -128,6 +104,28 @@
                     @endif
                     <input type="file" name="hero_image" accept="image/*" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2.5 file:px-5 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100 cursor-pointer transition">
                 </div>
+            </div>
+        </div>
+
+        <div class="border-t border-slate-100 pt-8 mb-6 mt-8">
+            <h3 class="text-lg font-bold text-slate-800 mb-1"><i class="fas fa-check-circle text-teal-500 mr-2"></i> Why Choose Us Settings</h3>
+            <p class="text-xs text-slate-500">Manage the texts for the 'Why Choose PharmaSys' section.</p>
+        </div>
+
+        <div class="space-y-5">
+            <div>
+                <label class="block text-sm font-bold text-slate-700 mb-2">Badge Text</label>
+                <input type="text" name="why_choose_badge" value="{{ $siteSettings['why_choose_badge'] ?? 'Why Choose PharmaSys' }}" class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-500 transition-all bg-slate-50">
+            </div>
+            
+            <div>
+                <label class="block text-sm font-bold text-slate-700 mb-2">Title</label>
+                <input type="text" name="why_choose_title" value="{{ $siteSettings['why_choose_title'] ?? 'Your Trusted Partner in <span class=\'gradient-text\'>Healthcare</span>' }}" class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-500 transition-all bg-slate-50">
+            </div>
+
+            <div>
+                <label class="block text-sm font-bold text-slate-700 mb-2">Description</label>
+                <textarea name="why_choose_desc" rows="3" class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-500 transition-all bg-slate-50">{{ $siteSettings['why_choose_desc'] ?? 'We\'re committed to making healthcare accessible, affordable, and convenient for everyone across Bangladesh.' }}</textarea>
             </div>
         </div>
 

@@ -12,7 +12,7 @@ class CmsController extends Controller
      */
     public function index()
     {
-        $features = \App\Models\Cms::where('section', 'feature_strip')->orderBy('order')->get();
+        $features = \App\Models\Cms::orderBy('section')->orderBy('order')->get();
         return view('admin.cms.index', compact('features'));
     }
 
@@ -24,6 +24,7 @@ class CmsController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'section' => 'required|in:feature_strip,why_choose_us,why_choose_stats',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'icon' => 'nullable|string',
@@ -32,10 +33,7 @@ class CmsController extends Controller
             'order' => 'required|integer',
         ]);
 
-        $data = $request->all();
-        $data['section'] = 'feature_strip';
-        
-        \App\Models\Cms::create($data);
+        \App\Models\Cms::create($request->all());
 
         return redirect()->route('admin.cms.index')->with('success', 'Feature created successfully.');
     }
@@ -48,6 +46,7 @@ class CmsController extends Controller
     public function update(Request $request, \App\Models\Cms $cm)
     {
         $request->validate([
+            'section' => 'required|in:feature_strip,why_choose_us,why_choose_stats',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'icon' => 'nullable|string',
