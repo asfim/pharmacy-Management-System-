@@ -225,27 +225,34 @@
                             $primaryImage = $product->product_images->where('is_primary', 1)->first() ?? $product->product_images->first();
                         @endphp
                         <div class="swiper-slide h-auto">
-                            <div class="bg-white/70 backdrop-blur-md border-2 border-white/50 rounded-2xl overflow-hidden flex flex-col h-full shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
-                                <a href="{{ route('product.detail', $product->id) }}" class="block relative h-48 bg-transparent flex items-center justify-center p-2">
+                            <div class="bg-white/20 backdrop-blur-xl border border-white/40 rounded-2xl overflow-hidden flex flex-col h-full shadow-[0_8px_32px_0_rgba(31,38,135,0.15)] hover:shadow-[0_8px_32px_0_rgba(31,38,135,0.25)] transition-all duration-300 transform hover:-translate-y-1">
+                                <a href="{{ route('product.detail', $product->id) }}" class="block relative h-48 bg-white/50 flex items-center justify-center p-2">
                                     @if($primaryImage && $primaryImage->image_url)
                                         <img src="{{ asset('storage/'.$primaryImage->image_url) }}" alt="{{ $product->name }}" class="w-full h-full object-contain mix-blend-multiply">
                                     @else
-                                        <svg class="w-12 h-12 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                                        <svg class="w-12 h-12 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
                                     @endif
-                                    <div class="absolute top-2 left-2 bg-gradient-to-br from-rose-500 to-pink-500 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-md">-{{ (int)$product->discount }}%</div>
+                                    <div class="absolute top-2 left-2 bg-gradient-to-br from-rose-500 to-pink-500 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-md shadow-sm">-{{ (int)$product->discount }}%</div>
                                 </a>
                                 <div class="p-4 flex-1 flex flex-col">
-                                    <div class="text-[10px] font-bold text-emerald-500 uppercase tracking-wide mb-1">{{ $product->manufacturer->name ?? ($product->brand->name ?? '') }}</div>
-                                    <a href="{{ route('product.detail', $product->id) }}" class="font-bold text-slate-800 text-sm line-clamp-1 mb-1 hover:text-rose-500 transition-colors">{{ $product->name }}</a>
-                                    <div class="text-xs text-slate-800 mb-3 line-clamp-1">{{ $product->generic->name ?? '' }} {{ $product->strength ?? '' }}</div>
-                                    <div class="mt-auto flex items-center justify-between pt-3 border-t border-slate-100">
-                                        <div>
-                                            <div class="font-black text-slate-800 text-lg">৳{{ number_format($product->sale_price, 2) }}</div>
-                                            @if($product->mrp > $product->sale_price)
-                                                <div class="text-[10px] text-slate-400 line-through">৳{{ number_format($product->mrp, 2) }}</div>
+                                    <div class="text-[10px] font-bold text-emerald-200 uppercase tracking-wide mb-1">{{ $product->manufacturer->name ?? ($product->brand->name ?? '') }}</div>
+                                    <a href="{{ route('product.detail', $product->id) }}" class="font-bold text-white text-sm line-clamp-1 mb-1 hover:text-rose-200 transition-colors">{{ $product->name }}</a>
+                                    <div class="text-xs text-white/80 mb-3 line-clamp-1">{{ $product->generic->name ?? '' }} {{ $product->strength ?? '' }}</div>
+                                    <div class="mt-auto flex items-center justify-between pt-3 border-t border-white/20">
+                                        @php
+                                            $originalPrice = $product->mrp > $product->sale_price ? $product->mrp : $product->sale_price;
+                                            $finalPrice = $product->sale_price;
+                                            if($product->discount > 0) {
+                                                $finalPrice = $originalPrice - ($originalPrice * $product->discount / 100);
+                                            }
+                                        @endphp
+                                        <div class="flex items-baseline space-x-2">
+                                            <div class="font-black text-white text-lg">৳{{ number_format($finalPrice, 2) }}</div>
+                                            @if($originalPrice > $finalPrice)
+                                                <div class="text-xs text-white/70 line-through">৳{{ number_format($originalPrice, 2) }}</div>
                                             @endif
                                         </div>
-                                        <a href="{{ route('product.detail', $product->id) }}" class="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-500 hover:text-white flex items-center justify-center transition-colors">
+                                        <a href="{{ route('product.detail', $product->id) }}" class="w-8 h-8 rounded-lg bg-white/20 text-white hover:bg-white hover:text-rose-600 flex items-center justify-center transition-colors">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                                         </a>
                                     </div>
@@ -256,8 +263,8 @@
                     </div>
                     
                     <!-- Flash Sale Navigation Arrows -->
-                    <div class="swiper-button-prev flash-prev !text-rose-600 !bg-white/90 backdrop-blur-sm !w-10 !h-10 !rounded-full shadow-lg hover:shadow-xl after:!text-sm border border-white/50 hidden md:flex !-left-2"></div>
-                    <div class="swiper-button-next flash-next !text-rose-600 !bg-white/90 backdrop-blur-sm !w-10 !h-10 !rounded-full shadow-lg hover:shadow-xl after:!text-sm border border-white/50 hidden md:flex !-right-2"></div>
+                    <div class="swiper-button-prev flash-prev !text-rose-600 !bg-white/90 backdrop-blur-sm !w-10 !h-10 !rounded-full shadow-lg hover:shadow-xl after:!text-sm border border-white/50 flex !-left-2"></div>
+                    <div class="swiper-button-next flash-next !text-rose-600 !bg-white/90 backdrop-blur-sm !w-10 !h-10 !rounded-full shadow-lg hover:shadow-xl after:!text-sm border border-white/50 flex !-right-2"></div>
                 </div>
             </div>
             @endif
@@ -266,98 +273,40 @@
 </section>
 
 <!-- ============================================
-     FEATURED PRODUCTS
+     CATEGORY PRODUCTS
      ============================================ -->
-<section class="py-16 bg-slate-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-end mb-10 reveal">
-            <div>
-                <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 section-title-line">Featured Medicines</h2>
-                <p class="text-slate-500 mt-4">Top rated and highly recommended products</p>
+@foreach($categories as $category)
+    @if(isset($category->home_products) && $category->home_products->count() > 0)
+    <section class="py-12 {{ $loop->iteration % 2 == 0 ? 'bg-white' : 'bg-slate-50' }}">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-end mb-8 reveal">
+                <div>
+                    <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 section-title-line">{{ $category->name }}</h2>
+                    <p class="text-slate-500 mt-2">Explore our collection of {{ strtolower($category->name) }}</p>
+                </div>
+                <a href="{{ route('category.products', $category->id) }}" class="hidden md:inline-flex items-center space-x-2 text-emerald-600 font-semibold hover:text-emerald-700 transition group">
+                    <span>View Category</span>
+                    <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
+                </a>
             </div>
-            <a href="#" class="hidden md:inline-flex items-center space-x-2 text-emerald-600 font-semibold hover:text-emerald-700 transition group">
-                <span>View All</span>
-                <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
-            </a>
-        </div>
 
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
-            @php
-                $products = [
-                    ['name' => 'Napa Extra 500mg', 'generic' => 'Paracetamol', 'company' => 'Square Pharma', 'price' => '5.50', 'oldPrice' => '7.00', 'discount' => '21', 'emoji' => '💊'],
-                    ['name' => 'Sergel 20mg', 'generic' => 'Omeprazole', 'company' => 'Healthcare Pharma', 'price' => '6.00', 'oldPrice' => null, 'discount' => null, 'emoji' => '💛'],
-                    ['name' => 'Seclo 20mg', 'generic' => 'Omeprazole', 'company' => 'Square Pharma', 'price' => '4.50', 'oldPrice' => '6.00', 'discount' => '25', 'emoji' => '🩹'],
-                    ['name' => 'Losectil 20mg', 'generic' => 'Omeprazole', 'company' => 'Incepta Pharma', 'price' => '5.00', 'oldPrice' => null, 'discount' => null, 'emoji' => '💊'],
-                    ['name' => 'Ace Plus 500mg', 'generic' => 'Paracetamol+Caffeine', 'company' => 'Square Pharma', 'price' => '2.50', 'oldPrice' => '3.50', 'discount' => '29', 'emoji' => '🩺'],
-                ];
-            @endphp
-
-            @foreach($products as $i => $p)
-            <div class="product-card card-hover reveal bg-white rounded-2xl border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow overflow-hidden group relative" style="animation-delay: {{ $i * 100 }}ms">
-                @if($p['discount'])
-                <div class="ribbon bg-gradient-to-r from-rose-500 to-pink-500 text-white shadow-lg">
-                    -{{ $p['discount'] }}%
-                </div>
-                @endif
-
-                <!-- Image Area -->
-                <div class="relative overflow-hidden bg-gradient-to-br from-slate-50 to-slate-100 h-44 flex items-center justify-center">
-                    <div class="product-image text-6xl">{{ $p['emoji'] }}</div>
-
-                    <!-- Overlay Actions -->
-                    <div class="product-overlay absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent flex items-end justify-center pb-4">
-                        <div class="flex space-x-2 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
-                            <button type="button" onclick="addToCart(event, {{ $p['id'] ?? 1 }}, 1, this)" class="w-9 h-9 rounded-full bg-white text-slate-700 flex items-center justify-center hover:bg-emerald-500 hover:text-white transition-all shadow-lg text-sm" title="Add to Cart">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                            </button>
-                            <button class="w-9 h-9 rounded-full bg-white text-slate-700 flex items-center justify-center hover:bg-rose-500 hover:text-white transition-all shadow-lg text-sm" title="Add to Wishlist">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
-                            </button>
-                            <button class="w-9 h-9 rounded-full bg-white text-slate-700 flex items-center justify-center hover:bg-blue-500 hover:text-white transition-all shadow-lg text-sm" title="Quick View">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Content -->
-                <div class="p-4">
-                    <div class="text-xs font-semibold text-emerald-600 mb-1">{{ $p['company'] }}</div>
-                    <h3 class="font-bold text-slate-800 text-sm truncate mb-0.5 group-hover:text-emerald-600 transition-colors">{{ $p['name'] }}</h3>
-                    <p class="text-xs text-slate-400 mb-3">{{ $p['generic'] }}</p>
-
-                    <!-- Rating -->
-                    <div class="flex items-center space-x-1 mb-3">
-                        <div class="flex text-amber-400 text-xs">★★★★<span class="text-slate-300">★</span></div>
-                        <span class="text-[10px] text-slate-400">(4.0)</span>
-                    </div>
-
-                    <!-- Price -->
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <span class="text-lg font-extrabold text-slate-900">৳{{ $p['price'] }}</span>
-                            @if($p['oldPrice'])
-                            <span class="text-xs text-slate-400 line-through ml-1">৳{{ $p['oldPrice'] }}</span>
-                            @endif
-                        </div>
-                        <button type="button" onclick="buyNow(event, {{ $p['id'] ?? 1 }})" class="w-9 h-9 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white flex items-center justify-center hover:shadow-lg hover:shadow-emerald-500/30 hover:scale-110 transition-all duration-300">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
-                        </button>
-                    </div>
-                </div>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4 md:gap-6" id="category-grid-{{ $category->id }}">
+                @include('frontend.home._product_cards', ['products' => $category->home_products])
             </div>
-            @endforeach
-        </div>
 
-        <!-- Mobile View All -->
-        <div class="mt-8 text-center md:hidden reveal">
-            <a href="#" class="inline-flex items-center space-x-2 text-emerald-600 font-semibold border-2 border-emerald-200 px-6 py-2.5 rounded-full hover:bg-emerald-50 transition">
-                <span>View All Products</span>
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
-            </a>
+            <!-- Load More Button -->
+            @if($category->products_count > 8)
+            <div class="mt-10 text-center reveal">
+                <button type="button" class="btn-load-more inline-flex items-center space-x-2 text-emerald-600 font-semibold border-2 border-emerald-200 px-8 py-3 rounded-full hover:bg-emerald-50 hover:border-emerald-300 transition-all shadow-sm hover:shadow-md" data-category-id="{{ $category->id }}" data-skip="8">
+                    <span>Load More</span>
+                    <svg class="w-4 h-4 animate-bounce-y" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </button>
+            </div>
+            @endif
         </div>
-    </div>
-</section>
+    </section>
+    @endif
+@endforeach
 
 <!-- ============================================
      WHY CHOOSE US — Infographic Style
@@ -617,5 +566,44 @@
     }
 
     startCountdown();
+
+    // Category Load More Products
+    document.querySelectorAll('.btn-load-more').forEach(button => {
+        button.addEventListener('click', async function() {
+            const btn = this;
+            const categoryId = btn.getAttribute('data-category-id');
+            const skip = parseInt(btn.getAttribute('data-skip'));
+            
+            // Add loading state
+            const originalHtml = btn.innerHTML;
+            btn.innerHTML = '<span>Loading...</span><svg class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>';
+            btn.disabled = true;
+
+            try {
+                const response = await fetch(`/ajax/category-products/${categoryId}?skip=${skip}`, {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                });
+                const data = await response.json();
+                
+                if (data.html) {
+                    const grid = document.getElementById(`category-grid-${categoryId}`);
+                    grid.insertAdjacentHTML('beforeend', data.html);
+                    
+                    // Update skip
+                    btn.setAttribute('data-skip', skip + 8);
+                    
+                    // Hide button if less than 8 items returned
+                    if (data.count < 8) {
+                        btn.parentElement.style.display = 'none';
+                    }
+                }
+            } catch (error) {
+                console.error("Failed to load more products:", error);
+            } finally {
+                btn.innerHTML = originalHtml;
+                btn.disabled = false;
+            }
+        });
+    });
 </script>
 @endpush

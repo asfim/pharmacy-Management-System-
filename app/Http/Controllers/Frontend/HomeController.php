@@ -9,7 +9,24 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $categories = \App\Models\Category::where('status', 'active')->withCount('products')->get();
+        $categories = \App\Models\Category::where('status', 'active')
+            ->whereHas('products', function($q) {
+                $q->where('status', 'active');
+            })
+            ->withCount(['products' => function($q) {
+                $q->where('status', 'active');
+            }])
+            ->get();
+            
+        // Load first 8 products for each category
+        foreach($categories as $category) {
+            $category->home_products = \App\Models\Product::where('category_id', $category->id)
+                ->where('status', 'active')
+                ->with(['product_images', 'manufacturer', 'generic', 'brand'])
+                ->limit(8)
+                ->get();
+        }
+
         $maxDiscount = \App\Models\Product::where('status', 'active')->max('discount') ?? 0;
         $discountedProducts = \App\Models\Product::with(['product_images', 'manufacturer', 'generic', 'brand'])
             ->where('status', 'active')
@@ -61,5 +78,23 @@ class HomeController extends Controller
             ->get();
 
         return view('frontend.product.detail', compact('product', 'relatedProducts'));
+    }
+
+    public function loadMoreCategoryProducts(Request $request, \App\Models\Category $category)
+    {
+        $skip = $request->input('skip', 8);
+        $products = \App\Models\Product::where('category_id', $category->id)
+            ->where('status', 'active')
+            ->with(['product_images', 'manufacturer', 'generic', 'brand'])
+            ->skip($skip)
+            ->take(8)
+            ->get();
+
+        $html = view('frontend.home._product_cards', compact('products'))->render();
+
+        return response()->json([
+            'html' => $html,
+            'count' => $products->count(),
+        ]);
     }
 }

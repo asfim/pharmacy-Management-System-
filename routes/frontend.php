@@ -6,6 +6,7 @@ use App\Http\Controllers\Frontend\CustomerDashboardController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/category/{category}', [HomeController::class, 'categoryProducts'])->name('category.products');
+Route::get('/ajax/category-products/{category}', [HomeController::class, 'loadMoreCategoryProducts'])->name('ajax.category.products');
 Route::get('/product/{product}', [HomeController::class, 'productDetail'])->name('product.detail');
 
 // Cart & Checkout
