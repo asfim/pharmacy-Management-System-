@@ -62,4 +62,41 @@ class CustomerDashboardController extends Controller
             'labels', 'amounts'
         ));
     }
+
+    public function orders()
+    {
+        $user = Auth::user();
+        $customer = Customer::where('email', $user->email)->first();
+        $orders = [];
+        if ($customer) {
+            $orders = OnlineOrder::where('customer_id', $customer->id)
+                ->orderByDesc('created_at')
+                ->paginate(10);
+        }
+        return view('frontend.customer.orders', compact('orders'));
+    }
+
+    public function prescriptions()
+    {
+        return view('frontend.customer.prescriptions');
+    }
+
+    public function profile()
+    {
+        $user = Auth::user();
+        $customer = Customer::where('email', $user->email)->first();
+        return view('frontend.customer.profile', compact('user', 'customer'));
+    }
+
+    public function addresses()
+    {
+        $user = Auth::user();
+        $customer = Customer::where('email', $user->email)->first();
+        return view('frontend.customer.addresses', compact('customer'));
+    }
+
+    public function security()
+    {
+        return view('frontend.customer.security');
+    }
 }

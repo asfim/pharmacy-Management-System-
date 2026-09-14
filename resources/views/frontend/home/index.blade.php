@@ -140,7 +140,7 @@
             <div class="swiper-wrapper">
                 @foreach($categories as $i => $cat)
                 <div class="swiper-slide h-auto">
-                    <a href="#" class="category-card reveal bg-white rounded-2xl p-5 text-center border border-slate-100 shadow-sm group block h-full" style="animation-delay: {{ ($i % 6) * 80 }}ms">
+                    <a href="{{ route('category.products', $cat->id) }}" class="category-card reveal bg-white rounded-2xl p-5 text-center border border-slate-100 shadow-sm group block h-full" style="animation-delay: {{ ($i % 6) * 80 }}ms">
                         <div class="category-icon w-16 h-16 mx-auto bg-slate-50 rounded-2xl flex items-center justify-center text-3xl mb-3 border border-slate-100 overflow-hidden">
                             @if($cat->image && file_exists(public_path('storage/' . $cat->image)))
                                 <img src="{{ asset('storage/'.$cat->image) }}" alt="{{ $cat->name }}" class="w-full h-full object-cover">
