@@ -115,23 +115,23 @@
                                 </a>
                             </div>
                             <div>
-                                <h4 class="font-semibold text-slate-700 mb-3">AI Verification Analysis</h4>
+                                <h4 class="font-semibold text-slate-700 mb-3">System Verification (OCR)</h4>
                                 @if($prescription->verification_status == 'verified')
                                     <div class="bg-emerald-50 text-emerald-800 p-4 rounded-xl border border-emerald-200 mb-4">
                                         <div class="flex items-center gap-2 mb-2 font-bold">
-                                            <i class="fas fa-check-circle text-emerald-500"></i> AI Match Successful
+                                            <i class="fas fa-check-circle text-emerald-500"></i> Match Successful
                                         </div>
                                         <p class="text-sm whitespace-pre-line">{{ $prescription->notes }}</p>
                                     </div>
                                 @else
                                     <div class="bg-rose-50 text-rose-800 p-4 rounded-xl border border-rose-200 mb-4">
                                         <div class="flex items-center gap-2 mb-2 font-bold">
-                                            <i class="fas fa-exclamation-triangle text-rose-500"></i> AI Match Failed or Pending
+                                            <i class="fas fa-exclamation-triangle text-rose-500"></i> Match Failed / Pending
                                         </div>
                                         <p class="text-sm whitespace-pre-line">{{ $prescription->notes }}</p>
                                     </div>
                                 @endif
-                                <p class="text-xs text-slate-500">AI analysis is automated. Please double check the image manually.</p>
+                                <p class="text-xs text-slate-500">The system automatically reads the image text to match medicine names.</p>
                             </div>
                         </div>
                     @else

@@ -50,15 +50,17 @@
                                 $prescription = $o->order_prescriptions->first()?->prescription;
                             @endphp
                             @if($prescription)
-                                @if($prescription->verification_status == 'verified')
-                                    <span class="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-100">
-                                        <i class="fas fa-check-circle"></i> Match
-                                    </span>
-                                @else
-                                    <span class="inline-flex items-center gap-1 text-[11px] font-bold text-rose-600 bg-rose-50 px-2.5 py-1 rounded-full border border-rose-100">
-                                        <i class="fas fa-times-circle"></i> Not Match
-                                    </span>
-                                @endif
+                                <a href="{{ asset('storage/' . $prescription->image_file) }}" target="_blank" class="block hover:opacity-80 transition" title="View Prescription">
+                                    @if($prescription->verification_status == 'verified')
+                                        <span class="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-100">
+                                            <i class="fas fa-check-circle"></i> Match
+                                        </span>
+                                    @else
+                                        <span class="inline-flex items-center gap-1 text-[11px] font-bold text-rose-600 bg-rose-50 px-2.5 py-1 rounded-full border border-rose-100">
+                                            <i class="fas fa-times-circle"></i> Not Match
+                                        </span>
+                                    @endif
+                                </a>
                             @else
                                 <span class="text-xs text-slate-400">Missing</span>
                             @endif
