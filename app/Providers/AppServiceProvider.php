@@ -37,6 +37,10 @@ class AppServiceProvider extends ServiceProvider
             // Do nothing if db is not ready
         }
 
+        View::composer('frontend.layouts.navbar', function ($view) {
+            $view->with('navCategories', \App\Models\Category::where('status', 'active')->get());
+        });
+
         Gate::before(function ($user, $ability) {
             return $user->hasRole('Super Admin') ? true : null;
         });

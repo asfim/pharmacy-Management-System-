@@ -11,42 +11,26 @@
                         <svg class="w-3.5 h-3.5 transition-transform group-hover:rotate-180 duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
                     <!-- Dropdown -->
-                    <div class="absolute left-0 top-full w-72 bg-white border border-slate-100 rounded-b-2xl shadow-2xl text-slate-800 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-50 overflow-hidden">
-                        <a href="#" class="flex items-center space-x-3 px-5 py-3.5 hover:bg-gradient-to-r hover:from-emerald-50 hover:to-teal-50 hover:text-emerald-600 border-b border-slate-50 transition-all duration-200 group/item">
-                            <span class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center group-hover/item:bg-emerald-500 group-hover/item:text-white transition-all text-sm">💊</span>
-                            <div>
-                                <span class="font-semibold text-sm">Prescription Medicines</span>
-                                <p class="text-[11px] text-slate-400">Doctor prescribed only</p>
+                    <div class="absolute left-0 top-full w-[750px] bg-white border border-slate-100 rounded-b-2xl shadow-2xl text-slate-800 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-50">
+                        <div class="p-4">
+                            <div class="grid grid-cols-3 gap-2 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+                                @if(isset($navCategories) && $navCategories->count() > 0)
+                                    @foreach($navCategories as $cat)
+                                    <a href="{{ route('category.products', $cat->id) }}" class="flex items-center space-x-3 px-4 py-3 hover:bg-emerald-50 rounded-xl hover:text-emerald-600 transition-all duration-200 group/item">
+                                        <span class="w-10 h-10 rounded-lg bg-emerald-100/50 text-emerald-600 flex items-center justify-center group-hover/item:bg-emerald-500 group-hover/item:text-white transition-all text-lg shrink-0">
+                                            {!! $cat->icon ?? '💊' !!}
+                                        </span>
+                                        <div class="min-w-0 flex-1">
+                                            <span class="font-bold text-sm block truncate">{{ $cat->name }}</span>
+                                            <p class="text-[11px] text-slate-400 truncate">{{ $cat->description ?? 'Explore ' . $cat->name }}</p>
+                                        </div>
+                                    </a>
+                                    @endforeach
+                                @else
+                                    <div class="col-span-3 px-5 py-4 text-sm text-slate-500 text-center">No categories found</div>
+                                @endif
                             </div>
-                        </a>
-                        <a href="#" class="flex items-center space-x-3 px-5 py-3.5 hover:bg-gradient-to-r hover:from-emerald-50 hover:to-teal-50 hover:text-emerald-600 border-b border-slate-50 transition-all duration-200 group/item">
-                            <span class="w-8 h-8 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center group-hover/item:bg-blue-500 group-hover/item:text-white transition-all text-sm">🏥</span>
-                            <div>
-                                <span class="font-semibold text-sm">Over The Counter (OTC)</span>
-                                <p class="text-[11px] text-slate-400">No prescription needed</p>
-                            </div>
-                        </a>
-                        <a href="#" class="flex items-center space-x-3 px-5 py-3.5 hover:bg-gradient-to-r hover:from-emerald-50 hover:to-teal-50 hover:text-emerald-600 border-b border-slate-50 transition-all duration-200 group/item">
-                            <span class="w-8 h-8 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center group-hover/item:bg-amber-500 group-hover/item:text-white transition-all text-sm">💛</span>
-                            <div>
-                                <span class="font-semibold text-sm">Vitamins & Supplements</span>
-                                <p class="text-[11px] text-slate-400">Health & wellness</p>
-                            </div>
-                        </a>
-                        <a href="#" class="flex items-center space-x-3 px-5 py-3.5 hover:bg-gradient-to-r hover:from-emerald-50 hover:to-teal-50 hover:text-emerald-600 border-b border-slate-50 transition-all duration-200 group/item">
-                            <span class="w-8 h-8 rounded-lg bg-pink-100 text-pink-600 flex items-center justify-center group-hover/item:bg-pink-500 group-hover/item:text-white transition-all text-sm">👶</span>
-                            <div>
-                                <span class="font-semibold text-sm">Baby Care</span>
-                                <p class="text-[11px] text-slate-400">Baby health essentials</p>
-                            </div>
-                        </a>
-                        <a href="#" class="flex items-center space-x-3 px-5 py-3.5 hover:bg-gradient-to-r hover:from-emerald-50 hover:to-teal-50 hover:text-emerald-600 transition-all duration-200 group/item">
-                            <span class="w-8 h-8 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center group-hover/item:bg-purple-500 group-hover/item:text-white transition-all text-sm">✨</span>
-                            <div>
-                                <span class="font-semibold text-sm">Personal Care</span>
-                                <p class="text-[11px] text-slate-400">Skin, hair & body</p>
-                            </div>
-                        </a>
+                        </div>
                     </div>
                 </div>
 
@@ -127,21 +111,15 @@
             <div class="mt-6 pt-6 border-t border-slate-100">
                 <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Categories</h4>
                 <div class="space-y-1">
-                    <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-50 transition text-sm">
-                        <span>💊</span><span>Prescription Medicines</span>
-                    </a>
-                    <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-50 transition text-sm">
-                        <span>🏥</span><span>Over The Counter (OTC)</span>
-                    </a>
-                    <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-50 transition text-sm">
-                        <span>💛</span><span>Vitamins & Supplements</span>
-                    </a>
-                    <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-50 transition text-sm">
-                        <span>👶</span><span>Baby Care</span>
-                    </a>
-                    <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-50 transition text-sm">
-                        <span>✨</span><span>Personal Care</span>
-                    </a>
+                    @if(isset($navCategories) && $navCategories->count() > 0)
+                        @foreach($navCategories as $cat)
+                        <a href="{{ route('category.products', $cat->id) }}" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-50 transition text-sm">
+                            <span>{!! $cat->icon ?? '💊' !!}</span><span>{{ $cat->name }}</span>
+                        </a>
+                        @endforeach
+                    @else
+                        <div class="px-3 py-2 text-sm text-slate-400">No categories found</div>
+                    @endif
                 </div>
             </div>
         </div>
