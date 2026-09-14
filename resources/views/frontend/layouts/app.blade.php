@@ -105,7 +105,9 @@
         });
 
         // Add to Cart (AJAX)
-        function addToCart(productId, quantity = 1, btnEl = null) {
+        function addToCart(event, productId, quantity = 1, btnEl = null) {
+            if (event) event.preventDefault();
+
             if (btnEl) {
                 btnEl.disabled = true;
                 btnEl.style.opacity = '0.7';
@@ -168,14 +170,17 @@
         }
 
         // Buy Now (Direct checkout without affecting main cart)
-        function buyNow(productId) {
+        function buyNow(event, productId) {
+            if (event) event.preventDefault();
             const qtyEl = document.getElementById('qty');
             const qty = qtyEl ? qtyEl.value : 1;
             window.location.href = `{{ route("checkout") }}?buy_now_id=${productId}&qty=${qty}`;
         }
 
         // Remove from Cart
-        function removeFromCart(productId, btnEl) {
+        function removeFromCart(event, productId, btnEl) {
+            if (event) event.preventDefault();
+
             fetch('{{ route("cart.remove") }}', {
                 method: 'POST',
                 headers: {

@@ -260,7 +260,7 @@
                     <!-- Overlay Actions -->
                     <div class="product-overlay absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent flex items-end justify-center pb-4">
                         <div class="flex space-x-2 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
-                            <button class="w-9 h-9 rounded-full bg-white text-slate-700 flex items-center justify-center hover:bg-emerald-500 hover:text-white transition-all shadow-lg text-sm" title="Add to Cart">
+                            <button type="button" onclick="addToCart(event, {{ $p['id'] ?? 1 }}, 1, this)" class="w-9 h-9 rounded-full bg-white text-slate-700 flex items-center justify-center hover:bg-emerald-500 hover:text-white transition-all shadow-lg text-sm" title="Add to Cart">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                             </button>
                             <button class="w-9 h-9 rounded-full bg-white text-slate-700 flex items-center justify-center hover:bg-rose-500 hover:text-white transition-all shadow-lg text-sm" title="Add to Wishlist">
@@ -293,7 +293,7 @@
                             <span class="text-xs text-slate-400 line-through ml-1">৳{{ $p['oldPrice'] }}</span>
                             @endif
                         </div>
-                        <button class="w-9 h-9 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white flex items-center justify-center hover:shadow-lg hover:shadow-emerald-500/30 hover:scale-110 transition-all duration-300">
+                        <button type="button" onclick="buyNow(event, {{ $p['id'] ?? 1 }})" class="w-9 h-9 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white flex items-center justify-center hover:shadow-lg hover:shadow-emerald-500/30 hover:scale-110 transition-all duration-300">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
                         </button>
                     </div>

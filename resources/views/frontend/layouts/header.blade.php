@@ -33,7 +33,7 @@
 <header class="bg-white/95 backdrop-blur-md border-b border-slate-100 py-4 sticky top-0 z-40 shadow-sm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center gap-6">
-            
+
             <!-- Logo -->
             <div class="shrink-0 flex items-center">
                 <a href="{{ route('home') }}" class="flex items-center space-x-2 group">
@@ -67,7 +67,7 @@
 
             <!-- Actions (Account, Wishlist, Cart) -->
             <div class="flex items-center space-x-2 sm:space-x-4">
-                
+
                 <!-- Mobile Search Toggle -->
                 <button class="md:hidden p-2.5 rounded-xl text-slate-500 hover:text-emerald-600 hover:bg-emerald-50 transition-all" id="mobileSearchToggle">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
@@ -89,14 +89,6 @@
                     </a>
                 @endauth
 
-                <a href="#" class="flex flex-col items-center p-2 rounded-xl text-slate-500 hover:text-rose-500 hover:bg-rose-50 transition-all duration-300 relative group">
-                    <div class="relative">
-                        <svg class="w-6 h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
-                        <span class="absolute -top-1.5 -right-1.5 flex items-center justify-center w-4.5 h-4.5 text-[9px] font-bold text-white bg-rose-500 rounded-full min-w-[18px] h-[18px] shadow-sm">0</span>
-                    </div>
-                    <span class="text-[10px] mt-0.5 font-semibold hidden sm:block">Wishlist</span>
-                </a>
-
                 <div class="flex items-center space-x-2">
                     <!-- Cart Dropdown Container -->
                     <div class="relative group">
@@ -115,7 +107,7 @@
                             <div class="p-4 border-b border-slate-100">
                                 <h3 class="font-bold text-slate-800 text-sm">Your Cart</h3>
                             </div>
-                            
+
                             <div class="max-h-64 overflow-y-auto p-2" id="miniCartItems">
                                 @if(session()->has('cart') && count(session('cart')) > 0)
                                     @foreach(session('cart') as $id => $item)
@@ -131,7 +123,7 @@
                                             <p class="text-xs font-bold text-slate-800 truncate">{{ $item['name'] }}</p>
                                             <p class="text-xs text-slate-500">{{ $item['quantity'] }} × ৳{{ number_format($item['price'], 2) }}</p>
                                         </div>
-                                        <button type="button" onclick="removeFromCart({{ $id }}, this)" class="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors ml-2">
+                                        <button type="button" onclick="removeFromCart(event, {{ $id }}, this)" class="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors ml-2">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                         </button>
                                     </div>
@@ -157,11 +149,6 @@
                             @endif
                         </div>
                     </div>
-
-                    <a href="{{ route('checkout') }}" class="hidden md:flex items-center space-x-2 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-semibold py-2 px-4 rounded-xl shadow-md transition-all duration-300 ml-2 text-sm">
-                        <span>Checkout</span>
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                    </a>
                 </div>
 
                 <!-- Mobile Menu Toggle -->

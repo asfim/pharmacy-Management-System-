@@ -19,22 +19,25 @@ class HomeController extends Controller
         $query = \App\Models\Product::where('category_id', $category->id)
             ->where('status', 'active');
 
-        // Live search via AJAX
-        if (request()->ajax() && request('search')) {
+        // Apply search if present
+        if (request('search')) {
             $search = request('search');
-            $products = $query->where(function ($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
                   ->orWhere('strength', 'like', "%{$search}%")
                   ->orWhere('dosage_form', 'like', "%{$search}%");
-            })->with(['brand', 'generic', 'manufacturer', 'product_images'])->paginate(24);
+            });
+        }
 
+        $products = $query->with(['brand', 'generic', 'manufacturer', 'product_images'])->paginate(8);
+
+        // Return JSON for AJAX requests (infinite scroll or live search)
+        if (request()->ajax()) {
             return response()->json([
                 'html' => view('frontend.category._product_grid', compact('products'))->render(),
                 'count' => $products->total(),
             ]);
         }
-
-        $products = $query->with(['brand', 'generic', 'manufacturer', 'product_images'])->paginate(24);
 
         return view('frontend.category.products', compact('category', 'products'));
     }

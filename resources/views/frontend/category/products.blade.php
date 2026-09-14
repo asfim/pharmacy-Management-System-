@@ -179,8 +179,11 @@
             @include('frontend.category._product_grid', ['products' => $products])
         </div>
 
-        <div class="cp-pagination" id="paginationWrap">
-            {{ $products->links() }}
+        <div id="loadMoreSentinel" class="py-8 flex justify-center items-center" style="display: {{ $products->hasMorePages() ? 'flex' : 'none' }};">
+            <svg class="animate-spin w-8 h-8 text-emerald-500" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+        </div>
+        <div id="noMoreProducts" class="text-center py-8 text-slate-400 font-medium" style="display: {{ $products->hasMorePages() ? 'none' : 'block' }};">
+            You have reached the end of the list.
         </div>
     </div>
 </section>
@@ -194,31 +197,107 @@ document.addEventListener('DOMContentLoaded', function () {
     const grid = document.getElementById('productGrid');
     const resultCount = document.getElementById('resultCount');
     const searchHint = document.getElementById('searchHint');
-    const paginationWrap = document.getElementById('paginationWrap');
+    const sentinel = document.getElementById('loadMoreSentinel');
+    const noMore = document.getElementById('noMoreProducts');
+    
     let debounceTimer;
+    let currentPage = 1;
+    let isFetching = false;
+    let hasMore = {{ $products->hasMorePages() ? 'true' : 'false' }};
+    let currentQuery = '';
 
+    // Live Search
     searchInput.addEventListener('input', function () {
         clearTimeout(debounceTimer);
-        const query = this.value.trim();
-        if (query.length === 0) { window.location.reload(); return; }
-        if (query.length < 2) return;
+        currentQuery = this.value.trim();
+        
+        if (currentQuery.length === 0) { 
+            window.location.reload(); 
+            return; 
+        }
+        if (currentQuery.length < 2) return;
+        
         spinner.classList.add('active');
         searchHint.textContent = 'Searching...';
+        
         debounceTimer = setTimeout(function () {
-            fetch(`{{ route('category.products', $category->id) }}?search=${encodeURIComponent(query)}`, {
+            currentPage = 1; // Reset page on new search
+            fetch(`{{ route('category.products', $category->id) }}?search=${encodeURIComponent(currentQuery)}&page=${currentPage}`, {
                 headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
             })
             .then(r => r.json())
             .then(data => {
                 grid.innerHTML = data.html;
-                resultCount.innerHTML = `Found <strong>${data.count}</strong> product(s) for "<strong>${query}</strong>"`;
+                resultCount.innerHTML = `Found <strong>${data.count}</strong> product(s) for "<strong>${currentQuery}</strong>"`;
                 searchHint.textContent = data.count > 0 ? 'Results updated' : 'No products found';
-                paginationWrap.style.display = 'none';
                 spinner.classList.remove('active');
+                
+                // Assuming 8 per page as per controller
+                hasMore = data.count > (currentPage * 8);
+                updateLoadMoreUI();
             })
             .catch(() => { spinner.classList.remove('active'); searchHint.textContent = 'Error, try again'; });
         }, 350);
     });
+
+    // Infinite Scroll
+    const observer = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore && !isFetching) {
+            loadNextPage();
+        }
+    }, { rootMargin: '0px 0px 200px 0px' });
+
+    if (sentinel) {
+        observer.observe(sentinel);
+    }
+
+    function loadNextPage() {
+        isFetching = true;
+        currentPage++;
+        
+        let url = `{{ route('category.products', $category->id) }}?page=${currentPage}`;
+        if (currentQuery.length >= 2) {
+            url += `&search=${encodeURIComponent(currentQuery)}`;
+        }
+
+        fetch(url, {
+            headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.html) {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(data.html, 'text/html');
+                const newItems = doc.querySelectorAll('.cp-product');
+                
+                const gridContainer = grid.querySelector('.grid');
+                if (gridContainer && newItems.length > 0) {
+                    newItems.forEach(item => gridContainer.appendChild(item));
+                } else if (newItems.length > 0) {
+                    // Fallback if grid container not found
+                    grid.insertAdjacentHTML('beforeend', data.html);
+                }
+                
+                hasMore = data.count > (currentPage * 8);
+                updateLoadMoreUI();
+            }
+            isFetching = false;
+        })
+        .catch(err => {
+            console.error('Failed to load more products:', err);
+            isFetching = false;
+        });
+    }
+
+    function updateLoadMoreUI() {
+        if (hasMore) {
+            sentinel.style.display = 'flex';
+            noMore.style.display = 'none';
+        } else {
+            sentinel.style.display = 'none';
+            noMore.style.display = 'block';
+        }
+    }
 });
 </script>
 @endpush
