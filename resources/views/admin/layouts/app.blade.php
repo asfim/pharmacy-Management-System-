@@ -336,6 +336,11 @@
                         <span>Settings</span>
                     </a>
                 @endcan
+                <a href="{{ route('admin.sliders.index') }}"
+                    class="sidebar-link {{ request()->routeIs('admin.sliders*') ? 'active' : '' }}">
+                    <i class="fas fa-images"></i>
+                    <span>Sliders (CMS)</span>
+                </a>
             </nav>
 
             <!-- Logout -->

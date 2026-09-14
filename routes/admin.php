@@ -38,6 +38,7 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\BranchController;
+use App\Http\Controllers\Admin\SliderController;
 
 Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
 
@@ -158,6 +159,9 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::post('settings', [SettingController::class, 'update'])->name('settings.update');
     Route::get('settings/invoice', [SettingController::class, 'invoice'])->name('settings.invoice');
     Route::get('settings/pos', [SettingController::class, 'pos'])->name('settings.pos');
+
+    // ==================== FRONTEND / CMS ====================
+    Route::resource('sliders', SliderController::class);
 
     // AJAX endpoints
     Route::get('ajax/subcategories', function () {

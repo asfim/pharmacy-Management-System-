@@ -8,83 +8,65 @@
 @section('content')
 
 <!-- ============================================
-     HERO SECTION — Full Gradient with Floating Elements
+     HERO SECTION — Dynamic Single Hero
      ============================================ -->
+@if(isset($sliders) && $sliders->count() > 0)
+@php $hero = $sliders->first(); @endphp
 <section class="relative overflow-hidden bg-gradient-to-br from-emerald-600 via-teal-600 to-cyan-600 animate-gradient min-h-[600px] flex items-center">
     <!-- Background Decorative Elements -->
     <div class="absolute inset-0 overflow-hidden pointer-events-none">
-        <!-- Floating Blobs -->
         <div class="absolute top-10 left-10 w-72 h-72 bg-emerald-400/20 rounded-full blur-3xl animate-blob"></div>
         <div class="absolute bottom-10 right-10 w-96 h-96 bg-cyan-400/20 rounded-full blur-3xl animate-blob delay-300"></div>
         <div class="absolute top-1/2 left-1/3 w-64 h-64 bg-teal-300/15 rounded-full blur-3xl animate-blob delay-700"></div>
-
-        <!-- Floating Medicine Icons -->
         <div class="absolute top-20 right-[15%] text-4xl animate-float opacity-20">💊</div>
         <div class="absolute top-40 right-[35%] text-3xl animate-float-slow delay-200 opacity-15">🩺</div>
         <div class="absolute bottom-32 left-[10%] text-4xl animate-float-reverse delay-500 opacity-20">🧬</div>
         <div class="absolute top-28 left-[20%] text-3xl animate-float delay-700 opacity-15">🩹</div>
         <div class="absolute bottom-20 right-[25%] text-3xl animate-float-slow delay-1000 opacity-15">💉</div>
         <div class="absolute top-1/2 right-[8%] text-5xl animate-float-reverse opacity-10">🔬</div>
-
-        <!-- Grid Pattern Overlay -->
         <div class="absolute inset-0 opacity-5" style="background-image: radial-gradient(circle at 1px 1px, white 1px, transparent 0); background-size: 40px 40px;"></div>
     </div>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 relative z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 relative z-10 w-full">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <!-- Left Content -->
             <div class="text-white">
-                <div class="inline-flex items-center space-x-2 bg-white/15 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2 mb-6 text-sm font-medium animate-slide-up">
-                    <span class="w-2 h-2 bg-emerald-300 rounded-full animate-pulse"></span>
-                    <span>🎉 Trusted by 50,000+ customers</span>
-                </div>
-
-                <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-6 animate-slide-up" style="animation-delay: 100ms">
-                    Your Health,<br>
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-200 via-white to-cyan-200">Delivered Fast!</span>
+                @if($hero->title)
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-6 animate-slide-up">
+                    {{ $hero->title }}
+                    @if($hero->highlight_title)
+                    <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-200 via-white to-cyan-200">{{ $hero->highlight_title }}</span>
+                    @endif
                 </h1>
+                @endif
 
-                <p class="text-lg md:text-xl text-emerald-100/90 mb-10 max-w-lg animate-slide-up leading-relaxed" style="animation-delay: 200ms">
-                    Order 100% genuine medicines online and get them delivered to your doorstep within 24 hours, securely & hassle-free.
+                @if($hero->description)
+                <p class="text-lg md:text-xl text-emerald-100/90 mb-10 max-w-lg leading-relaxed animate-slide-up" style="animation-delay: 200ms">
+                    {{ $hero->description }}
                 </p>
+                @endif
 
+                @if($hero->button_text && $hero->button_link)
                 <div class="flex flex-wrap gap-4 animate-slide-up" style="animation-delay: 300ms">
-                    <a href="{{ route('products') }}" class="btn-glow inline-flex items-center space-x-2 bg-white text-emerald-700 font-bold py-3.5 px-8 rounded-full shadow-xl shadow-black/10 hover:bg-emerald-50 transition-all duration-300 text-sm">
+                    <a href="{{ $hero->button_link }}" class="btn-glow inline-flex items-center space-x-2 bg-white text-emerald-700 font-bold py-3.5 px-8 rounded-full shadow-xl shadow-black/10 hover:bg-emerald-50 transition-all duration-300 text-sm">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                        <span>Order Now</span>
-                    </a>
-                    <a href="#" class="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white font-bold py-3.5 px-8 rounded-full hover:bg-white/20 transition-all duration-300 text-sm">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-                        <span>Upload Prescription</span>
+                        <span>{{ $hero->button_text }}</span>
                     </a>
                 </div>
-
-                <!-- Quick Stats -->
-                <div class="flex flex-wrap gap-8 mt-12 animate-slide-up" style="animation-delay: 400ms">
-                    <div class="text-center">
-                        <div class="text-2xl font-extrabold" data-counter data-target="10000" data-suffix="+">0</div>
-                        <div class="text-emerald-200/70 text-xs font-medium mt-1">Products</div>
-                    </div>
-                    <div class="w-px bg-white/20 self-stretch"></div>
-                    <div class="text-center">
-                        <div class="text-2xl font-extrabold" data-counter data-target="50000" data-suffix="+">0</div>
-                        <div class="text-emerald-200/70 text-xs font-medium mt-1">Happy Customers</div>
-                    </div>
-                    <div class="w-px bg-white/20 self-stretch"></div>
-                    <div class="text-center">
-                        <div class="text-2xl font-extrabold" data-counter data-target="30" data-suffix="+">0</div>
-                        <div class="text-emerald-200/70 text-xs font-medium mt-1">Branches</div>
-                    </div>
-                </div>
+                @endif
             </div>
 
             <!-- Right Side — Hero Image -->
             <div class="hidden lg:block relative">
                 <div class="relative z-10">
-                    <img src="{{ asset('assets/images/hero_illustration.jpg') }}" alt="PharmaSys App Illustration" class="w-full max-w-lg mx-auto rounded-3xl shadow-2xl">
+                    @if($hero->image)
+                        @if(str_starts_with($hero->image, 'assets/'))
+                            <img src="{{ asset($hero->image) }}" alt="{{ $hero->title ?? 'Hero' }}" class="w-full max-w-lg mx-auto rounded-3xl shadow-2xl">
+                        @else
+                            <img src="{{ asset('storage/' . $hero->image) }}" alt="{{ $hero->title ?? 'Hero' }}" class="w-full max-w-lg mx-auto rounded-3xl shadow-2xl">
+                        @endif
+                    @endif
                 </div>
-
-                <!-- Floating decorative glow behind the image -->
                 <div class="absolute inset-0 bg-gradient-to-tr from-emerald-400 to-teal-400 rounded-full blur-3xl opacity-30 -z-10"></div>
             </div>
         </div>
@@ -97,6 +79,83 @@
         </svg>
     </div>
 </section>
+@else
+{{-- Fallback: Original static hero section when no sliders exist --}}
+<section class="relative overflow-hidden bg-gradient-to-br from-emerald-600 via-teal-600 to-cyan-600 animate-gradient min-h-[600px] flex items-center">
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute top-10 left-10 w-72 h-72 bg-emerald-400/20 rounded-full blur-3xl animate-blob"></div>
+        <div class="absolute bottom-10 right-10 w-96 h-96 bg-cyan-400/20 rounded-full blur-3xl animate-blob delay-300"></div>
+        <div class="absolute top-1/2 left-1/3 w-64 h-64 bg-teal-300/15 rounded-full blur-3xl animate-blob delay-700"></div>
+        <div class="absolute top-20 right-[15%] text-4xl animate-float opacity-20">💊</div>
+        <div class="absolute top-40 right-[35%] text-3xl animate-float-slow delay-200 opacity-15">🩺</div>
+        <div class="absolute bottom-32 left-[10%] text-4xl animate-float-reverse delay-500 opacity-20">🧬</div>
+        <div class="absolute top-28 left-[20%] text-3xl animate-float delay-700 opacity-15">🩹</div>
+        <div class="absolute bottom-20 right-[25%] text-3xl animate-float-slow delay-1000 opacity-15">💉</div>
+        <div class="absolute top-1/2 right-[8%] text-5xl animate-float-reverse opacity-10">🔬</div>
+        <div class="absolute inset-0 opacity-5" style="background-image: radial-gradient(circle at 1px 1px, white 1px, transparent 0); background-size: 40px 40px;"></div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 relative z-10">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div class="text-white">
+                <div class="inline-flex items-center space-x-2 bg-white/15 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2 mb-6 text-sm font-medium animate-slide-up">
+                    <span class="w-2 h-2 bg-emerald-300 rounded-full animate-pulse"></span>
+                    <span>{{ $siteSettings['hero_badge_text'] ?? '🎉 Trusted by 50,000+ customers' }}</span>
+                </div>
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-6 animate-slide-up" style="animation-delay: 100ms">
+                    {{ $siteSettings['hero_title'] ?? 'Your Health,' }}<br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-200 via-white to-cyan-200">{{ $siteSettings['hero_highlight'] ?? 'Delivered Fast!' }}</span>
+                </h1>
+                <p class="text-lg md:text-xl text-emerald-100/90 mb-10 max-w-lg animate-slide-up leading-relaxed" style="animation-delay: 200ms">
+                    {{ $siteSettings['hero_desc'] ?? 'Order 100% genuine medicines online and get them delivered to your doorstep within 24 hours, securely & hassle-free.' }}
+                </p>
+                <div class="flex flex-wrap gap-4 animate-slide-up" style="animation-delay: 300ms">
+                    <a href="{{ $siteSettings['hero_btn1_link'] ?? route('products') }}" class="btn-glow inline-flex items-center space-x-2 bg-white text-emerald-700 font-bold py-3.5 px-8 rounded-full shadow-xl shadow-black/10 hover:bg-emerald-50 transition-all duration-300 text-sm">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                        <span>{{ $siteSettings['hero_btn1_text'] ?? 'Order Now' }}</span>
+                    </a>
+                    <a href="{{ $siteSettings['hero_btn2_link'] ?? '#' }}" class="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white font-bold py-3.5 px-8 rounded-full hover:bg-white/20 transition-all duration-300 text-sm">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                        <span>{{ $siteSettings['hero_btn2_text'] ?? 'Upload Prescription' }}</span>
+                    </a>
+                </div>
+                <div class="flex flex-wrap gap-8 mt-12 animate-slide-up" style="animation-delay: 400ms">
+                    <div class="text-center">
+                        <div class="text-2xl font-extrabold" data-counter data-target="{{ $siteSettings['hero_stat1_num'] ?? '10000' }}" data-suffix="+">0</div>
+                        <div class="text-emerald-200/70 text-xs font-medium mt-1">{{ $siteSettings['hero_stat1_label'] ?? 'Products' }}</div>
+                    </div>
+                    <div class="w-px bg-white/20 self-stretch"></div>
+                    <div class="text-center">
+                        <div class="text-2xl font-extrabold" data-counter data-target="{{ $siteSettings['hero_stat2_num'] ?? '50000' }}" data-suffix="+">0</div>
+                        <div class="text-emerald-200/70 text-xs font-medium mt-1">{{ $siteSettings['hero_stat2_label'] ?? 'Happy Customers' }}</div>
+                    </div>
+                    <div class="w-px bg-white/20 self-stretch"></div>
+                    <div class="text-center">
+                        <div class="text-2xl font-extrabold" data-counter data-target="{{ $siteSettings['hero_stat3_num'] ?? '30' }}" data-suffix="+">0</div>
+                        <div class="text-emerald-200/70 text-xs font-medium mt-1">{{ $siteSettings['hero_stat3_label'] ?? 'Branches' }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="hidden lg:block relative">
+                <div class="relative z-10">
+                    @if(isset($siteSettings['hero_image']) && $siteSettings['hero_image'])
+                        <img src="{{ asset('storage/' . $siteSettings['hero_image']) }}" alt="Hero Illustration" class="w-full max-w-lg mx-auto rounded-3xl shadow-2xl">
+                    @else
+                        <img src="{{ asset('assets/images/hero_illustration.jpg') }}" alt="PharmaSys App Illustration" class="w-full max-w-lg mx-auto rounded-3xl shadow-2xl">
+                    @endif
+                </div>
+                <div class="absolute inset-0 bg-gradient-to-tr from-emerald-400 to-teal-400 rounded-full blur-3xl opacity-30 -z-10"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="wave-divider">
+        <svg viewBox="0 0 1200 120" preserveAspectRatio="none" class="fill-white">
+            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C57.1,88.13,125.63,68.46,190.7,58.75,242.93,51.24,279.59,61.11,321.39,56.44Z"></path>
+        </svg>
+    </div>
+</section>
+@endif
 
 <!-- ============================================
      FEATURES STRIP — Glassmorphic Cards

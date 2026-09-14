@@ -34,7 +34,9 @@ class HomeController extends Controller
             ->orderByDesc('discount')
             ->limit(10)
             ->get();
-        return view('frontend.home.index', compact('categories', 'maxDiscount', 'discountedProducts'));
+        $sliders = \App\Models\Slider::where('status', 'active')->orderBy('order')->get();
+
+        return view('frontend.home.index', compact('categories', 'maxDiscount', 'discountedProducts', 'sliders'));
     }
 
     public function categoryProducts(\App\Models\Category $category)

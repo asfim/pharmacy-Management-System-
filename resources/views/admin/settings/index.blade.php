@@ -50,8 +50,89 @@
             </div>
         </div>
 
+        <div class="border-t border-slate-100 pt-8 mb-6 mt-8">
+            <h3 class="text-lg font-bold text-slate-800 mb-1"><i class="fas fa-home text-teal-500 mr-2"></i> Hero Section Settings</h3>
+            <p class="text-xs text-slate-500">Manage the texts, buttons, and statistics on the homepage hero section.</p>
+        </div>
+
+        <div class="space-y-5">
+            <div>
+                <label class="block text-sm font-bold text-slate-700 mb-2">Badge Text</label>
+                <input type="text" name="hero_badge_text" value="{{ $siteSettings['hero_badge_text'] ?? '🎉 Trusted by 50,000+ customers' }}" class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-500 transition-all bg-slate-50">
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Title (Line 1)</label>
+                    <input type="text" name="hero_title" value="{{ $siteSettings['hero_title'] ?? 'Your Health,' }}" class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-500 transition-all bg-slate-50">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Title (Highlighted)</label>
+                    <input type="text" name="hero_highlight" value="{{ $siteSettings['hero_highlight'] ?? 'Delivered Fast!' }}" class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-500 transition-all bg-slate-50">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-bold text-slate-700 mb-2">Description</label>
+                <textarea name="hero_desc" rows="3" class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-500 transition-all bg-slate-50">{{ $siteSettings['hero_desc'] ?? 'Order 100% genuine medicines online and get them delivered to your doorstep within 24 hours, securely & hassle-free.' }}</textarea>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div class="p-4 border border-slate-200 rounded-xl bg-slate-50">
+                    <h4 class="font-bold text-sm mb-3">Button 1 (Primary)</h4>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Text</label>
+                    <input type="text" name="hero_btn1_text" value="{{ $siteSettings['hero_btn1_text'] ?? 'Order Now' }}" class="w-full px-3 py-2 mb-3 border border-slate-200 rounded text-sm">
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Link</label>
+                    <input type="text" name="hero_btn1_link" value="{{ $siteSettings['hero_btn1_link'] ?? route('products') }}" class="w-full px-3 py-2 border border-slate-200 rounded text-sm">
+                </div>
+                <div class="p-4 border border-slate-200 rounded-xl bg-slate-50">
+                    <h4 class="font-bold text-sm mb-3">Button 2 (Secondary)</h4>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Text</label>
+                    <input type="text" name="hero_btn2_text" value="{{ $siteSettings['hero_btn2_text'] ?? 'Upload Prescription' }}" class="w-full px-3 py-2 mb-3 border border-slate-200 rounded text-sm">
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Link</label>
+                    <input type="text" name="hero_btn2_link" value="{{ $siteSettings['hero_btn2_link'] ?? '#' }}" class="w-full px-3 py-2 border border-slate-200 rounded text-sm">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div class="p-4 border border-slate-200 rounded-xl bg-slate-50">
+                    <h4 class="font-bold text-sm mb-3">Stat 1</h4>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Number</label>
+                    <input type="text" name="hero_stat1_num" value="{{ $siteSettings['hero_stat1_num'] ?? '10000' }}" class="w-full px-3 py-2 mb-3 border border-slate-200 rounded text-sm">
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Label</label>
+                    <input type="text" name="hero_stat1_label" value="{{ $siteSettings['hero_stat1_label'] ?? 'Products' }}" class="w-full px-3 py-2 border border-slate-200 rounded text-sm">
+                </div>
+                <div class="p-4 border border-slate-200 rounded-xl bg-slate-50">
+                    <h4 class="font-bold text-sm mb-3">Stat 2</h4>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Number</label>
+                    <input type="text" name="hero_stat2_num" value="{{ $siteSettings['hero_stat2_num'] ?? '50000' }}" class="w-full px-3 py-2 mb-3 border border-slate-200 rounded text-sm">
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Label</label>
+                    <input type="text" name="hero_stat2_label" value="{{ $siteSettings['hero_stat2_label'] ?? 'Happy Customers' }}" class="w-full px-3 py-2 border border-slate-200 rounded text-sm">
+                </div>
+                <div class="p-4 border border-slate-200 rounded-xl bg-slate-50">
+                    <h4 class="font-bold text-sm mb-3">Stat 3</h4>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Number</label>
+                    <input type="text" name="hero_stat3_num" value="{{ $siteSettings['hero_stat3_num'] ?? '30' }}" class="w-full px-3 py-2 mb-3 border border-slate-200 rounded text-sm">
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Label</label>
+                    <input type="text" name="hero_stat3_label" value="{{ $siteSettings['hero_stat3_label'] ?? 'Branches' }}" class="w-full px-3 py-2 border border-slate-200 rounded text-sm">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-bold text-slate-700 mb-2">Hero Image</label>
+                <div class="flex items-center gap-6 p-4 border border-slate-200 rounded-xl bg-slate-50">
+                    @if(isset($siteSettings['hero_image']) && $siteSettings['hero_image'])
+                        <img src="{{ asset('storage/' . $siteSettings['hero_image']) }}" class="h-24 w-auto object-contain bg-slate-900 p-1 rounded-lg shadow-sm border border-slate-800" alt="Current Hero Image">
+                    @else
+                        <img src="{{ asset('assets/images/hero_illustration.jpg') }}" class="h-24 w-auto object-contain bg-slate-900 p-1 rounded-lg shadow-sm border border-slate-800" alt="Default Hero Image">
+                    @endif
+                    <input type="file" name="hero_image" accept="image/*" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2.5 file:px-5 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100 cursor-pointer transition">
+                </div>
+            </div>
+        </div>
+
         <div class="flex justify-end pt-6 mt-6 border-t border-slate-100">
-            <button type="submit" class="bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm px-8 py-3 rounded-xl transition shadow-md shadow-teal-500/20">Save Branding Settings</button>
+            <button type="submit" class="bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm px-8 py-3 rounded-xl transition shadow-md shadow-teal-500/20">Save Settings</button>
         </div>
     </form>
 </div>

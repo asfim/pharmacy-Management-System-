@@ -36,6 +36,25 @@ class SettingController extends Controller
             Setting::updateOrCreate(['key' => 'site_favicon'], ['value' => $path]);
         }
 
+        // Hero Settings
+        $heroFields = [
+            'hero_badge_text', 'hero_title', 'hero_highlight', 'hero_desc',
+            'hero_btn1_text', 'hero_btn1_link', 'hero_btn2_text', 'hero_btn2_link',
+            'hero_stat1_num', 'hero_stat1_label', 'hero_stat2_num', 'hero_stat2_label',
+            'hero_stat3_num', 'hero_stat3_label'
+        ];
+
+        foreach ($heroFields as $field) {
+            if ($request->has($field)) {
+                Setting::updateOrCreate(['key' => $field], ['value' => $request->$field]);
+            }
+        }
+
+        if ($request->hasFile('hero_image')) {
+            $path = $request->file('hero_image')->store('settings', 'public');
+            Setting::updateOrCreate(['key' => 'hero_image'], ['value' => $path]);
+        }
+
         return redirect()->route('admin.settings.index')->with('success', 'Settings updated successfully.');
     }
 
