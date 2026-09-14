@@ -5,7 +5,7 @@
     <h2 class="text-2xl font-bold text-slate-800">Profit & Loss Report</h2>
 </div>
 <!-- Filter -->
-<div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 mb-6">
+<div class="bg-white rounded-2xl border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow p-5 mb-6">
     <form method="GET" class="flex flex-wrap gap-4 items-end">
         <div>
             <label class="block text-xs font-semibold text-slate-600 mb-1">From</label>
@@ -43,7 +43,7 @@
 </div>
 
 <!-- Monthly Chart -->
-<div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+<div class="bg-white rounded-2xl border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow p-6">
     <h3 class="font-semibold text-slate-800 mb-4">Monthly Profit Trend</h3>
     <canvas id="profitChart" height="80"></canvas>
 </div>

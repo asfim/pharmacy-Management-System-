@@ -5,7 +5,7 @@
     <h2 class="text-2xl font-bold text-slate-800">Edit: {{ $employee->name }}</h2>
     <a href="{{ route('admin.employees.index') }}" class="inline-flex items-center gap-2 border border-slate-300 text-slate-600 hover:bg-slate-50 text-sm font-medium px-4 py-2 rounded-xl transition"><i class="fas fa-arrow-left"></i> Back</a>
 </div>
-<div class="bg-white rounded-2xl border border-slate-100 shadow-sm max-w-3xl">
+<div class="bg-white rounded-2xl border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow max-w-3xl">
     <form action="{{ route('admin.employees.update', $employee) }}" method="POST" class="p-6 space-y-5">
         @csrf @method('PUT')
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">

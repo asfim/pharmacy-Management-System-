@@ -7,7 +7,7 @@
 </div>
 
 <!-- Filter -->
-<div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 mb-6">
+<div class="bg-white rounded-2xl border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow p-5 mb-6">
     <form method="GET" class="flex flex-wrap gap-4 items-end">
         <div>
             <label class="block text-xs font-semibold text-slate-600 mb-1">From</label>
@@ -24,7 +24,7 @@
 
 <!-- Overview Cards -->
 <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
-    <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
+    <div class="bg-white rounded-2xl p-6 border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow">
         <div class="flex items-center gap-4">
             <div class="w-12 h-12 rounded-full bg-teal-50 flex items-center justify-center">
                 <i class="fas fa-shopping-cart text-teal-600 text-xl"></i>
@@ -35,7 +35,7 @@
             </div>
         </div>
     </div>
-    <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
+    <div class="bg-white rounded-2xl p-6 border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow">
         <div class="flex items-center gap-4">
             <div class="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center">
                 <i class="fas fa-truck-loading text-blue-600 text-xl"></i>
@@ -46,7 +46,7 @@
             </div>
         </div>
     </div>
-    <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
+    <div class="bg-white rounded-2xl p-6 border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow">
         <div class="flex items-center gap-4">
             <div class="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center">
                 <i class="fas fa-file-invoice-dollar text-red-600 text-xl"></i>
@@ -60,7 +60,7 @@
 </div>
 
 <!-- Expenses Breakdown -->
-<div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden mb-6">
+<div class="bg-white rounded-2xl border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow overflow-hidden mb-6">
     <div class="p-5 border-b border-slate-100">
         <h3 class="font-semibold text-slate-800">Expense Breakdown by Category</h3>
     </div>

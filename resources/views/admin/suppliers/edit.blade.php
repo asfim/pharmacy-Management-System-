@@ -7,7 +7,7 @@
         <i class="fas fa-arrow-left"></i> Back
     </a>
 </div>
-<div class="bg-white rounded-2xl border border-slate-100 shadow-sm max-w-3xl">
+<div class="bg-white rounded-2xl border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow max-w-3xl">
     <form action="{{ route('admin.suppliers.update', $supplier) }}" method="POST" class="p-6 space-y-5">
         @csrf @method('PUT')
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">

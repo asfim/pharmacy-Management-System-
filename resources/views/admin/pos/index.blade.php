@@ -55,7 +55,7 @@
     <div class="flex-1 flex flex-col min-w-0">
 
         <!-- Search Bar & Branch Badge -->
-        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 mb-4">
+        <div class="bg-white rounded-2xl border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow p-4 mb-4">
             <div class="mb-3 flex items-center justify-between">
                 <div class="inline-flex items-center gap-2 px-3 py-1 bg-teal-50 border border-teal-200/80 rounded-xl text-teal-800 text-xs font-semibold">
                     <i class="fas fa-store text-teal-600"></i> POS Branch: <span class="font-bold text-teal-900">{{ $currentBranch->name ?? 'Main Branch' }}</span>
@@ -84,7 +84,7 @@
         </div>
 
         <!-- Cart Table -->
-        <div class="flex-1 bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden flex flex-col">
+        <div class="flex-1 bg-white rounded-2xl border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow overflow-hidden flex flex-col">
             <div class="px-5 py-4 border-b border-slate-100 flex justify-between items-center">
                 <h3 class="font-semibold text-slate-800 flex items-center gap-2">
                     <i class="fas fa-shopping-cart text-teal-600"></i> Cart
@@ -123,7 +123,7 @@
     <div class="w-80 flex-shrink-0 flex flex-col gap-4">
 
         <!-- Summary -->
-        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 space-y-3">
+        <div class="bg-white rounded-2xl border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow p-5 space-y-3">
             <h3 class="font-semibold text-slate-800 border-b border-slate-100 pb-2">Payment Summary</h3>
 
             <div class="flex justify-between text-sm"><span class="text-slate-600">Subtotal</span><span class="font-semibold" id="posSubtotal">৳0.00</span></div>
@@ -142,7 +142,7 @@
         </div>
 
         <!-- Payment Method -->
-        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 space-y-3">
+        <div class="bg-white rounded-2xl border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow p-5 space-y-3">
             <h3 class="font-semibold text-slate-800">Payment Method</h3>
             <div class="grid grid-cols-3 gap-2" id="paymentMethods">
                 @foreach(['Cash','bKash','Nagad','Rocket','Card','Due'] as $method)
@@ -164,7 +164,7 @@
         </div>
 
         <!-- Note -->
-        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
+        <div class="bg-white rounded-2xl border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow p-5">
             <label class="block text-sm font-semibold text-slate-700 mb-1.5">Note</label>
             <textarea id="posNote" rows="2" placeholder="Optional note..." class="w-full px-4 py-2.5 border border-slate-300 rounded-xl text-sm"></textarea>
         </div>

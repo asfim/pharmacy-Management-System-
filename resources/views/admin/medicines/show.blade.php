@@ -5,16 +5,16 @@
 <div class="space-y-6">
 
     <!-- Top Action & Navigation Header -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-slate-100 shadow-xs">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-3xl border-2 border border-slate-200 shadow-md hover:shadow-xl transition-shadow">
         <div class="flex items-center gap-4">
-            <div class="w-14 h-14 rounded-2xl bg-teal-500/10 text-teal-600 flex items-center justify-center text-2xl font-bold border border-teal-500/20 shadow-xs">
+            <div class="w-14 h-14 rounded-2xl bg-teal-500/10 text-teal-600 flex items-center justify-center text-2xl font-bold border border-teal-500/20 shadow-md hover:shadow-xl transition-shadow">
                 <i class="fas fa-pills"></i>
             </div>
             <div>
                 <div class="flex items-center gap-2 flex-wrap">
                     <h2 class="text-2xl font-extrabold text-slate-800 tracking-tight">{{ $medicine->name }}</h2>
                     @if($medicine->prescription_required)
-                    <span class="px-2.5 py-0.5 rounded-full text-xs font-black bg-rose-500 text-white uppercase tracking-wider shadow-xs">
+                    <span class="px-2.5 py-0.5 rounded-full text-xs font-black bg-rose-500 text-white uppercase tracking-wider shadow-md hover:shadow-xl transition-shadow">
                         <i class="fas fa-file-prescription text-[10px] mr-1"></i> Rx Required
                     </span>
                     @endif
@@ -34,11 +34,11 @@
                 <i class="fas fa-arrow-left text-xs"></i> Back
             </a>
             @can('edit medicines')
-            <a href="{{ route('admin.medicines.edit', $medicine->id) }}" class="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-sm font-semibold transition flex items-center gap-2 shadow-xs">
+            <a href="{{ route('admin.medicines.edit', $medicine->id) }}" class="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-sm font-semibold transition flex items-center gap-2 shadow-md hover:shadow-xl transition-shadow">
                 <i class="fas fa-pen-to-square text-xs"></i> Edit Medicine
             </a>
             @endcan
-            <a href="{{ route('admin.purchases.create', ['product_id' => $medicine->id]) }}" class="px-4 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold transition flex items-center gap-2 shadow-xs">
+            <a href="{{ route('admin.purchases.create', ['product_id' => $medicine->id]) }}" class="px-4 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold transition flex items-center gap-2 shadow-md hover:shadow-xl transition-shadow">
                 <i class="fas fa-cart-flatbed text-xs"></i> Restock / Purchase
             </a>
         </div>
@@ -57,7 +57,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
 
         <!-- Stock Available Card -->
-        <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-xs flex items-center justify-between">
+        <div class="bg-white p-5 rounded-3xl border-2 border border-slate-200 shadow-md hover:shadow-xl transition-shadow flex items-center justify-between">
             <div>
                 <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">
                     {{ $activeBranch ? ('Stock (' . $activeBranch->name . ')') : 'Total Stock (All Branches)' }}
@@ -93,7 +93,7 @@
         </div>
 
         <!-- Minimum Stock Requirement -->
-        <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-xs flex items-center justify-between">
+        <div class="bg-white p-5 rounded-3xl border-2 border border-slate-200 shadow-md hover:shadow-xl transition-shadow flex items-center justify-between">
             <div>
                 <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Minimum Required Stock</p>
                 <div class="flex items-baseline gap-2 mt-1">
@@ -108,7 +108,7 @@
         </div>
 
         <!-- Sale Price & MRP -->
-        <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-xs flex items-center justify-between">
+        <div class="bg-white p-5 rounded-3xl border-2 border border-slate-200 shadow-md hover:shadow-xl transition-shadow flex items-center justify-between">
             <div>
                 <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Sale Price / MRP</p>
                 <div class="flex items-baseline gap-2 mt-1">
@@ -122,7 +122,7 @@
         </div>
 
         <!-- Purchase Price & Margin -->
-        <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-xs flex items-center justify-between">
+        <div class="bg-white p-5 rounded-3xl border-2 border border-slate-200 shadow-md hover:shadow-xl transition-shadow flex items-center justify-between">
             <div>
                 <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Purchase Price / Margin</p>
                 <div class="flex items-baseline gap-2 mt-1">
@@ -143,8 +143,8 @@
         <div class="lg:col-span-2 space-y-6">
 
             <!-- Branch Stock Distribution Table -->
-            <div class="bg-white rounded-3xl border border-slate-100 shadow-xs overflow-hidden">
-                <div class="p-5 border-b border-slate-100 flex items-center justify-between">
+            <div class="bg-white rounded-3xl border border-slate-200 shadow-md hover:shadow-xl transition-shadow overflow-hidden">
+                <div class="p-5 border-b border-slate-200 flex items-center justify-between">
                     <div class="flex items-center gap-2.5">
                         <div class="w-8 h-8 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-sm font-bold">
                             <i class="fas fa-code-branch"></i>
@@ -161,7 +161,7 @@
 
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm">
-                        <thead class="bg-slate-50 text-xs text-slate-500 uppercase font-semibold border-b border-slate-100">
+                        <thead class="bg-slate-50 text-xs text-slate-500 uppercase font-semibold border-b border-slate-200">
                             <tr>
                                 <th class="px-5 py-3.5 text-left">Branch Name</th>
                                 <th class="px-5 py-3.5 text-right">Available Stock</th>
@@ -207,8 +207,8 @@
             </div>
 
             <!-- Batches & Expiry List -->
-            <div class="bg-white rounded-3xl border border-slate-100 shadow-xs overflow-hidden">
-                <div class="p-5 border-b border-slate-100 flex items-center justify-between">
+            <div class="bg-white rounded-3xl border border-slate-200 shadow-md hover:shadow-xl transition-shadow overflow-hidden">
+                <div class="p-5 border-b border-slate-200 flex items-center justify-between">
                     <div class="flex items-center gap-2.5">
                         <div class="w-8 h-8 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center text-sm font-bold">
                             <i class="fas fa-boxes-stacked"></i>
@@ -225,7 +225,7 @@
 
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm">
-                        <thead class="bg-slate-50 text-xs text-slate-500 uppercase font-semibold border-b border-slate-100">
+                        <thead class="bg-slate-50 text-xs text-slate-500 uppercase font-semibold border-b border-slate-200">
                             <tr>
                                 <th class="px-5 py-3.5 text-left">Batch No</th>
                                 <th class="px-5 py-3.5 text-left">Expiry Date</th>
@@ -291,10 +291,10 @@
         <div class="space-y-6">
 
             <!-- Product Image & Meta -->
-            <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-xs space-y-5">
+            <div class="bg-white p-6 rounded-3xl border-2 border border-slate-200 shadow-md hover:shadow-xl transition-shadow space-y-5">
                 <div class="text-center">
                     @if($medicine->image)
-                        <img src="{{ asset('storage/' . $medicine->image) }}" alt="{{ $medicine->name }}" class="w-32 h-32 object-cover mx-auto rounded-2xl border border-slate-100 shadow-sm mb-3">
+                        <img src="{{ asset('storage/' . $medicine->image) }}" alt="{{ $medicine->name }}" class="w-32 h-32 object-cover mx-auto rounded-2xl border border-slate-200 shadow-sm mb-3">
                     @else
                         <div class="w-32 h-32 mx-auto rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center text-4xl mb-3">
                             <i class="fas fa-pills"></i>

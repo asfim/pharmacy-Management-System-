@@ -55,7 +55,7 @@
     <div class="lg:col-span-2 space-y-5">
 
         <!-- Header Info -->
-        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+        <div class="bg-white rounded-2xl border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow p-6">
             <h3 class="font-semibold text-slate-800 mb-4">Purchase Information</h3>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div>
@@ -89,7 +89,7 @@
         </div>
 
         <!-- Items Table -->
-        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+        <div class="bg-white rounded-2xl border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow p-6">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="font-semibold text-slate-800">Medicine Items</h3>
                 <button type="button" id="addRow" class="inline-flex items-center gap-2 bg-teal-50 hover:bg-teal-100 text-teal-700 text-sm font-semibold px-4 py-2 rounded-xl transition">
@@ -147,7 +147,7 @@
 
     <!-- Right: Summary -->
     <div class="space-y-5">
-        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 space-y-4">
+        <div class="bg-white rounded-2xl border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow p-6 space-y-4">
             <h3 class="font-semibold text-slate-800">Payment Summary</h3>
 
             <div>

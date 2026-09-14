@@ -24,7 +24,7 @@
         <h3 class="font-semibold text-green-800">No Expired Medicines</h3>
     </div>
     @else
-    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+    <div class="bg-white rounded-2xl border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow overflow-hidden">
         <table class="w-full text-sm">
             <thead class="bg-red-50 border-b border-red-200 text-xs text-red-600 uppercase">
                 <tr>
@@ -83,7 +83,7 @@
         <h3 class="font-semibold text-green-800">No Near-Expiry Medicines in 90 Days</h3>
     </div>
     @else
-    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+    <div class="bg-white rounded-2xl border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow overflow-hidden">
         <table class="w-full text-sm">
             <thead class="bg-yellow-50 border-b border-yellow-200 text-xs text-yellow-700 uppercase">
                 <tr>

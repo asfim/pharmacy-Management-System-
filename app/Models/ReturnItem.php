@@ -50,6 +50,6 @@ class ReturnItem extends Model
 
 	public function return()
 	{
-		return $this->belongsTo('App\Models\Return');
+		return $this->belongsTo('App\Models\OrderReturn', 'return_id');
 	}
 }

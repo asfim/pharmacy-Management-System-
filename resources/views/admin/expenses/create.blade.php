@@ -5,7 +5,7 @@
     <h2 class="text-2xl font-bold text-slate-800">Add Expense</h2>
     <a href="{{ route('admin.expenses.index') }}" class="inline-flex items-center gap-2 border border-slate-300 text-slate-600 hover:bg-slate-50 text-sm font-medium px-4 py-2 rounded-xl transition"><i class="fas fa-arrow-left"></i> Back</a>
 </div>
-<div class="bg-white rounded-2xl border border-slate-100 shadow-sm max-w-xl">
+<div class="bg-white rounded-2xl border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow max-w-xl">
     <form action="{{ route('admin.expenses.store') }}" method="POST" class="p-6 space-y-5">
         @csrf
         <div>

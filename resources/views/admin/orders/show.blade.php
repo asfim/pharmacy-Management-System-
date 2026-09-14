@@ -15,7 +15,7 @@
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
     <!-- Left Column: Order Items -->
     <div class="lg:col-span-2 space-y-6">
-        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+        <div class="bg-white rounded-2xl border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow overflow-hidden">
             <div class="px-6 py-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
                 <h3 class="font-bold text-slate-800">Order Items</h3>
                 <span class="px-3 py-1 rounded-full text-xs font-bold bg-teal-100 text-teal-700">{{ $order->order_items->count() }} items</span>
@@ -34,7 +34,34 @@
                         @foreach($order->order_items as $item)
                         <tr>
                             <td class="py-4">
-                                <p class="font-bold text-slate-800">{{ $item->product->name ?? 'Unknown Product' }}</p>
+                                <div class="flex items-center gap-3">
+                                    @if($item->product && $item->product->product_images->count() > 0)
+                                        <img src="{{ asset('storage/' . $item->product->product_images->first()->image_url) }}" class="w-10 h-10 rounded-lg object-cover border border-slate-100" alt="{{ $item->product->name }}">
+                                    @else
+                                        <div class="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center text-slate-400 border border-slate-200">
+                                            <i class="fas fa-pills"></i>
+                                        </div>
+                                    @endif
+                                    <div>
+                                        <p class="font-bold text-slate-800">{{ $item->product->name ?? 'Unknown Product' }}</p>
+                                        <div class="text-[11px] text-slate-500 mt-1 mb-1 leading-relaxed">
+                                            @if($item->product && $item->product->generic)
+                                                <div class="text-teal-600 font-semibold">{{ $item->product->generic->name }}</div>
+                                            @endif
+                                            @if($item->product && $item->product->manufacturer)
+                                                <div class="text-slate-500"><i class="fas fa-building mr-1"></i> {{ $item->product->manufacturer->company_name }}</div>
+                                            @endif
+                                        </div>
+                                        <div class="text-xs text-slate-500">
+                                            @if($item->product)
+                                                <span class="mr-2">SKU: {{ $item->product->sku }}</span>
+                                                @if($item->product->strength || $item->product->medicine_type)
+                                                    <span class="bg-slate-100 px-1.5 py-0.5 rounded text-[10px] text-slate-600 font-semibold">{{ $item->product->medicine_type }} {{ $item->product->strength }}</span>
+                                                @endif
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
                             </td>
                             <td class="py-4 text-center font-semibold text-slate-700">{{ $item->quantity }}</td>
                             <td class="py-4 text-right text-slate-600">৳{{ number_format($item->unit_price, 2) }}</td>
@@ -65,7 +92,7 @@
                 $orderPrescription = \App\Models\OrderPrescription::with('prescription')->where('order_id', $order->id)->first();
                 $prescription = $orderPrescription ? $orderPrescription->prescription : null;
             @endphp
-            <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+            <div class="bg-white rounded-2xl border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow overflow-hidden">
                 <div class="px-6 py-4 border-b border-slate-100 bg-rose-50 flex justify-between items-center">
                     <h3 class="font-bold text-rose-800 flex items-center gap-2">
                         <i class="fas fa-file-medical"></i> Prescription Details
@@ -119,7 +146,7 @@
 
     <!-- Right Column: Customer & Status -->
     <div class="space-y-6">
-        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+        <div class="bg-white rounded-2xl border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow p-6">
             <h3 class="font-bold text-slate-800 mb-4">Order Status</h3>
             @php
                 $statusColors = ['pending'=>'yellow','confirmed'=>'blue','processing'=>'indigo','ready'=>'purple','shipped'=>'cyan','delivered'=>'green','cancelled'=>'red','returned'=>'orange','refunded'=>'slate'];
@@ -131,7 +158,7 @@
             <p class="text-xs text-slate-400 mt-3">Status can be updated from the main orders list.</p>
         </div>
 
-        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+        <div class="bg-white rounded-2xl border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow p-6">
             <h3 class="font-bold text-slate-800 mb-4">Customer Details</h3>
             <div class="space-y-3 text-sm">
                 <div class="flex items-start gap-3">

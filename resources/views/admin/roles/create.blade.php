@@ -11,7 +11,7 @@
     </a>
 </div>
 
-<div class="bg-white rounded-2xl border border-slate-100 shadow-sm max-w-5xl">
+<div class="bg-white rounded-2xl border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow max-w-5xl">
     <form action="{{ route('admin.roles.store') }}" method="POST" class="p-6 space-y-6">
         @csrf
         <div>

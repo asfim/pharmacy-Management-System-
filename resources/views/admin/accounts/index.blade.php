@@ -15,7 +15,7 @@
 
 @include('admin.layouts.alerts')
 
-<div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+<div class="bg-white rounded-2xl border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow overflow-hidden">
     <div class="overflow-x-auto">
         <table class="w-full text-sm text-left">
             <thead class="bg-slate-50 border-b border-slate-200 text-xs text-slate-500 uppercase">

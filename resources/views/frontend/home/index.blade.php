@@ -114,7 +114,7 @@
             @endphp
 
             @foreach($features as $i => $f)
-            <div class="card-hover reveal bg-white rounded-2xl p-5 md:p-6 border border-slate-100 shadow-sm hover:shadow-xl text-center group" style="animation-delay: {{ $i * 100 }}ms">
+            <div class="card-hover reveal bg-white rounded-2xl p-5 md:p-6 border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow hover:shadow-xl text-center group" style="animation-delay: {{ $i * 100 }}ms">
                 <div class="w-14 h-14 mx-auto bg-{{ $f['color'] }}-100 rounded-2xl flex items-center justify-center text-{{ $f['color'] }}-600 mb-4 group-hover:bg-gradient-to-br group-hover:from-{{ $f['color'] }}-500 group-hover:to-{{ $f['color'] }}-600 group-hover:text-white transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 group-hover:shadow-lg">
                     {!! $f['icon'] !!}
                 </div>
@@ -140,7 +140,7 @@
             <div class="swiper-wrapper">
                 @foreach($categories as $i => $cat)
                 <div class="swiper-slide h-auto">
-                    <a href="{{ route('category.products', $cat->id) }}" class="category-card reveal bg-white rounded-2xl p-5 text-center border border-slate-100 shadow-sm group block h-full" style="animation-delay: {{ ($i % 6) * 80 }}ms">
+                    <a href="{{ route('category.products', $cat->id) }}" class="category-card reveal bg-white rounded-2xl p-5 text-center border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow group block h-full" style="animation-delay: {{ ($i % 6) * 80 }}ms">
                         <div class="category-icon w-16 h-16 mx-auto bg-slate-50 rounded-2xl flex items-center justify-center text-3xl mb-3 border border-slate-100 overflow-hidden">
                             @if($cat->image && file_exists(public_path('storage/' . $cat->image)))
                                 <img src="{{ asset('storage/'.$cat->image) }}" alt="{{ $cat->name }}" class="w-full h-full object-cover">
@@ -246,7 +246,7 @@
             @endphp
 
             @foreach($products as $i => $p)
-            <div class="product-card card-hover reveal bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden group relative" style="animation-delay: {{ $i * 100 }}ms">
+            <div class="product-card card-hover reveal bg-white rounded-2xl border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow overflow-hidden group relative" style="animation-delay: {{ $i * 100 }}ms">
                 @if($p['discount'])
                 <div class="ribbon bg-gradient-to-r from-rose-500 to-pink-500 text-white shadow-lg">
                     -{{ $p['discount'] }}%
@@ -409,7 +409,7 @@
             @endphp
 
             @foreach($testimonials as $i => $t)
-            <div class="testimonial-card reveal bg-white rounded-2xl p-7 border border-slate-100 shadow-sm" style="animation-delay: {{ $i * 150 }}ms">
+            <div class="testimonial-card reveal bg-white rounded-2xl p-7 border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow" style="animation-delay: {{ $i * 150 }}ms">
                 <!-- Stars -->
                 <div class="flex text-amber-400 mb-4">
                     @for($s = 0; $s < 5; $s++)

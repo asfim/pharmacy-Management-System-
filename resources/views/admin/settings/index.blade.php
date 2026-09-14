@@ -10,7 +10,7 @@
 
 @include('admin.layouts.alerts')
 
-<div class="bg-white rounded-2xl border border-slate-100 shadow-sm max-w-3xl p-8">
+<div class="bg-white rounded-2xl border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow max-w-3xl p-8">
     <form action="{{ route('admin.settings.update') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
         @csrf
         

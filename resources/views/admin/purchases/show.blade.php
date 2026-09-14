@@ -9,7 +9,7 @@
     </div>
 </div>
 
-<div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden mb-6">
+<div class="bg-white rounded-2xl border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow overflow-hidden mb-6">
     <div class="p-6 grid grid-cols-2 gap-6">
         <div>
             <h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-2">Supplier Info</h3>
@@ -25,7 +25,7 @@
     </div>
 </div>
 
-<div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+<div class="bg-white rounded-2xl border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow overflow-hidden">
     <div class="overflow-x-auto">
         <table class="w-full text-sm text-left">
             <thead class="bg-slate-50 border-b border-slate-200 text-xs text-slate-500 uppercase">
@@ -75,7 +75,7 @@
 </div>
 
 @if($purchase->due > 0)
-<div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden mt-6">
+<div class="bg-white rounded-2xl border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow overflow-hidden mt-6">
     <div class="p-6">
         <h3 class="text-lg font-bold text-slate-800 mb-4">Add Payment</h3>
         <form action="{{ route('admin.supplier-payments.store') }}" method="POST">

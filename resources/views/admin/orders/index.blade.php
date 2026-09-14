@@ -16,7 +16,7 @@
     @endforeach
 </div>
 
-<div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+<div class="bg-white rounded-2xl border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow overflow-hidden">
     <div class="overflow-x-auto">
         <table class="w-full text-sm">
             <thead class="bg-slate-50 border-b border-slate-200 text-xs text-slate-500 uppercase">
@@ -25,7 +25,7 @@
                     <th class="px-5 py-4 text-left">Customer</th>
                     <th class="px-5 py-4 text-left">Date</th>
                     <th class="px-5 py-4 text-right">Amount</th>
-                    <th class="px-5 py-4 text-center">Payment</th>
+                    <th class="px-5 py-4 text-center">Prescription</th>
                     <th class="px-5 py-4 text-center">Status</th>
                     <th class="px-5 py-4 text-right">Actions</th>
                 </tr>
@@ -44,23 +44,34 @@
                     </td>
                     <td class="px-5 py-3.5 text-slate-500 text-xs">{{ $o->created_at->format('d M Y, h:i A') }}</td>
                     <td class="px-5 py-3.5 text-right font-bold text-slate-800">৳{{ number_format($o->total, 2) }}</td>
-                    <td class="px-5 py-3.5 text-center text-xs text-slate-600 capitalize">{{ $o->payment_method ?? '-' }}</td>
+                    <td class="px-5 py-3.5 text-center">
+                        @if($o->prescription_required)
+                            @php
+                                $prescription = $o->order_prescriptions->first()?->prescription;
+                            @endphp
+                            @if($prescription)
+                                @if($prescription->verification_status == 'verified')
+                                    <span class="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-100">
+                                        <i class="fas fa-check-circle"></i> Match
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center gap-1 text-[11px] font-bold text-rose-600 bg-rose-50 px-2.5 py-1 rounded-full border border-rose-100">
+                                        <i class="fas fa-times-circle"></i> Not Match
+                                    </span>
+                                @endif
+                            @else
+                                <span class="text-xs text-slate-400">Missing</span>
+                            @endif
+                        @else
+                            <span class="text-xs text-slate-300">-</span>
+                        @endif
+                    </td>
                     <td class="px-5 py-3.5 text-center">
                         <select onchange="updateOrderStatus({{ $o->id }}, this)" class="text-xs font-bold rounded-lg border-2 border-slate-200 bg-{{ $c }}-50 text-{{ $c }}-700 hover:border-teal-400 focus:ring-4 focus:ring-teal-50 focus:border-teal-500 cursor-pointer shadow-sm transition-all py-1.5 px-3">
                             @foreach(['pending','confirmed','delivered','cancelled'] as $s)
                                 <option value="{{ $s }}" {{ $o->status == $s ? 'selected' : '' }}>{{ ucfirst($s) }}</option>
                             @endforeach
                         </select>
-                        @if($o->prescription_required)
-                            @php
-                                $prescription = $o->order_prescriptions->first()?->prescription;
-                            @endphp
-                            @if($prescription && $prescription->verification_status != 'verified')
-                                <div class="mt-2 text-[10px] font-bold text-rose-600 bg-rose-50 px-2 py-0.5 rounded-full inline-flex items-center gap-1 shadow-sm border border-rose-100">
-                                    <i class="fas fa-exclamation-circle"></i> Match Failed
-                                </div>
-                            @endif
-                        @endif
                     </td>
                     <td class="px-5 py-3.5 text-right">
                         <div class="flex justify-end gap-1">

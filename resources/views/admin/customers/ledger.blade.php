@@ -10,7 +10,7 @@
 </div>
 
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+    <div class="bg-white rounded-2xl border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow p-6">
         <h3 class="text-lg font-bold text-slate-800 mb-4">Sales History</h3>
         <div class="overflow-x-auto">
             <table class="w-full text-sm">
@@ -38,7 +38,7 @@
         </div>
     </div>
 
-    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+    <div class="bg-white rounded-2xl border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow p-6">
         <h3 class="text-lg font-bold text-slate-800 mb-4">Payment History</h3>
         <div class="overflow-x-auto">
             <table class="w-full text-sm">

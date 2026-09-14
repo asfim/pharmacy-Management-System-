@@ -28,7 +28,7 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @package App\Models
  */
-class Return extends Model
+class OrderReturn extends Model
 {
 	protected $table = 'returns';
 

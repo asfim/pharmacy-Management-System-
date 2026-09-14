@@ -12,7 +12,7 @@
 
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
     <div class="md:col-span-1">
-        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+        <div class="bg-white rounded-2xl border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow p-6">
             <h3 class="text-lg font-bold text-slate-800 mb-4">Add Category</h3>
             <form action="{{ route('admin.expense-categories.store') }}" method="POST">
                 @csrf
@@ -26,7 +26,7 @@
     </div>
     
     <div class="md:col-span-2">
-        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+        <div class="bg-white rounded-2xl border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow overflow-hidden">
             <table class="w-full text-sm text-left">
                 <thead class="bg-slate-50 border-b border-slate-200 text-xs text-slate-500 uppercase">
                     <tr>

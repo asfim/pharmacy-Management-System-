@@ -76,7 +76,25 @@
                     <tbody class="divide-y divide-slate-100">
                         @foreach($order->order_items as $item)
                         <tr>
-                            <td class="py-4 text-slate-800 font-semibold">{{ $item->product->name ?? 'Unknown Product' }}</td>
+                            <td class="py-4">
+                                <p class="text-slate-800 font-semibold">{{ $item->product->name ?? 'Unknown Product' }}</p>
+                                @if($item->product)
+                                <div class="text-[10px] text-slate-500 mt-1 mb-1">
+                                    @if($item->product->generic)
+                                        <div class="text-teal-600 font-semibold">{{ $item->product->generic->name }}</div>
+                                    @endif
+                                    @if($item->product->manufacturer)
+                                        <div>Manufacturer: {{ $item->product->manufacturer->company_name }}</div>
+                                    @endif
+                                </div>
+                                <p class="text-[10px] text-slate-500 mt-1">
+                                    <span class="mr-2">SKU: {{ $item->product->sku }}</span>
+                                    @if($item->product->strength || $item->product->medicine_type)
+                                        <span class="text-slate-400">({{ $item->product->medicine_type }} {{ $item->product->strength }})</span>
+                                    @endif
+                                </p>
+                                @endif
+                            </td>
                             <td class="py-4 text-center text-slate-600">{{ $item->quantity }}</td>
                             <td class="py-4 text-right text-slate-600">৳{{ number_format($item->unit_price, 2) }}</td>
                             <td class="py-4 text-right font-bold text-slate-800">৳{{ number_format($item->total, 2) }}</td>

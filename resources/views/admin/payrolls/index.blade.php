@@ -16,25 +16,25 @@
 @include('admin.layouts.alerts')
 
 <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-    <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+    <div class="bg-white p-4 rounded-xl border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow">
         <p class="text-sm text-slate-500 mb-1">Total Salary (Gross)</p>
         <h4 class="text-xl font-bold text-slate-800">৳{{ number_format($totalGross, 2) }}</h4>
     </div>
-    <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+    <div class="bg-white p-4 rounded-xl border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow">
         <p class="text-sm text-slate-500 mb-1">Total Deduction</p>
         <h4 class="text-xl font-bold text-red-600">৳{{ number_format($totalDeduction, 2) }}</h4>
     </div>
-    <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+    <div class="bg-white p-4 rounded-xl border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow">
         <p class="text-sm text-slate-500 mb-1">Total Paid</p>
         <h4 class="text-xl font-bold text-emerald-600">৳{{ number_format($totalPaid, 2) }}</h4>
     </div>
-    <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+    <div class="bg-white p-4 rounded-xl border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow">
         <p class="text-sm text-slate-500 mb-1">Total Due</p>
         <h4 class="text-xl font-bold text-amber-600">৳{{ number_format($totalDue, 2) }}</h4>
     </div>
 </div>
 
-<div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+<div class="bg-white rounded-2xl border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow overflow-hidden">
     <div class="overflow-x-auto">
         <table class="w-full text-sm text-left">
             <thead class="bg-slate-50 border-b border-slate-200 text-xs text-slate-500 uppercase">

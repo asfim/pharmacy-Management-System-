@@ -10,7 +10,7 @@
     @endcan
 </div>
 @include('admin.layouts.alerts')
-<div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+<div class="bg-white rounded-2xl border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow overflow-hidden">
     <div class="p-5 border-b border-slate-100 flex gap-3">
         <input type="text" id="customerSearch" placeholder="Search customers..." class="flex-1 px-4 py-2.5 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-teal-500">
     </div>

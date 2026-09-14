@@ -11,7 +11,7 @@
 
 @include('admin.layouts.alerts')
 
-<div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+<div class="bg-white rounded-2xl border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow overflow-hidden">
     <form action="{{ route('admin.payrolls.store') }}" method="POST" class="p-6">
         @csrf
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">

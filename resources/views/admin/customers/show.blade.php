@@ -17,14 +17,14 @@
 </div>
 
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+    <div class="bg-white rounded-2xl border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow p-6">
         <h3 class="text-lg font-bold text-slate-800 mb-4 border-b pb-2">Profile</h3>
         <p class="mb-2"><strong class="text-slate-600">Phone:</strong> {{ $customer->phone }}</p>
         <p class="mb-2"><strong class="text-slate-600">Email:</strong> {{ $customer->email ?? 'N/A' }}</p>
         <p class="mb-2"><strong class="text-slate-600">Address:</strong> {{ $customer->address ?? 'N/A' }}</p>
         <p class="mb-2"><strong class="text-slate-600">Status:</strong> <span class="px-2 py-0.5 rounded text-xs font-medium {{ $customer->status === 'active' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }}">{{ ucfirst($customer->status ?? 'active') }}</span></p>
     </div>
-    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 md:col-span-2">
+    <div class="bg-white rounded-2xl border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow p-6 md:col-span-2">
         <h3 class="text-lg font-bold text-slate-800 mb-4 border-b pb-2">Financial Overview</h3>
         <div class="grid grid-cols-2 gap-4">
             <div>
@@ -46,7 +46,7 @@
     </div>
 </div>
 
-<div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+<div class="bg-white rounded-2xl border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow overflow-hidden">
     <div class="p-5 border-b border-slate-100">
         <h3 class="text-lg font-bold text-slate-800">Recent Sales</h3>
     </div>

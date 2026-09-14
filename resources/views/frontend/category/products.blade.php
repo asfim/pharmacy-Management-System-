@@ -58,15 +58,19 @@
 /* Product Card */
 .cp-product {
     background: #fff;
-    border-radius: 16px;
-    border: 1px solid #e2e8f0;
+    border: 2px solid #e2e8f0;
+    border-radius: 20px;
     overflow: hidden;
-    transition: all .3s;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 .cp-product:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 20px 40px rgba(0,0,0,.08);
-    border-color: #10b981;
+    border-color: #cbd5e1;
+    transform: translateY(-4px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 .cp-product-img {
     height: 180px;
