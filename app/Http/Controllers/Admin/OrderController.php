@@ -16,7 +16,7 @@ class OrderController extends Controller
 
     public function show(OnlineOrder $order)
     {
-        $order->load('customer', 'items.product', 'shippingAddress');
+        $order->load('customer', 'order_items.product', 'customer_address');
         return view('admin.orders.show', compact('order'));
     }
 
@@ -29,7 +29,7 @@ class OrderController extends Controller
 
     public function invoice(OnlineOrder $order)
     {
-        $order->load('customer', 'items.product');
+        $order->load('customer', 'order_items.product', 'customer_address');
         return view('admin.orders.invoice', compact('order'));
     }
 

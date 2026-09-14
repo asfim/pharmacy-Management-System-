@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Customer;
+use App\Models\CustomerAddress;
 use App\Models\OnlineOrder;
+use App\Models\OrderItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -190,13 +192,32 @@ class CartController extends Controller
         $delivery = 60;
         $total    = $subtotal + $delivery;
 
-        $user     = Auth::user();
-        $customer = $user ? Customer::where('email', $user->email)->first() : null;
+        // Handle customer creation/updates
+        $user = Auth::user();
+        if ($user) {
+            $customer = Customer::firstOrCreate(
+                ['email' => $user->email],
+                ['name' => $request->name, 'phone' => $request->phone, 'user_id' => $user->id]
+            );
+        } else {
+            // Guest checkout
+            $customer = Customer::firstOrCreate(
+                ['phone' => $request->phone],
+                ['name' => $request->name, 'email' => $request->email]
+            );
+        }
+
+        // Handle address
+        $address = CustomerAddress::firstOrCreate(
+            ['customer_id' => $customer->id, 'address_line' => $request->address],
+            ['name' => $request->name, 'phone' => $request->phone, 'is_default' => 1]
+        );
 
         // Create order
         $order = OnlineOrder::create([
             'order_no'              => 'ORD-' . strtoupper(uniqid()),
-            'customer_id'           => $customer->id ?? null,
+            'customer_id'           => $customer->id,
+            'address_id'            => $address->id,
             'status'                => 'pending',
             'payment_status'        => 'unpaid',
             'fulfillment_status'    => 'unfulfilled',
@@ -207,6 +228,17 @@ class CartController extends Controller
             'total'                 => $total,
             'prescription_required' => false,
         ]);
+
+        // Create Order Items
+        foreach ($cart as $id => $item) {
+            OrderItem::create([
+                'order_id'   => $order->id,
+                'product_id' => $id,
+                'quantity'   => $item['quantity'],
+                'unit_price' => $item['price'],
+                'total'      => $item['price'] * $item['quantity'],
+            ]);
+        }
 
         // Clear respective cart
         if ($isBuyNow) {
