@@ -35,8 +35,9 @@ class HomeController extends Controller
             ->limit(10)
             ->get();
         $sliders = \App\Models\Slider::where('status', 'active')->orderBy('order')->get();
+        $cmsFeatures = \App\Models\Cms::where('section', 'feature_strip')->where('status', 'active')->orderBy('order')->get();
 
-        return view('frontend.home.index', compact('categories', 'maxDiscount', 'discountedProducts', 'sliders'));
+        return view('frontend.home.index', compact('categories', 'maxDiscount', 'discountedProducts', 'sliders', 'cmsFeatures'));
     }
 
     public function categoryProducts(\App\Models\Category $category)

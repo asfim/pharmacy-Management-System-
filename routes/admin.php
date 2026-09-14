@@ -39,6 +39,7 @@ use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\BranchController;
 use App\Http\Controllers\Admin\SliderController;
+use App\Http\Controllers\Admin\CmsController;
 
 Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
 
@@ -162,6 +163,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
 
     // ==================== FRONTEND / CMS ====================
     Route::resource('sliders', SliderController::class);
+    Route::resource('cms', CmsController::class);
 
     // AJAX endpoints
     Route::get('ajax/subcategories', function () {

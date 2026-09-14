@@ -339,7 +339,12 @@
                 <a href="{{ route('admin.sliders.index') }}"
                     class="sidebar-link {{ request()->routeIs('admin.sliders*') ? 'active' : '' }}">
                     <i class="fas fa-images"></i>
-                    <span>Sliders (CMS)</span>
+                    <span>Hero Section</span>
+                </a>
+                <a href="{{ route('admin.cms.index') }}"
+                    class="sidebar-link {{ request()->routeIs('admin.cms*') ? 'active' : '' }}">
+                    <i class="fas fa-layer-group"></i>
+                    <span>Homepage Features</span>
                 </a>
             </nav>
 

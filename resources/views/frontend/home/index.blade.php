@@ -163,22 +163,13 @@
 <section class="py-14 bg-white relative -mt-1">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-            @php
-                $features = [
-                    ['icon' => '<svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>', 'title' => 'Genuine Medicines', 'desc' => '100% authentic products', 'color' => 'emerald'],
-                    ['icon' => '<svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>', 'title' => 'Fast Delivery', 'desc' => 'Within 24 hours', 'color' => 'blue'],
-                    ['icon' => '<svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>', 'title' => 'Secure Payments', 'desc' => 'bKash, Nagad, Card', 'color' => 'violet'],
-                    ['icon' => '<svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>', 'title' => '30+ Branches', 'desc' => 'All over the country', 'color' => 'amber'],
-                ];
-            @endphp
-
-            @foreach($features as $i => $f)
+            @foreach($cmsFeatures as $i => $f)
             <div class="card-hover reveal bg-white rounded-2xl p-5 md:p-6 border-2 border-slate-200 shadow-md hover:shadow-xl transition-shadow hover:shadow-xl text-center group" style="animation-delay: {{ $i * 100 }}ms">
-                <div class="w-14 h-14 mx-auto bg-{{ $f['color'] }}-100 rounded-2xl flex items-center justify-center text-{{ $f['color'] }}-600 mb-4 group-hover:bg-gradient-to-br group-hover:from-{{ $f['color'] }}-500 group-hover:to-{{ $f['color'] }}-600 group-hover:text-white transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 group-hover:shadow-lg">
-                    {!! $f['icon'] !!}
+                <div class="w-14 h-14 mx-auto bg-{{ $f->color }}-100 rounded-2xl flex items-center justify-center text-{{ $f->color }}-600 mb-4 group-hover:bg-gradient-to-br group-hover:from-{{ $f->color }}-500 group-hover:to-{{ $f->color }}-600 group-hover:text-white transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 group-hover:shadow-lg">
+                    {!! $f->icon !!}
                 </div>
-                <h3 class="font-bold text-slate-800 text-sm md:text-base">{{ $f['title'] }}</h3>
-                <p class="text-xs md:text-sm text-slate-500 mt-1.5">{{ $f['desc'] }}</p>
+                <h3 class="font-bold text-slate-800 text-sm md:text-base">{{ $f->title }}</h3>
+                <p class="text-xs md:text-sm text-slate-500 mt-1.5">{{ $f->description }}</p>
             </div>
             @endforeach
         </div>
