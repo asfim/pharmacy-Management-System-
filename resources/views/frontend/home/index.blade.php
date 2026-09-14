@@ -434,37 +434,6 @@
     </div>
 </section>
 
-<!-- ============================================
-     NEWSLETTER SIGNUP
-     ============================================ -->
-<section class="py-16 relative overflow-hidden">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 rounded-3xl p-10 md:p-16 text-center relative overflow-hidden reveal">
-            <!-- Background -->
-            <div class="absolute inset-0 pointer-events-none">
-                <div class="absolute top-0 right-0 w-60 h-60 bg-white/5 rounded-full blur-3xl"></div>
-                <div class="absolute bottom-0 left-0 w-60 h-60 bg-white/5 rounded-full blur-3xl"></div>
-                <div class="absolute inset-0 opacity-5" style="background-image: radial-gradient(circle at 1px 1px, white 1px, transparent 0); background-size: 30px 30px;"></div>
-            </div>
-
-            <div class="relative z-10">
-                <div class="inline-flex items-center justify-center w-16 h-16 bg-white/15 rounded-2xl backdrop-blur-sm mb-6">
-                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                </div>
-                <h2 class="text-3xl md:text-4xl font-extrabold text-white mb-4">Stay Updated with Health Tips</h2>
-                <p class="text-emerald-100 text-lg mb-8 max-w-xl mx-auto">Subscribe to our newsletter and get exclusive deals, health tips, and early access to flash sales.</p>
-
-                <div class="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto">
-                    <input type="email" class="flex-1 py-3.5 px-6 rounded-full bg-white/15 border border-white/25 text-white placeholder-emerald-200/60 focus:outline-none focus:border-white/50 focus:bg-white/20 backdrop-blur-sm transition text-sm" placeholder="Enter your email address...">
-                    <button class="bg-white text-emerald-700 font-bold py-3.5 px-8 rounded-full shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 text-sm whitespace-nowrap">
-                        Subscribe Now ✨
-                    </button>
-                </div>
-                <p class="text-emerald-200/50 text-xs mt-4">No spam, unsubscribe anytime. We respect your privacy.</p>
-            </div>
-        </div>
-    </div>
-</section>
 
 <!-- ============================================
      BRAND PARTNERS

@@ -9,6 +9,10 @@ Route::get('/category/{category}', [HomeController::class, 'categoryProducts'])-
 Route::get('/ajax/category-products/{category}', [HomeController::class, 'loadMoreCategoryProducts'])->name('ajax.category.products');
 Route::get('/product/{product}', [HomeController::class, 'productDetail'])->name('product.detail');
 
+// All Products
+Route::get('/products', [\App\Http\Controllers\Frontend\ProductController::class, 'index'])->name('products');
+Route::get('/ajax/products/fetch', [\App\Http\Controllers\Frontend\ProductController::class, 'fetchProducts'])->name('ajax.products.fetch');
+
 // Cart & Checkout
 Route::post('/cart/add', [\App\Http\Controllers\Frontend\CartController::class, 'add'])->name('cart.add');
 Route::post('/cart/remove', [\App\Http\Controllers\Frontend\CartController::class, 'remove'])->name('cart.remove');

@@ -37,8 +37,8 @@
                 <!-- Main Nav Links -->
                 <div class="flex items-center h-full ml-2">
                     <a href="{{ route('home') }}" class="nav-link-effect px-4 py-2 font-medium text-sm hover:text-emerald-400 transition-colors duration-200">Home</a>
-                    <a href="#" class="nav-link-effect px-4 py-2 font-medium text-sm hover:text-emerald-400 transition-colors duration-200">Products</a>
-                    <a href="#" class="nav-link-effect px-4 py-2 font-medium text-sm text-amber-400 hover:text-amber-300 transition-colors duration-200 flex items-center space-x-1.5">
+                    <a href="{{ route('products') }}" class="nav-link-effect px-4 py-2 font-medium text-sm hover:text-emerald-400 transition-colors duration-200">Products</a>
+                    <a href="{{ route('products', ['discount' => 'true']) }}" class="nav-link-effect px-4 py-2 font-medium text-sm text-amber-400 hover:text-amber-300 transition-colors duration-200 flex items-center space-x-1.5">
                         <svg class="w-4 h-4 animate-pulse" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"></path></svg>
                         <span>Flash Sale</span>
                     </a>
@@ -81,11 +81,11 @@
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
                     <span>Home</span>
                 </a>
-                <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-700 hover:bg-emerald-50 hover:text-emerald-600 transition font-medium">
+                <a href="{{ route('products') }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-700 hover:bg-emerald-50 hover:text-emerald-600 transition font-medium">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
                     <span>Products</span>
                 </a>
-                <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-amber-600 bg-amber-50 hover:bg-amber-100 transition font-medium">
+                <a href="{{ route('products', ['discount' => 'true']) }}" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-amber-600 bg-amber-50 hover:bg-amber-100 transition font-medium">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"></path></svg>
                     <span>Flash Sale</span>
                 </a>
