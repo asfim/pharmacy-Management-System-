@@ -32,11 +32,13 @@
 </head>
 <body class="antialiased text-slate-800 bg-white overflow-x-hidden">
     
-    <!-- Top Announcement & Header -->
-    @include('frontend.layouts.header')
-
-    <!-- Main Navigation -->
-    @include('frontend.layouts.navbar')
+    <!-- Top Announcement & Header & Navbar Wrapper (Sticky) -->
+    <div class="sticky top-0 z-[60]">
+        @include('frontend.layouts.header')
+        
+        <!-- Main Navigation -->
+        @include('frontend.layouts.navbar')
+    </div>
 
     <!-- Main Content -->
     <main class="min-h-screen">

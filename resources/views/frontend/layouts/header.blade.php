@@ -30,7 +30,7 @@
 </div>
 
 <!-- Main Header -->
-<header class="bg-white/95 backdrop-blur-md border-b border-slate-100 py-4 sticky top-0 z-40 shadow-sm">
+<header class="bg-white/95 backdrop-blur-md border-b border-slate-100 py-4 shadow-sm relative z-40">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center gap-6">
 
