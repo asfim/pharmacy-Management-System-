@@ -73,7 +73,7 @@
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 .cp-product-img {
-    height: 180px;
+    height: 220px;
     background: linear-gradient(135deg, #f8fafc, #f1f5f9);
     display: flex;
     align-items: center;
@@ -81,9 +81,10 @@
     font-size: 52px;
     position: relative;
     overflow: hidden;
+    padding: 10px;
 }
 .cp-product-img img {
-    width: 100%; height: 100%; object-fit: cover;
+    width: 100%; height: 100%; object-fit: contain;
 }
 .cp-discount-tag {
     position: absolute; top: 10px; left: 10px;

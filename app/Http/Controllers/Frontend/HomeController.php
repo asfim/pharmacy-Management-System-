@@ -11,7 +11,13 @@ class HomeController extends Controller
     {
         $categories = \App\Models\Category::where('status', 'active')->withCount('products')->get();
         $maxDiscount = \App\Models\Product::where('status', 'active')->max('discount') ?? 0;
-        return view('frontend.home.index', compact('categories', 'maxDiscount'));
+        $discountedProducts = \App\Models\Product::with(['product_images', 'manufacturer', 'generic', 'brand'])
+            ->where('status', 'active')
+            ->where('discount', '>', 0)
+            ->orderByDesc('discount')
+            ->limit(10)
+            ->get();
+        return view('frontend.home.index', compact('categories', 'maxDiscount', 'discountedProducts'));
     }
 
     public function categoryProducts(\App\Models\Category $category)

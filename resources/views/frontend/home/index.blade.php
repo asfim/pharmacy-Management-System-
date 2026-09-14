@@ -17,7 +17,7 @@
         <div class="absolute top-10 left-10 w-72 h-72 bg-emerald-400/20 rounded-full blur-3xl animate-blob"></div>
         <div class="absolute bottom-10 right-10 w-96 h-96 bg-cyan-400/20 rounded-full blur-3xl animate-blob delay-300"></div>
         <div class="absolute top-1/2 left-1/3 w-64 h-64 bg-teal-300/15 rounded-full blur-3xl animate-blob delay-700"></div>
-        
+
         <!-- Floating Medicine Icons -->
         <div class="absolute top-20 right-[15%] text-4xl animate-float opacity-20">💊</div>
         <div class="absolute top-40 right-[35%] text-3xl animate-float-slow delay-200 opacity-15">🩺</div>
@@ -25,7 +25,7 @@
         <div class="absolute top-28 left-[20%] text-3xl animate-float delay-700 opacity-15">🩹</div>
         <div class="absolute bottom-20 right-[25%] text-3xl animate-float-slow delay-1000 opacity-15">💉</div>
         <div class="absolute top-1/2 right-[8%] text-5xl animate-float-reverse opacity-10">🔬</div>
-        
+
         <!-- Grid Pattern Overlay -->
         <div class="absolute inset-0 opacity-5" style="background-image: radial-gradient(circle at 1px 1px, white 1px, transparent 0); background-size: 40px 40px;"></div>
     </div>
@@ -38,16 +38,16 @@
                     <span class="w-2 h-2 bg-emerald-300 rounded-full animate-pulse"></span>
                     <span>🎉 Trusted by 50,000+ customers</span>
                 </div>
-                
+
                 <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-6 animate-slide-up" style="animation-delay: 100ms">
                     Your Health,<br>
                     <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-200 via-white to-cyan-200">Delivered Fast!</span>
                 </h1>
-                
+
                 <p class="text-lg md:text-xl text-emerald-100/90 mb-10 max-w-lg animate-slide-up leading-relaxed" style="animation-delay: 200ms">
                     Order 100% genuine medicines online and get them delivered to your doorstep within 24 hours, securely & hassle-free.
                 </p>
-                
+
                 <div class="flex flex-wrap gap-4 animate-slide-up" style="animation-delay: 300ms">
                     <a href="#" class="btn-glow inline-flex items-center space-x-2 bg-white text-emerald-700 font-bold py-3.5 px-8 rounded-full shadow-xl shadow-black/10 hover:bg-emerald-50 transition-all duration-300 text-sm">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
@@ -83,7 +83,7 @@
                 <div class="relative z-10">
                     <img src="{{ asset('assets/images/hero_illustration.jpg') }}" alt="PharmaSys App Illustration" class="w-full max-w-lg mx-auto rounded-3xl shadow-2xl">
                 </div>
-                
+
                 <!-- Floating decorative glow behind the image -->
                 <div class="absolute inset-0 bg-gradient-to-tr from-emerald-400 to-teal-400 rounded-full blur-3xl opacity-30 -z-10"></div>
             </div>
@@ -177,7 +177,7 @@
                 <div class="absolute top-10 right-[20%] text-6xl opacity-10 animate-float">⚡</div>
                 <div class="absolute bottom-5 left-[15%] text-4xl opacity-10 animate-float-reverse">🔥</div>
             </div>
-            
+
             <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
                 <div class="text-white text-center md:text-left">
                     <div class="inline-flex items-center space-x-2 bg-white/15 rounded-full px-4 py-1.5 text-sm font-medium mb-4 backdrop-blur-sm">
@@ -187,7 +187,7 @@
                     <h2 class="text-3xl md:text-4xl font-extrabold mb-2">Flash Sale — Up to {{ (int)$maxDiscount }}% OFF!</h2>
                     <p class="text-rose-100 text-lg">Get incredible deals on top medicines & health products.</p>
                 </div>
-                
+
                 <!-- Countdown Timer -->
                 <div class="flex items-center space-x-3" id="flashCountdown">
                     <div class="countdown-box">
@@ -214,6 +214,53 @@
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
                 </a>
             </div>
+
+            <!-- Flash Sale Swiper Carousel -->
+            @if(isset($discountedProducts) && $discountedProducts->count() > 0)
+            <div class="relative z-10 mt-12">
+                <div class="swiper flashSaleSwiper relative px-2">
+                    <div class="swiper-wrapper py-4">
+                        @foreach($discountedProducts as $product)
+                        @php
+                            $primaryImage = $product->product_images->where('is_primary', 1)->first() ?? $product->product_images->first();
+                        @endphp
+                        <div class="swiper-slide h-auto">
+                            <div class="bg-white/70 backdrop-blur-md border-2 border-white/50 rounded-2xl overflow-hidden flex flex-col h-full shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+                                <a href="{{ route('product.detail', $product->id) }}" class="block relative h-48 bg-transparent flex items-center justify-center p-2">
+                                    @if($primaryImage && $primaryImage->image_url)
+                                        <img src="{{ asset('storage/'.$primaryImage->image_url) }}" alt="{{ $product->name }}" class="w-full h-full object-contain mix-blend-multiply">
+                                    @else
+                                        <svg class="w-12 h-12 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                                    @endif
+                                    <div class="absolute top-2 left-2 bg-gradient-to-br from-rose-500 to-pink-500 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-md">-{{ (int)$product->discount }}%</div>
+                                </a>
+                                <div class="p-4 flex-1 flex flex-col">
+                                    <div class="text-[10px] font-bold text-emerald-500 uppercase tracking-wide mb-1">{{ $product->manufacturer->name ?? ($product->brand->name ?? '') }}</div>
+                                    <a href="{{ route('product.detail', $product->id) }}" class="font-bold text-slate-800 text-sm line-clamp-1 mb-1 hover:text-rose-500 transition-colors">{{ $product->name }}</a>
+                                    <div class="text-xs text-slate-800 mb-3 line-clamp-1">{{ $product->generic->name ?? '' }} {{ $product->strength ?? '' }}</div>
+                                    <div class="mt-auto flex items-center justify-between pt-3 border-t border-slate-100">
+                                        <div>
+                                            <div class="font-black text-slate-800 text-lg">৳{{ number_format($product->sale_price, 2) }}</div>
+                                            @if($product->mrp > $product->sale_price)
+                                                <div class="text-[10px] text-slate-400 line-through">৳{{ number_format($product->mrp, 2) }}</div>
+                                            @endif
+                                        </div>
+                                        <a href="{{ route('product.detail', $product->id) }}" class="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-500 hover:text-white flex items-center justify-center transition-colors">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                    
+                    <!-- Flash Sale Navigation Arrows -->
+                    <div class="swiper-button-prev flash-prev !text-rose-600 !bg-white/90 backdrop-blur-sm !w-10 !h-10 !rounded-full shadow-lg hover:shadow-xl after:!text-sm border border-white/50 hidden md:flex !-left-2"></div>
+                    <div class="swiper-button-next flash-next !text-rose-600 !bg-white/90 backdrop-blur-sm !w-10 !h-10 !rounded-full shadow-lg hover:shadow-xl after:!text-sm border border-white/50 hidden md:flex !-right-2"></div>
+                </div>
+            </div>
+            @endif
         </div>
     </div>
 </section>
@@ -256,7 +303,7 @@
                 <!-- Image Area -->
                 <div class="relative overflow-hidden bg-gradient-to-br from-slate-50 to-slate-100 h-44 flex items-center justify-center">
                     <div class="product-image text-6xl">{{ $p['emoji'] }}</div>
-                    
+
                     <!-- Overlay Actions -->
                     <div class="product-overlay absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent flex items-end justify-center pb-4">
                         <div class="flex space-x-2 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
@@ -278,7 +325,7 @@
                     <div class="text-xs font-semibold text-emerald-600 mb-1">{{ $p['company'] }}</div>
                     <h3 class="font-bold text-slate-800 text-sm truncate mb-0.5 group-hover:text-emerald-600 transition-colors">{{ $p['name'] }}</h3>
                     <p class="text-xs text-slate-400 mb-3">{{ $p['generic'] }}</p>
-                    
+
                     <!-- Rating -->
                     <div class="flex items-center space-x-1 mb-3">
                         <div class="flex text-amber-400 text-xs">★★★★<span class="text-slate-300">★</span></div>
@@ -318,7 +365,7 @@
 <section class="py-20 bg-white relative overflow-hidden">
     <!-- Background Pattern -->
     <div class="absolute inset-0 opacity-[0.02]" style="background-image: radial-gradient(circle at 1px 1px, #059669 1px, transparent 0); background-size: 30px 30px;"></div>
-    
+
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <!-- Left: Content -->
@@ -420,9 +467,9 @@
                         @endif
                     @endfor
                 </div>
-                
+
                 <p class="text-slate-600 text-sm leading-relaxed mb-6">"{{ $t['text'] }}"</p>
-                
+
                 <div class="flex items-center space-x-3 pt-4 border-t border-slate-100">
                     <div class="w-10 h-10 rounded-full bg-gradient-to-r {{ $t['gradient'] }} flex items-center justify-center text-white font-bold text-sm shadow-md">
                         {{ $t['initial'] }}
@@ -457,7 +504,7 @@
                 </div>
                 <h2 class="text-3xl md:text-4xl font-extrabold text-white mb-4">Stay Updated with Health Tips</h2>
                 <p class="text-emerald-100 text-lg mb-8 max-w-xl mx-auto">Subscribe to our newsletter and get exclusive deals, health tips, and early access to flash sales.</p>
-                
+
                 <div class="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto">
                     <input type="email" class="flex-1 py-3.5 px-6 rounded-full bg-white/15 border border-white/25 text-white placeholder-emerald-200/60 focus:outline-none focus:border-white/50 focus:bg-white/20 backdrop-blur-sm transition text-sm" placeholder="Enter your email address...">
                     <button class="bg-white text-emerald-700 font-bold py-3.5 px-8 rounded-full shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 text-sm whitespace-nowrap">
@@ -520,6 +567,24 @@
                 preventClicks: false,
                 preventClicksPropagation: false
             });
+
+            var flashSaleSwiper = new Swiper('.flashSaleSwiper', {
+                slidesPerView: 2,
+                spaceBetween: 16,
+                navigation: {
+                    nextEl: '.flashSaleSwiper .flash-next',
+                    prevEl: '.flashSaleSwiper .flash-prev',
+                },
+                breakpoints: {
+                    640: { slidesPerView: 3, spaceBetween: 20 },
+                    768: { slidesPerView: 4, spaceBetween: 20 },
+                    1024: { slidesPerView: 4, spaceBetween: 24 },
+                },
+                autoplay: {
+                    delay: 4000,
+                    disableOnInteraction: false,
+                },
+            });
         });
     </script>
 @endpush
@@ -530,27 +595,27 @@
     function startCountdown() {
         // Set countdown for 12 hours from now
         let totalSeconds = 12 * 3600 + 45 * 60 + 30;
-        
+
         function updateTimer() {
             if (totalSeconds <= 0) return;
             totalSeconds--;
-            
+
             const hours = Math.floor(totalSeconds / 3600);
             const minutes = Math.floor((totalSeconds % 3600) / 60);
             const seconds = totalSeconds % 60;
-            
+
             const hEl = document.getElementById('countHours');
             const mEl = document.getElementById('countMinutes');
             const sEl = document.getElementById('countSeconds');
-            
+
             if (hEl) hEl.textContent = String(hours).padStart(2, '0');
             if (mEl) mEl.textContent = String(minutes).padStart(2, '0');
             if (sEl) sEl.textContent = String(seconds).padStart(2, '0');
         }
-        
+
         setInterval(updateTimer, 1000);
     }
-    
+
     startCountdown();
 </script>
 @endpush
