@@ -276,7 +276,7 @@
                         @endphp
                         <div class="swiper-slide h-auto">
                             <div class="bg-white/20 backdrop-blur-xl border border-white/40 rounded-2xl overflow-hidden flex flex-col h-full shadow-[0_8px_32px_0_rgba(31,38,135,0.15)] hover:shadow-[0_8px_32px_0_rgba(31,38,135,0.25)] transition-all duration-300 transform hover:-translate-y-1">
-                                <a href="{{ route('product.detail', $product->id) }}" class="block relative h-48 bg-white/50 flex items-center justify-center p-2">
+                                <a href="{{ route('product.detail', $product->id) }}" class="block relative h-32 sm:h-48 bg-white/50 flex items-center justify-center p-2">
                                     @if($primaryImage && $primaryImage->image_url)
                                         <img src="{{ asset('storage/'.$primaryImage->image_url) }}" alt="{{ $product->name }}" class="w-full h-full object-contain mix-blend-multiply">
                                     @else
@@ -284,7 +284,7 @@
                                     @endif
                                     <div class="absolute top-2 left-2 bg-gradient-to-br from-rose-500 to-pink-500 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-md shadow-sm">-{{ (int)$product->discount }}%</div>
                                 </a>
-                                <div class="p-4 flex-1 flex flex-col">
+                                <div class="p-2.5 sm:p-4 flex-1 flex flex-col">
                                     <div class="text-[10px] font-bold text-emerald-200 uppercase tracking-wide mb-1">{{ $product->manufacturer->name ?? ($product->brand->name ?? '') }}</div>
                                     <a href="{{ route('product.detail', $product->id) }}" class="font-bold text-white text-sm line-clamp-1 mb-1 hover:text-rose-200 transition-colors">{{ $product->name }}</a>
                                     <div class="text-xs text-white/80 mb-3 line-clamp-1">{{ $product->generic->name ?? '' }} {{ $product->strength ?? '' }}</div>
@@ -296,10 +296,10 @@
                                                 $finalPrice = $originalPrice - ($originalPrice * $product->discount / 100);
                                             }
                                         @endphp
-                                        <div class="flex items-baseline space-x-2">
-                                            <div class="font-black text-white text-lg">৳{{ number_format($finalPrice, 2) }}</div>
+                                        <div class="flex flex-col sm:flex-row sm:items-baseline sm:space-x-2">
+                                            <div class="font-black text-white text-base sm:text-lg">৳{{ number_format($finalPrice, 2) }}</div>
                                             @if($originalPrice > $finalPrice)
-                                                <div class="text-xs text-white/70 line-through">৳{{ number_format($originalPrice, 2) }}</div>
+                                                <div class="text-[10px] sm:text-xs text-white/70 line-through mt-0.5 sm:mt-0">৳{{ number_format($originalPrice, 2) }}</div>
                                             @endif
                                         </div>
                                         <a href="{{ route('product.detail', $product->id) }}" class="w-8 h-8 rounded-lg bg-white/20 text-white hover:bg-white hover:text-rose-600 flex items-center justify-center transition-colors">

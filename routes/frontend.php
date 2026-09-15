@@ -12,6 +12,7 @@ Route::get('/product/{product}', [HomeController::class, 'productDetail'])->name
 // All Products
 Route::get('/products', [\App\Http\Controllers\Frontend\ProductController::class, 'index'])->name('products');
 Route::get('/ajax/products/fetch', [\App\Http\Controllers\Frontend\ProductController::class, 'fetchProducts'])->name('ajax.products.fetch');
+Route::get('/ajax/products/live-search', [\App\Http\Controllers\Frontend\ProductController::class, 'liveSearch'])->name('ajax.products.liveSearch');
 
 // Cart & Checkout
 Route::post('/cart/add', [\App\Http\Controllers\Frontend\CartController::class, 'add'])->name('cart.add');

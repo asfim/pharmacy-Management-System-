@@ -20,7 +20,7 @@
     background: #fff;
     border: 1px solid #e2e8f0;
     border-radius: 16px;
-    padding: 20px;
+    padding: 20px 4px 20px 20px;
 }
 .filter-section {
     margin-bottom: 24px;
@@ -33,19 +33,25 @@
     font-weight: 700;
     color: #0f172a;
     margin-bottom: 12px;
+    padding-right: 16px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 .filter-list {
     max-height: 200px;
     overflow-y: auto;
+    padding-right: 12px;
 }
 .filter-list::-webkit-scrollbar {
-    width: 4px;
+    width: 6px;
 }
 .filter-list::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 4px;
+    background: #10b981;
+    border-radius: 6px;
+}
+.filter-list::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 6px;
 }
 .filter-label {
     display: flex;
@@ -103,8 +109,8 @@
         <div class="flex flex-col lg:flex-row gap-8">
             
             <!-- Sidebar Filters -->
-            <div class="w-full flex-shrink-0" style="max-width: 280px;">
-                <div class="filter-sidebar sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto custom-scrollbar">
+            <div class="w-full lg:w-[280px] flex-shrink-0">
+                <div class="filter-sidebar lg:sticky lg:top-24 max-h-[calc(100vh-7rem)] overflow-y-auto custom-scrollbar">
                     <div class="filter-section">
                         <h3 class="filter-title">Categories</h3>
                         <div class="filter-list custom-scrollbar">

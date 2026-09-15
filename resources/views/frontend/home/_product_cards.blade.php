@@ -15,7 +15,7 @@
     @endif
 
     <!-- Image Area -->
-    <div class="relative overflow-hidden bg-gradient-to-br from-slate-50 to-slate-100 h-44 flex items-center justify-center">
+    <div class="relative overflow-hidden bg-gradient-to-br from-slate-50 to-slate-100 h-36 sm:h-44 flex items-center justify-center">
         @if($primaryImage && $primaryImage->image_url)
             <img src="{{ asset('storage/'.$primaryImage->image_url) }}" alt="{{ $product->name }}" class="w-full h-full object-contain mix-blend-multiply p-4">
         @else
@@ -39,7 +39,7 @@
     </div>
 
     <!-- Content -->
-    <div class="p-4 flex-1 flex flex-col">
+    <div class="p-2.5 sm:p-4 flex-1 flex flex-col">
         <div class="text-xs font-semibold text-emerald-600 mb-1">{{ $product->manufacturer->name ?? ($product->brand->name ?? '') }}</div>
         <a href="{{ route('product.detail', $product->id) }}">
             <h3 class="font-bold text-slate-800 text-sm truncate mb-0.5 group-hover:text-emerald-600 transition-colors">{{ $product->name }}</h3>
@@ -54,10 +54,10 @@
 
         <!-- Price -->
         <div class="flex items-center justify-between mt-auto">
-            <div class="flex items-baseline space-x-2">
-                <span class="text-lg font-extrabold text-slate-900">৳{{ number_format($finalPrice, 2) }}</span>
+            <div class="flex flex-col sm:flex-row sm:items-baseline sm:space-x-2">
+                <span class="text-base sm:text-lg font-extrabold text-slate-900">৳{{ number_format($finalPrice, 2) }}</span>
                 @if($originalPrice > $finalPrice)
-                <span class="text-xs text-slate-400 line-through">৳{{ number_format($originalPrice, 2) }}</span>
+                <span class="text-[10px] sm:text-xs text-slate-400 line-through mt-0.5 sm:mt-0">৳{{ number_format($originalPrice, 2) }}</span>
                 @endif
             </div>
             <button type="button" onclick="buyNow(event, {{ $product->id }})" class="w-9 h-9 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white flex items-center justify-center hover:shadow-lg hover:shadow-emerald-500/30 hover:scale-110 transition-all duration-300">

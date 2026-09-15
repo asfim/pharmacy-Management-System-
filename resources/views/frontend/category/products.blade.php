@@ -140,6 +140,23 @@
     text-align: center; padding: 60px 20px; color: #94a3b8;
 }
 .cp-pagination { margin-top: 30px; display: flex; justify-content: center; }
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+    .cp-product-img { height: 150px; }
+    .cp-product-body { padding: 12px; }
+    .cp-price-row { 
+        flex-direction: column; 
+        align-items: flex-start; 
+        gap: 8px; 
+    }
+    .cp-buy-btn { 
+        width: 100%; 
+        justify-content: center; 
+        padding: 6px 12px;
+    }
+    .cp-price { font-size: 16px; }
+}
 </style>
 @endpush
 

@@ -1,4 +1,3 @@
-<!-- Top Announcement Bar -->
 <div class="bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 animate-gradient text-white text-sm py-2.5 overflow-hidden relative">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
         <div class="hidden sm:flex items-center space-x-2 text-emerald-100">
@@ -29,12 +28,10 @@
     </div>
 </div>
 
-<!-- Main Header -->
 <header class="bg-white/95 backdrop-blur-md border-b border-slate-100 py-4 shadow-sm relative z-40">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center gap-6">
 
-            <!-- Logo -->
             <div class="shrink-0 flex items-center">
                 <a href="{{ route('home') }}" class="flex items-center space-x-2 group">
                     @if(isset($siteSettings['site_logo']) && $siteSettings['site_logo'])
@@ -52,26 +49,24 @@
                 </a>
             </div>
 
-            <!-- Search Bar -->
             <div class="hidden md:flex flex-1 max-w-2xl">
                 <div class="relative w-full group">
                     <div class="absolute inset-0 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-2xl opacity-0 group-focus-within:opacity-100 transition-opacity duration-300 blur-sm -z-10"></div>
-                    <div class="flex">
+                    <form action="{{ route('products') }}" method="GET" class="flex w-full">
                         <div class="relative flex-1">
-                            <input type="text" id="frontendSearch" class="w-full py-3 pl-5 pr-4 bg-slate-50 border-2 border-slate-200 rounded-l-2xl text-sm focus:outline-none focus:border-emerald-500 focus:bg-white transition-all duration-300 placeholder:text-slate-400" placeholder="Search medicines, generics, brands...">
+                            <input type="text" name="search" autocomplete="off" value="{{ request('search') }}" id="frontendSearch" class="w-full py-3 pl-5 pr-4 bg-slate-50 border-2 border-slate-200 rounded-l-2xl text-sm focus:outline-none focus:border-emerald-500 focus:bg-white transition-all duration-300 placeholder:text-slate-400" placeholder="Search medicines, generics, brands...">
+                            <div id="desktopSearchResults" class="absolute left-0 top-full mt-2 w-full bg-white rounded-xl shadow-2xl border border-slate-100 hidden z-50 max-h-96 overflow-y-auto"></div>
                         </div>
-                        <button type="button" class="px-6 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white rounded-r-2xl font-medium text-sm transition-all duration-300 flex items-center space-x-2 shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/40">
+                        <button type="submit" class="px-6 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white rounded-r-2xl font-medium text-sm transition-all duration-300 flex items-center space-x-2 shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/40">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                             <span class="hidden lg:inline">Search</span>
                         </button>
-                    </div>
+                    </form>
                 </div>
             </div>
 
-            <!-- Actions (Account, Wishlist, Cart) -->
             <div class="flex items-center space-x-2 sm:space-x-4">
 
-                <!-- Mobile Search Toggle -->
                 <button class="md:hidden p-2.5 rounded-xl text-slate-500 hover:text-emerald-600 hover:bg-emerald-50 transition-all" id="mobileSearchToggle">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 </button>
@@ -93,7 +88,6 @@
                 @endauth
 
                 <div class="flex items-center space-x-2">
-                    <!-- Cart Dropdown Container -->
                     <div class="relative group">
                         <a href="javascript:void(0)" class="flex flex-col items-center p-2 rounded-xl text-slate-500 hover:text-emerald-600 hover:bg-emerald-50 transition-all duration-300">
                             <div class="relative">
@@ -105,7 +99,6 @@
                             <span class="text-[10px] mt-0.5 font-semibold hidden sm:block">Cart</span>
                         </a>
 
-                        <!-- Mini Cart Dropdown -->
                         <div class="absolute right-0 top-full mt-2 w-80 bg-white rounded-2xl shadow-2xl border border-slate-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 transform origin-top-right scale-95 group-hover:scale-100">
                             <div class="p-4 border-b border-slate-100">
                                 <h3 class="font-bold text-slate-800 text-sm">Your Cart</h3>
@@ -154,21 +147,20 @@
                     </div>
                 </div>
 
-                <!-- Mobile Menu Toggle -->
                 <button class="lg:hidden p-2.5 rounded-xl text-slate-500 hover:text-emerald-600 hover:bg-emerald-50 transition-all" id="mobileMenuToggle">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                 </button>
             </div>
         </div>
 
-        <!-- Mobile Search Bar (hidden by default) -->
         <div class="md:hidden mt-3 hidden" id="mobileSearchBar">
-            <div class="flex">
-                <input type="text" class="w-full py-2.5 pl-4 pr-4 bg-slate-50 border-2 border-slate-200 rounded-l-xl text-sm focus:outline-none focus:border-emerald-500" placeholder="Search medicines...">
-                <button class="px-5 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-r-xl">
+            <form action="{{ route('products') }}" method="GET" class="flex relative">
+                <input type="text" name="search" id="mobileSearchInput" autocomplete="off" value="{{ request('search') }}" class="w-full py-2.5 pl-4 pr-4 bg-slate-50 border-2 border-slate-200 rounded-l-xl text-sm focus:outline-none focus:border-emerald-500" placeholder="Search medicines...">
+                <button type="submit" class="px-5 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-r-xl">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 </button>
-            </div>
+                <div id="mobileSearchResults" class="absolute left-0 top-full mt-1 w-full bg-white rounded-xl shadow-2xl border border-slate-100 hidden z-50 max-h-80 overflow-y-auto"></div>
+            </form>
         </div>
     </div>
 </header>
@@ -178,4 +170,61 @@
     document.getElementById('mobileSearchToggle')?.addEventListener('click', () => {
         document.getElementById('mobileSearchBar')?.classList.toggle('hidden');
     });
+
+    // Header Live Search function
+    function setupLiveSearch(inputId, resultsId) {
+        const input = document.getElementById(inputId);
+        const resultsBox = document.getElementById(resultsId);
+        let timeout = null;
+
+        if (!input || !resultsBox) return;
+
+        input.addEventListener('input', function() {
+            clearTimeout(timeout);
+            const query = this.value.trim();
+            
+            if (query.length < 2) {
+                resultsBox.classList.add('hidden');
+                return;
+            }
+
+            timeout = setTimeout(() => {
+                fetch(`{{ route('ajax.products.liveSearch') }}?search=${encodeURIComponent(query)}`, {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    resultsBox.innerHTML = '';
+                    if (data.length > 0) {
+                        data.forEach(item => {
+                            const img = item.image_url ? `<img src="${item.image_url}" class="w-10 h-10 object-contain rounded-md bg-slate-50">` : `<div class="w-10 h-10 flex items-center justify-center bg-slate-100 rounded-md text-xl">💊</div>`;
+                            resultsBox.innerHTML += `
+                                <a href="${item.url}" class="flex items-center gap-3 p-3 hover:bg-slate-50 border-b border-slate-100 transition-colors last:border-0">
+                                    ${img}
+                                    <div class="flex-1 min-w-0">
+                                        <div class="text-sm font-bold text-slate-800 truncate">${item.name}</div>
+                                        <div class="text-xs text-slate-500 truncate">${item.generic} ${item.strength || ''}</div>
+                                    </div>
+                                    <div class="text-sm font-bold text-emerald-600 shrink-0">৳${item.price}</div>
+                                </a>
+                            `;
+                        });
+                    } else {
+                        resultsBox.innerHTML = `<div class="p-4 text-center text-sm text-slate-500">No products found for "${query}"</div>`;
+                    }
+                    resultsBox.classList.remove('hidden');
+                });
+            }, 300);
+        });
+
+        // Hide results on outside click
+        document.addEventListener('click', function(e) {
+            if (!input.contains(e.target) && !resultsBox.contains(e.target)) {
+                resultsBox.classList.add('hidden');
+            }
+        });
+    }
+
+    setupLiveSearch('frontendSearch', 'desktopSearchResults');
+    setupLiveSearch('mobileSearchInput', 'mobileSearchResults');
 </script>

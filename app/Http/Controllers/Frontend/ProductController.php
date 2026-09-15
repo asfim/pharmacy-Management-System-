@@ -76,4 +76,40 @@ class ProductController extends Controller
             'count' => $products->count(),
         ]);
     }
+
+    public function liveSearch(Request $request)
+    {
+        if (!$request->filled('search')) {
+            return response()->json([]);
+        }
+
+        $products = Product::with(['product_images', 'generic'])
+            ->where('status', 'active')
+            ->where('name', 'like', '%' . $request->search . '%')
+            ->take(6)
+            ->get();
+
+        $results = $products->map(function ($product) {
+            $primaryImage = $product->product_images->where('is_primary', 1)->first() ?? $product->product_images->first();
+            $imageUrl = $primaryImage && $primaryImage->image_url ? asset('storage/' . $primaryImage->image_url) : null;
+            
+            $originalPrice = $product->mrp > $product->sale_price ? $product->mrp : $product->sale_price;
+            $finalPrice = $product->sale_price;
+            if ($product->discount > 0) {
+                $finalPrice = $originalPrice - ($originalPrice * $product->discount / 100);
+            }
+
+            return [
+                'id' => $product->id,
+                'name' => $product->name,
+                'generic' => $product->generic ? $product->generic->name : '',
+                'strength' => $product->strength,
+                'image_url' => $imageUrl,
+                'price' => number_format($finalPrice, 2),
+                'url' => route('product.detail', $product->id),
+            ];
+        });
+
+        return response()->json($results);
+    }
 }
