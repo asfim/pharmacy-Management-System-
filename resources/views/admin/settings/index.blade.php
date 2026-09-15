@@ -129,6 +129,85 @@
             </div>
         </div>
 
+        <div class="border-t border-slate-100 pt-8 mb-6 mt-8">
+            <h3 class="text-lg font-bold text-slate-800 mb-1"><i class="fas fa-shoe-prints text-teal-500 mr-2"></i> Footer Settings</h3>
+            <p class="text-xs text-slate-500">Manage footer description, contact info, social links, and quick links.</p>
+        </div>
+
+        <div class="space-y-5">
+            <div>
+                <label class="block text-sm font-bold text-slate-700 mb-2">Footer Description</label>
+                <textarea name="footer_desc" rows="3" class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-500 transition-all bg-slate-50">{{ $siteSettings['footer_desc'] ?? 'Your trusted digital pharmacy. We provide genuine medicines, fast delivery, and authentic healthcare products at your doorstep across Bangladesh.' }}</textarea>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Contact Address</label>
+                    <input type="text" name="footer_address" value="{{ $siteSettings['footer_address'] ?? '123 Pharmacy Road, Dhaka, Bangladesh' }}" class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-500 transition-all bg-slate-50">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Contact Phone</label>
+                    <input type="text" name="footer_phone" value="{{ $siteSettings['footer_phone'] ?? '+880 1234 567890' }}" class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-500 transition-all bg-slate-50">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Contact Email</label>
+                    <input type="email" name="footer_email" value="{{ $siteSettings['footer_email'] ?? 'support@pharmasys.com' }}" class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-500 transition-all bg-slate-50">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Support Hours / Text</label>
+                    <input type="text" name="footer_support" value="{{ $siteSettings['footer_support'] ?? '24/7 Customer Support' }}" class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-500 transition-all bg-slate-50">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Facebook URL</label>
+                    <input type="url" name="footer_facebook" value="{{ $siteSettings['footer_facebook'] ?? '#' }}" class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-500 transition-all bg-slate-50">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Twitter URL</label>
+                    <input type="url" name="footer_twitter" value="{{ $siteSettings['footer_twitter'] ?? '#' }}" class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-500 transition-all bg-slate-50">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Instagram URL</label>
+                    <input type="url" name="footer_instagram" value="{{ $siteSettings['footer_instagram'] ?? '#' }}" class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-500 transition-all bg-slate-50">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">YouTube URL</label>
+                    <input type="url" name="footer_youtube" value="{{ $siteSettings['footer_youtube'] ?? '#' }}" class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-500 transition-all bg-slate-50">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-bold text-slate-700 mb-2">Copyright Text</label>
+                <input type="text" name="footer_copyright" value="{{ $siteSettings['footer_copyright'] ?? '© '.date('Y').' PharmaSys. All rights reserved. Made with ❤️ in Bangladesh.' }}" class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-500 transition-all bg-slate-50">
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Quick Links -->
+                <div class="p-4 border border-slate-200 rounded-xl bg-slate-50">
+                    <h4 class="font-bold text-sm mb-4">Quick Links</h4>
+                    @for($i=1; $i<=4; $i++)
+                    <div class="flex gap-2 mb-3">
+                        <input type="text" name="quick_link_{{$i}}_name" value="{{ $siteSettings['quick_link_'.$i.'_name'] ?? '' }}" placeholder="Link {{$i}} Name" class="w-1/2 px-3 py-2 border border-slate-200 rounded text-sm">
+                        <input type="text" name="quick_link_{{$i}}_url" value="{{ $siteSettings['quick_link_'.$i.'_url'] ?? '' }}" placeholder="URL (e.g. /about)" class="w-1/2 px-3 py-2 border border-slate-200 rounded text-sm">
+                    </div>
+                    @endfor
+                </div>
+
+                <!-- Customer Services -->
+                <div class="p-4 border border-slate-200 rounded-xl bg-slate-50">
+                    <h4 class="font-bold text-sm mb-4">Customer Services</h4>
+                    @for($i=1; $i<=4; $i++)
+                    <div class="flex gap-2 mb-3">
+                        <input type="text" name="customer_link_{{$i}}_name" value="{{ $siteSettings['customer_link_'.$i.'_name'] ?? '' }}" placeholder="Link {{$i}} Name" class="w-1/2 px-3 py-2 border border-slate-200 rounded text-sm">
+                        <input type="text" name="customer_link_{{$i}}_url" value="{{ $siteSettings['customer_link_'.$i.'_url'] ?? '' }}" placeholder="URL (e.g. /contact)" class="w-1/2 px-3 py-2 border border-slate-200 rounded text-sm">
+                    </div>
+                    @endfor
+                </div>
+            </div>
+        </div>
+
         <div class="flex justify-end pt-6 mt-6 border-t border-slate-100">
             <button type="submit" class="bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm px-8 py-3 rounded-xl transition shadow-md shadow-teal-500/20">Save Settings</button>
         </div>

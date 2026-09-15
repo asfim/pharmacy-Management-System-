@@ -55,6 +55,23 @@ class SettingController extends Controller
             Setting::updateOrCreate(['key' => 'hero_image'], ['value' => $path]);
         }
 
+        // Footer Settings
+        $footerFields = [
+            'footer_desc', 'footer_address', 'footer_phone', 'footer_email', 'footer_support',
+            'footer_facebook', 'footer_twitter', 'footer_instagram', 'footer_youtube',
+            'footer_copyright',
+            'quick_link_1_name', 'quick_link_1_url', 'quick_link_2_name', 'quick_link_2_url',
+            'quick_link_3_name', 'quick_link_3_url', 'quick_link_4_name', 'quick_link_4_url',
+            'customer_link_1_name', 'customer_link_1_url', 'customer_link_2_name', 'customer_link_2_url',
+            'customer_link_3_name', 'customer_link_3_url', 'customer_link_4_name', 'customer_link_4_url'
+        ];
+
+        foreach ($footerFields as $field) {
+            if ($request->has($field)) {
+                Setting::updateOrCreate(['key' => $field], ['value' => $request->$field]);
+            }
+        }
+
         return redirect()->route('admin.settings.index')->with('success', 'Settings updated successfully.');
     }
 

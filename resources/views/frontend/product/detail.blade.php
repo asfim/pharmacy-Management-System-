@@ -19,12 +19,44 @@
 }
 @media (max-width: 768px) {
     .pd-main { grid-template-columns: 1fr; gap: 24px; }
+    .pd-title { font-size: 22px; }
+    .pd-price-box { padding: 10px 20px; margin-bottom: 16px; }
+    .pd-price-now { font-size: 24px; }
+    .pd-qty-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 16px;
+    }
+    .pd-qty-wrap {
+        justify-content: center;
+    }
+    .pd-qty-row > .flex {
+        flex-direction: row;
+        width: 100%;
+        gap: 8px;
+    }
+    .pd-buy-btn {
+        padding: 8px 4px;
+        font-size: 11px;
+        gap: 4px;
+        white-space: nowrap;
+        border-radius: 10px;
+    }
+    .pd-buy-btn svg {
+        width: 16px;
+        height: 16px;
+    }
+    .pd-qty-btn {
+        width: 32px; height: 32px; font-size: 16px;
+    }
+    .pd-qty-input {
+        width: 40px; height: 32px; font-size: 14px;
+    }
 }
 
 /* Image Gallery */
 .pd-gallery {
-    position: sticky;
-    top: 100px;
+    position: relative;
 }
 .pd-img-main {
     width: 100%;
@@ -100,19 +132,19 @@
 /* Price Section */
 .pd-price-box {
     background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
-    border-radius: 16px; padding: 24px; margin-bottom: 20px;
-    display: flex; align-items: center; justify-content: space-between;
+    border-radius: 12px; padding: 12px 24px; margin-bottom: 20px;
+    display: inline-flex; align-items: center; justify-content: space-between; gap: 24px;
 }
 .pd-price-now {
-    font-size: 36px; font-weight: 900; color: #10b981;
+    font-size: 32px; font-weight: 900; color: #10b981;
 }
 .pd-price-old {
-    font-size: 18px; color: #94a3b8; text-decoration: line-through; margin-left: 12px;
+    font-size: 16px; color: #94a3b8; text-decoration: line-through; margin-left: 8px;
 }
 .pd-discount-tag {
     background: linear-gradient(135deg, #ef4444, #f43f5e);
-    color: #fff; font-size: 14px; font-weight: 800;
-    padding: 6px 16px; border-radius: 10px;
+    color: #fff; font-size: 13px; font-weight: 800;
+    padding: 4px 12px; border-radius: 8px;
 }
 
 /* Quantity & Buy */
@@ -312,7 +344,7 @@
                         </button>
                         <button type="button" class="pd-buy-btn" style="flex:1; background: linear-gradient(135deg, #0f172a, #334155);" onclick="buyNow(event, {{ $product->id }})">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                            Checkout Now
+                            Order Now
                         </button>
                     </div>
                 </div>
@@ -354,34 +386,8 @@
         @if($relatedProducts->count() > 0)
         <div class="pd-related">
             <h2 class="pd-related-title">Related Products</h2>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-5">
-                @foreach($relatedProducts as $rp)
-                @php
-                    $rpImg = $rp->product_images->where('is_primary', 1)->first() ?? $rp->product_images->first();
-                @endphp
-                <a href="{{ route('product.detail', $rp->id) }}" class="cp-product block" style="text-decoration:none;">
-                    <div class="cp-product-img">
-                        @if($rpImg)
-                            <img src="{{ asset('storage/'.$rpImg->image_url) }}" alt="{{ $rp->name }}">
-                        @else
-                            <svg class="w-12 h-12 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
-                        @endif
-                        @if($rp->discount > 0)
-                            <div class="cp-discount-tag">-{{ (int)$rp->discount }}%</div>
-                        @endif
-                    </div>
-                    <div class="cp-product-body">
-                        <div class="cp-product-brand">{{ $rp->manufacturer->name ?? '' }}</div>
-                        <div class="cp-product-name">{{ $rp->name }}</div>
-                        <div class="cp-price-row" style="margin-top:8px;">
-                            <span class="cp-price">৳{{ number_format($rp->sale_price, 2) }}</span>
-                            @if($rp->discount > 0 && $rp->mrp > $rp->sale_price)
-                                <span class="cp-price-old">৳{{ number_format($rp->mrp, 2) }}</span>
-                            @endif
-                        </div>
-                    </div>
-                </a>
-                @endforeach
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+                @include('frontend.home._product_cards', ['products' => $relatedProducts])
             </div>
         </div>
         @endif
