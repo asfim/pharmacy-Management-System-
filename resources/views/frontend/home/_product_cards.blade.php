@@ -17,7 +17,11 @@
     <!-- Image Area -->
     <div class="relative overflow-hidden bg-gradient-to-br from-slate-50 to-slate-100 h-36 sm:h-44 flex items-center justify-center">
         @if($primaryImage && $primaryImage->image_url)
-            <img src="{{ asset('storage/'.$primaryImage->image_url) }}" alt="{{ $product->name }}" class="w-full h-full object-contain mix-blend-multiply p-4">
+            @if(str_starts_with($primaryImage->image_url, 'http'))
+                <img src="{{ $primaryImage->image_url }}" alt="{{ $product->name }}" class="w-full h-full object-contain mix-blend-multiply p-4">
+            @else
+                <img src="{{ asset('storage/'.$primaryImage->image_url) }}" alt="{{ $product->name }}" class="w-full h-full object-contain mix-blend-multiply p-4">
+            @endif
         @else
             <div class="product-image text-6xl">💊</div>
         @endif

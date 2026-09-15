@@ -358,6 +358,11 @@ class MedicineController extends Controller
 
         $header = fgetcsv($handle);
         $count = 0;
+        
+        $isNetmedsFormat = false;
+        if (is_array($header) && count($header) >= 12 && stripos($header[0], 'disease_name') !== false) {
+            $isNetmedsFormat = true;
+        }
 
         $categories = Category::pluck('id', 'name')->toArray();
         $generics = Generic::pluck('id', 'name')->toArray();
@@ -369,17 +374,37 @@ class MedicineController extends Controller
             while (($row = fgetcsv($handle)) !== false) {
                 if (count($row) < 2) continue;
 
-                $medicineName     = trim($row[0] ?? '');
-                $categoryName     = trim($row[1] ?? 'General') ?: 'General';
-                $slug             = trim($row[2] ?? '');
-                $genericName      = trim($row[3] ?? 'General Generic') ?: 'General Generic';
-                $strength         = trim($row[4] ?? '');
-                $manufacturerName = trim($row[5] ?? 'Local Manufacturer') ?: 'Local Manufacturer';
-                $unitName         = trim($row[6] ?? 'Piece') ?: 'Piece';
-                $unitSize         = trim($row[7] ?? '1');
-                $price            = (float) trim($row[8] ?? 0);
+                if ($isNetmedsFormat) {
+                    $medicineName     = trim($row[2] ?? '');
+                    $categoryName     = trim($row[0] ?? 'General') ?: 'General';
+                    // Extract numeric part from final_price like "₹335.68"
+                    $rawPrice         = preg_replace('/[^0-9.]/', '', trim($row[4] ?? '0'));
+                    $price            = (float) ($rawPrice ?: 0);
+                    $genericName      = trim($row[11] ?? 'General Generic') ?: 'General Generic';
+                    $strength         = trim($row[7] ?? '');
+                    $manufacturerName = trim($row[8] ?? 'Local Manufacturer') ?: 'Local Manufacturer';
+                    $unitName         = 'Piece';
+                    $unitSize         = '1';
+                    $csvImage         = trim($row[12] ?? '');
+                    // Split multiple URLs
+                    $csvImages = explode(',', $csvImage);
+                    $csvImage = trim($csvImages[0] ?? '');
+                } else {
+                    $medicineName     = trim($row[0] ?? '');
+                    $categoryName     = trim($row[1] ?? 'General') ?: 'General';
+                    $genericName      = trim($row[3] ?? 'General Generic') ?: 'General Generic';
+                    $strength         = trim($row[4] ?? '');
+                    $manufacturerName = trim($row[5] ?? 'Local Manufacturer') ?: 'Local Manufacturer';
+                    $unitName         = trim($row[6] ?? 'Piece') ?: 'Piece';
+                    $unitSize         = trim($row[7] ?? '1');
+                    $price            = (float) trim($row[8] ?? 0);
+                    $csvImage         = trim($row[9] ?? '');
+                }
 
                 if (empty($medicineName)) continue;
+
+                // Truncate category if it's too long (like ADHD (7))
+                if (strlen($categoryName) > 50) $categoryName = substr($categoryName, 0, 50);
 
                 if (!isset($categories[$categoryName])) {
                     $cat = Category::firstOrCreate(['name' => $categoryName]);
@@ -401,7 +426,6 @@ class MedicineController extends Controller
                 $purchasePrice = round($price * 0.85, 2);
                 $sku = 'MED-' . strtoupper(Str::random(6));
 
-                $csvImage = trim($row[9] ?? '');
                 if (!empty($csvImage)) {
                     $assignedImage = $csvImage;
                 } else {
@@ -409,8 +433,8 @@ class MedicineController extends Controller
                 }
 
                 $product = Product::create([
-                    'sku'                  => $sku,
-                    'barcode'              => '880' . sprintf('%010d', rand(100000, 999999)),
+                    'sku'                  => $sku . '-' . $count,
+                    'barcode'              => '880' . sprintf('%010d', time() + $count),
                     'name'                 => $medicineName,
                     'generic_id'           => $generics[$genericName],
                     'manufacturer_id'      => $manufacturers[$manufacturerName],

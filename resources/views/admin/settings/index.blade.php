@@ -49,7 +49,13 @@
                 </div>
             </div>
         </div>
+        <div class="flex justify-end mt-4">
+            <button type="submit" class="bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm px-6 py-2 rounded-xl transition shadow-md shadow-teal-500/20">Save Global Branding</button>
+        </div>
+    </form>
 
+    <form action="{{ route('admin.settings.update') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+        @csrf
         <div class="border-t border-slate-100 pt-8 mb-6 mt-8">
             <h3 class="text-lg font-bold text-slate-800 mb-1"><i class="fas fa-home text-teal-500 mr-2"></i> Hero Section Settings</h3>
             <p class="text-xs text-slate-500">Manage the texts, buttons, and statistics on the homepage hero section.</p>
@@ -106,7 +112,13 @@
                 </div>
             </div>
         </div>
+        <div class="flex justify-end mt-4">
+            <button type="submit" class="bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm px-6 py-2 rounded-xl transition shadow-md shadow-teal-500/20">Save Hero Settings</button>
+        </div>
+    </form>
 
+    <form action="{{ route('admin.settings.update') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+        @csrf
         <div class="border-t border-slate-100 pt-8 mb-6 mt-8">
             <h3 class="text-lg font-bold text-slate-800 mb-1"><i class="fas fa-check-circle text-teal-500 mr-2"></i> Why Choose Us Settings</h3>
             <p class="text-xs text-slate-500">Manage the texts for the 'Why Choose PharmaSys' section.</p>
@@ -128,7 +140,61 @@
                 <textarea name="why_choose_desc" rows="3" class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-500 transition-all bg-slate-50">{{ $siteSettings['why_choose_desc'] ?? 'We\'re committed to making healthcare accessible, affordable, and convenient for everyone across Bangladesh.' }}</textarea>
             </div>
         </div>
+        <div class="flex justify-end mt-4">
+            <button type="submit" class="bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm px-6 py-2 rounded-xl transition shadow-md shadow-teal-500/20">Save Why Choose Us</button>
+        </div>
+    </form>
 
+    <form action="{{ route('admin.settings.update') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+        @csrf
+        <div class="border-t border-slate-100 pt-8 mb-6 mt-8">
+            <h3 class="text-lg font-bold text-slate-800 mb-1"><i class="fas fa-bars text-teal-500 mr-2"></i> Topbar Settings</h3>
+            <p class="text-xs text-slate-500">Manage the texts and links in the top bar above the main header.</p>
+        </div>
+
+        <div class="space-y-5">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Message (Desktop)</label>
+                    <input type="text" name="topbar_message" value="{{ $siteSettings['topbar_message'] ?? 'Free delivery on orders over ৳1,000!' }}" class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-500 transition-all bg-slate-50">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Marquee Text (Mobile)</label>
+                    <input type="text" name="topbar_marquee" value="{{ $siteSettings['topbar_marquee'] ?? '🚚 Free delivery on orders over ৳1,000! &nbsp;&nbsp;|&nbsp;&nbsp; 💊 100% Genuine Medicines &nbsp;&nbsp;|&nbsp;&nbsp; ⚡ Fast 24h Delivery' }}" class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-500 transition-all bg-slate-50">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div class="p-4 border border-slate-200 rounded-xl bg-slate-50">
+                    <h4 class="font-bold text-sm mb-3">Link 1</h4>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Text</label>
+                    <input type="text" name="topbar_link_1_name" value="{{ $siteSettings['topbar_link_1_name'] ?? 'Track Order' }}" class="w-full px-3 py-2 mb-3 border border-slate-200 rounded text-sm">
+                    <label class="block text-xs font-bold text-slate-700 mb-1">URL</label>
+                    <input type="text" name="topbar_link_1_url" value="{{ $siteSettings['topbar_link_1_url'] ?? '#' }}" class="w-full px-3 py-2 border border-slate-200 rounded text-sm">
+                </div>
+                <div class="p-4 border border-slate-200 rounded-xl bg-slate-50">
+                    <h4 class="font-bold text-sm mb-3">Link 2</h4>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Text</label>
+                    <input type="text" name="topbar_link_2_name" value="{{ $siteSettings['topbar_link_2_name'] ?? '24/7 Support' }}" class="w-full px-3 py-2 mb-3 border border-slate-200 rounded text-sm">
+                    <label class="block text-xs font-bold text-slate-700 mb-1">URL</label>
+                    <input type="text" name="topbar_link_2_url" value="{{ $siteSettings['topbar_link_2_url'] ?? '#' }}" class="w-full px-3 py-2 border border-slate-200 rounded text-sm">
+                </div>
+                <div class="p-4 border border-slate-200 rounded-xl bg-slate-50">
+                    <h4 class="font-bold text-sm mb-3">Link 3</h4>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Text</label>
+                    <input type="text" name="topbar_link_3_name" value="{{ $siteSettings['topbar_link_3_name'] ?? '+880 1234 567890' }}" class="w-full px-3 py-2 mb-3 border border-slate-200 rounded text-sm">
+                    <label class="block text-xs font-bold text-slate-700 mb-1">URL</label>
+                    <input type="text" name="topbar_link_3_url" value="{{ $siteSettings['topbar_link_3_url'] ?? '#' }}" class="w-full px-3 py-2 border border-slate-200 rounded text-sm">
+                </div>
+            </div>
+        </div>
+        <div class="flex justify-end mt-4">
+            <button type="submit" class="bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm px-6 py-2 rounded-xl transition shadow-md shadow-teal-500/20">Save Topbar Settings</button>
+        </div>
+    </form>
+
+    <form action="{{ route('admin.settings.update') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+        @csrf
         <div class="border-t border-slate-100 pt-8 mb-6 mt-8">
             <h3 class="text-lg font-bold text-slate-800 mb-1"><i class="fas fa-shoe-prints text-teal-500 mr-2"></i> Footer Settings</h3>
             <p class="text-xs text-slate-500">Manage footer description, contact info, social links, and quick links.</p>
@@ -208,8 +274,10 @@
             </div>
         </div>
 
+        </div>
+
         <div class="flex justify-end pt-6 mt-6 border-t border-slate-100">
-            <button type="submit" class="bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm px-8 py-3 rounded-xl transition shadow-md shadow-teal-500/20">Save Settings</button>
+            <button type="submit" class="bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm px-8 py-3 rounded-xl transition shadow-md shadow-teal-500/20">Save Footer Settings</button>
         </div>
     </form>
 </div>

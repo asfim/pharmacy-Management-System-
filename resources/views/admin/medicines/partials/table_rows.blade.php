@@ -9,8 +9,12 @@
     <td class="px-4 py-3">
         @php
             $imgUrl = $item->product_images->first()->image_url ?? $item->image ?? null;
-            if ($imgUrl && !str_starts_with($imgUrl, 'http')) {
-                $imgUrl = asset('storage/' . $imgUrl);
+            if ($imgUrl) {
+                if (str_starts_with($imgUrl, 'http')) {
+                    $imgUrl = $imgUrl;
+                } else {
+                    $imgUrl = asset('storage/' . $imgUrl);
+                }
             }
         @endphp
         @if($imgUrl)

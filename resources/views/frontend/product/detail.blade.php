@@ -243,18 +243,27 @@
 
                 <div class="pd-img-main" id="mainImage">
                     @if($primaryImg)
-                        <img src="{{ asset('storage/'.$primaryImg->image_url) }}" alt="{{ $product->name }}" id="mainImgEl">
+                        @if(str_starts_with($primaryImg->image_url, 'http'))
+                            <img src="{{ $primaryImg->image_url }}" alt="{{ $product->name }}" id="mainImgEl">
+                        @else
+                            <img src="{{ asset('storage/'.$primaryImg->image_url) }}" alt="{{ $product->name }}" id="mainImgEl">
+                        @endif
                     @else
-                        <svg class="w-32 h-32 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                        <div class="w-full h-full flex items-center justify-center bg-slate-50 rounded-2xl border border-slate-100 text-6xl shadow-inner">
+                            💊
+                        </div>
                     @endif
                 </div>
 
                 @if($images->count() > 1)
-                <div class="pd-img-thumbs">
+                <div class="pd-img-thumbs mt-4 flex gap-3 overflow-x-auto pb-2 snap-x">
                     @foreach($images as $i => $img)
-                    <div class="pd-img-thumb {{ $img->id == optional($primaryImg)->id ? 'active' : '' }}"
-                         onclick="changeImage('{{ asset('storage/'.$img->image_url) }}', this)">
-                        <img src="{{ asset('storage/'.$img->image_url) }}" alt="">
+                    @php
+                        $imgSrc = str_starts_with($img->image_url, 'http') ? $img->image_url : asset('storage/'.$img->image_url);
+                    @endphp
+                    <div class="pd-thumb w-20 h-20 flex-shrink-0 bg-white rounded-xl border-2 {{ $i === 0 ? 'border-emerald-500' : 'border-slate-200' }} p-1 cursor-pointer transition-all hover:border-emerald-400 snap-center shadow-sm"
+                         onclick="changeImage('{{ $imgSrc }}', this)">
+                        <img src="{{ $imgSrc }}" alt="">
                     </div>
                     @endforeach
                 </div>

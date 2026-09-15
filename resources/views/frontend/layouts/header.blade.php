@@ -2,27 +2,27 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
         <div class="hidden sm:flex items-center space-x-2 text-emerald-100">
             <svg class="w-4 h-4 animate-bounce-subtle" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-            <span class="font-medium">Free delivery on orders over <strong class="text-white">৳1,000!</strong></span>
+            <span class="font-medium">{!! $siteSettings['topbar_message'] ?? 'Free delivery on orders over <strong class="text-white">৳1,000!</strong>' !!}</span>
         </div>
         <div class="sm:hidden flex-1 overflow-hidden">
             <div class="animate-marquee whitespace-nowrap">
-                <span>🚚 Free delivery on orders over ৳1,000! &nbsp;&nbsp;|&nbsp;&nbsp; 💊 100% Genuine Medicines &nbsp;&nbsp;|&nbsp;&nbsp; ⚡ Fast 24h Delivery</span>
+                <span>{!! $siteSettings['topbar_marquee'] ?? '🚚 Free delivery on orders over ৳1,000! &nbsp;&nbsp;|&nbsp;&nbsp; 💊 100% Genuine Medicines &nbsp;&nbsp;|&nbsp;&nbsp; ⚡ Fast 24h Delivery' !!}</span>
             </div>
         </div>
         <div class="hidden sm:flex items-center space-x-5 text-sm">
-            <a href="#" class="flex items-center space-x-1.5 hover:text-white text-emerald-100 transition">
+            <a href="{{ $siteSettings['topbar_link_1_url'] ?? '#' }}" class="flex items-center space-x-1.5 hover:text-white text-emerald-100 transition">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                <span>Track Order</span>
+                <span>{{ $siteSettings['topbar_link_1_name'] ?? 'Track Order' }}</span>
             </a>
             <span class="text-emerald-400">|</span>
-            <a href="#" class="flex items-center space-x-1.5 hover:text-white text-emerald-100 transition">
+            <a href="{{ $siteSettings['topbar_link_2_url'] ?? '#' }}" class="flex items-center space-x-1.5 hover:text-white text-emerald-100 transition">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                <span>24/7 Support</span>
+                <span>{{ $siteSettings['topbar_link_2_name'] ?? '24/7 Support' }}</span>
             </a>
             <span class="text-emerald-400">|</span>
-            <a href="#" class="flex items-center space-x-1.5 hover:text-white text-emerald-100 transition">
+            <a href="{{ $siteSettings['topbar_link_3_url'] ?? '#' }}" class="flex items-center space-x-1.5 hover:text-white text-emerald-100 transition">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
-                <span>+880 1234 567890</span>
+                <span>{{ $siteSettings['topbar_link_3_name'] ?? '+880 1234 567890' }}</span>
             </a>
         </div>
     </div>

@@ -72,6 +72,20 @@ class SettingController extends Controller
             }
         }
 
+        // Topbar Settings
+        $topbarFields = [
+            'topbar_message', 'topbar_marquee',
+            'topbar_link_1_name', 'topbar_link_1_url',
+            'topbar_link_2_name', 'topbar_link_2_url',
+            'topbar_link_3_name', 'topbar_link_3_url'
+        ];
+
+        foreach ($topbarFields as $field) {
+            if ($request->has($field)) {
+                Setting::updateOrCreate(['key' => $field], ['value' => $request->$field]);
+            }
+        }
+
         return redirect()->route('admin.settings.index')->with('success', 'Settings updated successfully.');
     }
 
