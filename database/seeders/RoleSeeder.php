@@ -90,5 +90,33 @@ class RoleSeeder extends Seeder
         if (!$superAdmin->hasRole('Super Admin')) {
             $superAdmin->assignRole('Super Admin');
         }
+
+        // Customer Role & Demo Customer
+        $customerRole = Role::firstOrCreate(['name' => 'Customer']);
+
+        $demoCustomer = User::firstOrCreate(
+            ['email' => 'customer@pharmacy.com'],
+            [
+                'name' => 'Demo Customer',
+                'password' => Hash::make('password'),
+                'status' => 'active',
+                'email_verified_at' => now(),
+            ]
+        );
+
+        if (!$demoCustomer->hasRole('Customer')) {
+            $demoCustomer->assignRole('Customer');
+        }
+
+        \App\Models\Customer::firstOrCreate(
+            ['email' => 'customer@pharmacy.com'],
+            [
+                'name' => 'Demo Customer',
+                'phone' => '01700000001',
+                'address' => 'Dhaka, Bangladesh',
+                'customer_type' => 'retail',
+                'status' => 'active',
+            ]
+        );
     }
 }
