@@ -107,7 +107,7 @@
     @stack('styles')
 </head>
 
-<body class="antialiased" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 40%, #134e4a 80%, #0f172a 100%); background-attachment: fixed; min-height: 100vh;" x-data="{ sidebarOpen: true, dropdownOpen: false }">
+<body class="antialiased" style="background: linear-gradient(135deg, #e8f0ef 0%, #dce8e6 40%, #e2eceb 70%, #dde7e9 100%); background-attachment: fixed; min-height: 100vh;" x-data="{ sidebarOpen: true, dropdownOpen: false }">
 
     <div class="flex h-screen overflow-hidden">
 
