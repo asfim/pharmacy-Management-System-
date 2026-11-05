@@ -1,148 +1,207 @@
 @extends('admin.layouts.app')
 @php $header = 'Dashboard'; @endphp
 
+@push('styles')
+<style>
+    /* Glassmorphism card base */
+    .glass-card {
+        background: rgba(255, 255, 255, 0.07);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: #e2e8f0;
+        transition: background 0.2s, box-shadow 0.2s;
+    }
+    .glass-card:hover {
+        background: rgba(255, 255, 255, 0.11);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }
+    .glass-card .text-slate-800  { color: #f1f5f9 !important; }
+    .glass-card .text-slate-700  { color: #e2e8f0 !important; }
+    .glass-card .text-slate-600  { color: #cbd5e1 !important; }
+    .glass-card .text-slate-500  { color: #94a3b8 !important; }
+    .glass-card .text-slate-400  { color: #64748b !important; }
+    .glass-card .divide-y.divide-slate-50 > * { border-color: rgba(255,255,255,0.08) !important; }
+    .glass-card .border-b.border-slate-50 { border-color: rgba(255,255,255,0.08) !important; }
+    .glass-card .border-b.border-slate-100 { border-color: rgba(255,255,255,0.1) !important; }
+    .glass-card thead.bg-slate-50 { background: rgba(255,255,255,0.08) !important; }
+    .glass-card thead .text-slate-500 { color: #94a3b8 !important; }
+    .glass-card tr.hover\:bg-slate-50:hover { background: rgba(255,255,255,0.06) !important; }
+    .glass-card .bg-slate-50 { background: rgba(255,255,255,0.08) !important; }
+
+    /* Alert cards glass */
+    .glass-alert-orange {
+        background: rgba(251,146,60,0.12);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        border: 1px solid rgba(251,146,60,0.25);
+    }
+    .glass-alert-red {
+        background: rgba(239,68,68,0.12);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        border: 1px solid rgba(239,68,68,0.25);
+    }
+    .glass-alert-yellow {
+        background: rgba(234,179,8,0.12);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        border: 1px solid rgba(234,179,8,0.25);
+    }
+    .glass-alert-blue {
+        background: rgba(59,130,246,0.12);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        border: 1px solid rgba(59,130,246,0.25);
+    }
+
+    /* Chart tick labels */
+    .glass-card canvas { color: #94a3b8; }
+</style>
+@endpush
+
 @section('content')
 
 {{-- ==================== STAT CARDS ROW 1 ==================== --}}
 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
 
     {{-- Today Sales --}}
-    <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 hover:shadow-md transition">
+    <div class="glass-card rounded-2xl p-5 shadow-lg">
         <div class="flex items-center justify-between mb-3">
-            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Today's Sales</p>
-            <div class="w-9 h-9 bg-teal-50 rounded-xl flex items-center justify-center">
-                <i class="fas fa-money-bill-wave text-teal-600 text-sm"></i>
+            <p class="text-xs font-semibold text-teal-300/70 uppercase tracking-wide">Today's Sales</p>
+            <div class="w-9 h-9 bg-teal-400/20 rounded-xl flex items-center justify-center">
+                <i class="fas fa-money-bill-wave text-teal-300 text-sm"></i>
             </div>
         </div>
-        <p class="text-2xl font-bold text-slate-800">৳{{ number_format($todaySales, 0) }}</p>
-        <p class="text-xs text-teal-600 mt-1 font-medium"><i class="fas fa-arrow-up mr-1"></i>Today's revenue</p>
+        <p class="text-2xl font-bold text-white">৳{{ number_format($todaySales, 0) }}</p>
+        <p class="text-xs text-teal-300 mt-1 font-medium"><i class="fas fa-arrow-up mr-1"></i>Today's revenue</p>
     </div>
 
     {{-- Today Purchase --}}
-    <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 hover:shadow-md transition">
+    <div class="glass-card rounded-2xl p-5 shadow-lg">
         <div class="flex items-center justify-between mb-3">
-            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Today's Purchase</p>
-            <div class="w-9 h-9 bg-blue-50 rounded-xl flex items-center justify-center">
-                <i class="fas fa-cart-flatbed text-blue-600 text-sm"></i>
+            <p class="text-xs font-semibold text-blue-300/70 uppercase tracking-wide">Today's Purchase</p>
+            <div class="w-9 h-9 bg-blue-400/20 rounded-xl flex items-center justify-center">
+                <i class="fas fa-cart-flatbed text-blue-300 text-sm"></i>
             </div>
         </div>
-        <p class="text-2xl font-bold text-slate-800">৳{{ number_format($todayPurchase, 0) }}</p>
-        <p class="text-xs text-blue-600 mt-1 font-medium">Purchase cost today</p>
+        <p class="text-2xl font-bold text-white">৳{{ number_format($todayPurchase, 0) }}</p>
+        <p class="text-xs text-blue-300 mt-1 font-medium">Purchase cost today</p>
     </div>
 
     {{-- Today Profit --}}
-    <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 hover:shadow-md transition">
+    <div class="glass-card rounded-2xl p-5 shadow-lg">
         <div class="flex items-center justify-between mb-3">
-            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Today's Profit</p>
-            <div class="w-9 h-9 bg-green-50 rounded-xl flex items-center justify-center">
-                <i class="fas fa-chart-line text-green-600 text-sm"></i>
+            <p class="text-xs font-semibold text-green-300/70 uppercase tracking-wide">Today's Profit</p>
+            <div class="w-9 h-9 bg-green-400/20 rounded-xl flex items-center justify-center">
+                <i class="fas fa-chart-line text-green-300 text-sm"></i>
             </div>
         </div>
-        <p class="text-2xl font-bold {{ $todayProfit >= 0 ? 'text-green-600' : 'text-red-600' }}">৳{{ number_format($todayProfit, 0) }}</p>
-        <p class="text-xs text-slate-500 mt-1">Sales - Purchase</p>
+        <p class="text-2xl font-bold {{ $todayProfit >= 0 ? 'text-green-300' : 'text-red-400' }}">৳{{ number_format($todayProfit, 0) }}</p>
+        <p class="text-xs text-slate-400 mt-1">Sales - Purchase</p>
     </div>
 
     {{-- Monthly Sales --}}
-    <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 hover:shadow-md transition">
+    <div class="glass-card rounded-2xl p-5 shadow-lg">
         <div class="flex items-center justify-between mb-3">
-            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Month Sales</p>
-            <div class="w-9 h-9 bg-purple-50 rounded-xl flex items-center justify-center">
-                <i class="fas fa-calendar-check text-purple-600 text-sm"></i>
+            <p class="text-xs font-semibold text-purple-300/70 uppercase tracking-wide">Month Sales</p>
+            <div class="w-9 h-9 bg-purple-400/20 rounded-xl flex items-center justify-center">
+                <i class="fas fa-calendar-check text-purple-300 text-sm"></i>
             </div>
         </div>
-        <p class="text-2xl font-bold text-slate-800">৳{{ number_format($monthSales, 0) }}</p>
-        <p class="text-xs text-purple-600 mt-1 font-medium">This month's total</p>
+        <p class="text-2xl font-bold text-white">৳{{ number_format($monthSales, 0) }}</p>
+        <p class="text-xs text-purple-300 mt-1 font-medium">This month's total</p>
     </div>
 </div>
 
 {{-- STAT CARDS ROW 2 --}}
 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
 
-    <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
+    <div class="glass-card rounded-2xl p-5 shadow-lg">
         <div class="flex items-center justify-between mb-3">
-            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Total Medicines</p>
-            <div class="w-9 h-9 bg-indigo-50 rounded-xl flex items-center justify-center">
-                <i class="fas fa-capsules text-indigo-600 text-sm"></i>
+            <p class="text-xs font-semibold text-indigo-300/70 uppercase tracking-wide">Total Medicines</p>
+            <div class="w-9 h-9 bg-indigo-400/20 rounded-xl flex items-center justify-center">
+                <i class="fas fa-capsules text-indigo-300 text-sm"></i>
             </div>
         </div>
-        <p class="text-2xl font-bold text-slate-800">{{ number_format($totalMedicines) }}</p>
-        <a href="{{ route('admin.medicines.index') }}" class="text-xs text-indigo-600 mt-1 font-medium hover:underline">View all →</a>
+        <p class="text-2xl font-bold text-white">{{ number_format($totalMedicines) }}</p>
+        <a href="{{ route('admin.medicines.index') }}" class="text-xs text-indigo-300 mt-1 font-medium hover:underline">View all →</a>
     </div>
 
-    <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
+    <div class="glass-card rounded-2xl p-5 shadow-lg">
         <div class="flex items-center justify-between mb-3">
-            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Stock Value</p>
-            <div class="w-9 h-9 bg-amber-50 rounded-xl flex items-center justify-center">
-                <i class="fas fa-warehouse text-amber-600 text-sm"></i>
+            <p class="text-xs font-semibold text-amber-300/70 uppercase tracking-wide">Stock Value</p>
+            <div class="w-9 h-9 bg-amber-400/20 rounded-xl flex items-center justify-center">
+                <i class="fas fa-warehouse text-amber-300 text-sm"></i>
             </div>
         </div>
-        <p class="text-2xl font-bold text-slate-800">৳{{ number_format($stockValue, 0) }}</p>
-        <p class="text-xs text-slate-500 mt-1">Total inventory value</p>
+        <p class="text-2xl font-bold text-white">৳{{ number_format($stockValue, 0) }}</p>
+        <p class="text-xs text-slate-400 mt-1">Total inventory value</p>
     </div>
 
-    <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
+    <div class="glass-card rounded-2xl p-5 shadow-lg">
         <div class="flex items-center justify-between mb-3">
-            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Today Expense</p>
-            <div class="w-9 h-9 bg-red-50 rounded-xl flex items-center justify-center">
-                <i class="fas fa-receipt text-red-500 text-sm"></i>
+            <p class="text-xs font-semibold text-red-300/70 uppercase tracking-wide">Today Expense</p>
+            <div class="w-9 h-9 bg-red-400/20 rounded-xl flex items-center justify-center">
+                <i class="fas fa-receipt text-red-300 text-sm"></i>
             </div>
         </div>
-        <p class="text-2xl font-bold text-slate-800">৳{{ number_format($todayExpense, 0) }}</p>
-        <a href="{{ route('admin.expenses.index') }}" class="text-xs text-red-500 mt-1 font-medium hover:underline">View expenses →</a>
+        <p class="text-2xl font-bold text-white">৳{{ number_format($todayExpense, 0) }}</p>
+        <a href="{{ route('admin.expenses.index') }}" class="text-xs text-red-300 mt-1 font-medium hover:underline">View expenses →</a>
     </div>
 
-    <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
+    <div class="glass-card rounded-2xl p-5 shadow-lg">
         <div class="flex items-center justify-between mb-3">
-            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Customers Due</p>
-            <div class="w-9 h-9 bg-orange-50 rounded-xl flex items-center justify-center">
-                <i class="fas fa-hand-holding-dollar text-orange-600 text-sm"></i>
+            <p class="text-xs font-semibold text-orange-300/70 uppercase tracking-wide">Customers Due</p>
+            <div class="w-9 h-9 bg-orange-400/20 rounded-xl flex items-center justify-center">
+                <i class="fas fa-hand-holding-dollar text-orange-300 text-sm"></i>
             </div>
         </div>
-        <p class="text-2xl font-bold text-slate-800">৳{{ number_format($customerDue, 0) }}</p>
-        <a href="{{ route('admin.customers.index') }}" class="text-xs text-orange-600 mt-1 font-medium hover:underline">Collect dues →</a>
+        <p class="text-2xl font-bold text-white">৳{{ number_format($customerDue, 0) }}</p>
+        <a href="{{ route('admin.customers.index') }}" class="text-xs text-orange-300 mt-1 font-medium hover:underline">Collect dues →</a>
     </div>
 </div>
 
 {{-- ALERT CARDS --}}
 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
 
-    <a href="{{ route('admin.stock.low') }}" class="bg-orange-50 border border-orange-200 rounded-2xl p-5 flex items-center gap-4 hover:shadow-md transition group">
-        <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center shrink-0">
-            <i class="fas fa-box-open text-orange-600 text-lg"></i>
+    <a href="{{ route('admin.stock.low') }}" class="glass-alert-orange rounded-2xl p-5 flex items-center gap-4 hover:shadow-lg transition group">
+        <div class="w-12 h-12 bg-orange-400/20 rounded-xl flex items-center justify-center shrink-0">
+            <i class="fas fa-box-open text-orange-300 text-lg"></i>
         </div>
         <div>
-            <p class="text-2xl font-bold text-orange-700">{{ $lowStockCount }}</p>
-            <p class="text-xs text-orange-600 font-medium">Low Stock Items</p>
+            <p class="text-2xl font-bold text-orange-300">{{ $lowStockCount }}</p>
+            <p class="text-xs text-orange-200/80 font-medium">Low Stock Items</p>
         </div>
     </a>
 
-    <a href="{{ route('admin.stock.expiry') }}" class="bg-red-50 border border-red-200 rounded-2xl p-5 flex items-center gap-4 hover:shadow-md transition group">
-        <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center shrink-0">
-            <i class="fas fa-triangle-exclamation text-red-600 text-lg"></i>
+    <a href="{{ route('admin.stock.expiry') }}" class="glass-alert-red rounded-2xl p-5 flex items-center gap-4 hover:shadow-lg transition group">
+        <div class="w-12 h-12 bg-red-400/20 rounded-xl flex items-center justify-center shrink-0">
+            <i class="fas fa-triangle-exclamation text-red-300 text-lg"></i>
         </div>
         <div>
-            <p class="text-2xl font-bold text-red-700">{{ $expiredCount }}</p>
-            <p class="text-xs text-red-600 font-medium">Expired Medicines</p>
+            <p class="text-2xl font-bold text-red-300">{{ $expiredCount }}</p>
+            <p class="text-xs text-red-200/80 font-medium">Expired Medicines</p>
         </div>
     </a>
 
-    <a href="{{ route('admin.stock.expiry') }}" class="bg-yellow-50 border border-yellow-200 rounded-2xl p-5 flex items-center gap-4 hover:shadow-md transition">
-        <div class="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center shrink-0">
-            <i class="fas fa-clock text-yellow-600 text-lg"></i>
+    <a href="{{ route('admin.stock.expiry') }}" class="glass-alert-yellow rounded-2xl p-5 flex items-center gap-4 hover:shadow-lg transition">
+        <div class="w-12 h-12 bg-yellow-400/20 rounded-xl flex items-center justify-center shrink-0">
+            <i class="fas fa-clock text-yellow-300 text-lg"></i>
         </div>
         <div>
-            <p class="text-2xl font-bold text-yellow-700">{{ $nearExpiryCount }}</p>
-            <p class="text-xs text-yellow-600 font-medium">Near Expiry (90d)</p>
+            <p class="text-2xl font-bold text-yellow-300">{{ $nearExpiryCount }}</p>
+            <p class="text-xs text-yellow-200/80 font-medium">Near Expiry (90d)</p>
         </div>
     </a>
 
-    <a href="{{ route('admin.orders.index') }}" class="bg-blue-50 border border-blue-200 rounded-2xl p-5 flex items-center gap-4 hover:shadow-md transition">
-        <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center shrink-0">
-            <i class="fas fa-bag-shopping text-blue-600 text-lg"></i>
+    <a href="{{ route('admin.orders.index') }}" class="glass-alert-blue rounded-2xl p-5 flex items-center gap-4 hover:shadow-lg transition">
+        <div class="w-12 h-12 bg-blue-400/20 rounded-xl flex items-center justify-center shrink-0">
+            <i class="fas fa-bag-shopping text-blue-300 text-lg"></i>
         </div>
         <div>
-            <p class="text-2xl font-bold text-blue-700">{{ $pendingOrders }}</p>
-            <p class="text-xs text-blue-600 font-medium">Pending Orders</p>
+            <p class="text-2xl font-bold text-blue-300">{{ $pendingOrders }}</p>
+            <p class="text-xs text-blue-200/80 font-medium">Pending Orders</p>
         </div>
     </a>
 </div>
@@ -151,7 +210,7 @@
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
 
     {{-- Daily Sales Chart --}}
-    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+    <div class="glass-card rounded-2xl p-6 shadow-lg">
         <div class="flex items-center justify-between mb-4">
             <h3 class="font-semibold text-slate-800">Daily Sales (Last 7 Days)</h3>
             <span class="text-xs bg-teal-50 text-teal-700 px-2.5 py-1 rounded-full font-medium">৳ Sales</span>
@@ -160,7 +219,7 @@
     </div>
 
     {{-- Monthly Sales vs Purchase --}}
-    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+    <div class="glass-card rounded-2xl p-6 shadow-lg">
         <div class="flex items-center justify-between mb-4">
             <h3 class="font-semibold text-slate-800">Sales vs Purchase (6 Months)</h3>
             <div class="flex items-center gap-3 text-xs">
@@ -176,7 +235,7 @@
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
 
     {{-- Order Status Card --}}
-    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+    <div class="glass-card rounded-2xl p-6 shadow-lg">
         <h3 class="font-semibold text-slate-800 mb-4">Online Orders Status</h3>
         <canvas id="orderStatusChart" height="200"></canvas>
         <div class="grid grid-cols-2 gap-3 mt-4">
@@ -200,7 +259,7 @@
     </div>
 
     {{-- Top Selling Medicines --}}
-    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+    <div class="glass-card rounded-2xl p-6 shadow-lg">
         <h3 class="font-semibold text-slate-800 mb-4">Top Selling Medicines</h3>
         @forelse($topMedicines as $medicine)
         <div class="flex items-center justify-between py-2.5 border-b border-slate-50 last:border-0">
@@ -225,7 +284,7 @@
     </div>
 
     {{-- Quick Stats --}}
-    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+    <div class="glass-card rounded-2xl p-6 shadow-lg">
         <h3 class="font-semibold text-slate-800 mb-4">Quick Overview</h3>
         <div class="space-y-3">
             <div class="flex items-center justify-between py-2 border-b border-slate-50">
@@ -281,7 +340,7 @@
 {{-- RECENT SALES TABLE --}}
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+    <div class="glass-card rounded-2xl shadow-lg overflow-hidden">
         <div class="flex items-center justify-between p-5 border-b border-slate-100">
             <h3 class="font-semibold text-slate-800">Recent Sales</h3>
             <a href="{{ route('admin.sales.index') }}" class="text-xs text-teal-600 hover:underline font-medium">View all →</a>
@@ -314,7 +373,7 @@
         </div>
     </div>
 
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+    <div class="glass-card rounded-2xl shadow-lg overflow-hidden">
         <div class="flex items-center justify-between p-5 border-b border-slate-100">
             <h3 class="font-semibold text-slate-800">Recent Online Orders</h3>
             <a href="{{ route('admin.orders.index') }}" class="text-xs text-teal-600 hover:underline font-medium">View all →</a>
@@ -360,6 +419,8 @@
 const teal = '#14b8a6';
 const blue = '#3b82f6';
 const slate = '#64748b';
+const gridColor = 'rgba(255,255,255,0.08)';
+const tickColor = '#94a3b8';
 
 // Daily Sales Chart
 new Chart(document.getElementById('dailySalesChart'), {
@@ -369,7 +430,7 @@ new Chart(document.getElementById('dailySalesChart'), {
         datasets: [{
             label: 'Sales (৳)',
             data: {!! json_encode($dailySalesData->values()) !!},
-            backgroundColor: 'rgba(20,184,166,0.15)',
+            backgroundColor: 'rgba(20,184,166,0.25)',
             borderColor: teal,
             borderWidth: 2,
             borderRadius: 8,
@@ -380,8 +441,8 @@ new Chart(document.getElementById('dailySalesChart'), {
         responsive: true,
         plugins: { legend: { display: false } },
         scales: {
-            y: { beginAtZero: true, grid: { color: '#f1f5f9' }, ticks: { callback: v => '৳'+v.toLocaleString() } },
-            x: { grid: { display: false } }
+            y: { beginAtZero: true, grid: { color: gridColor }, ticks: { color: tickColor, callback: v => '৳'+v.toLocaleString() } },
+            x: { grid: { display: false }, ticks: { color: tickColor } }
         }
     }
 });
@@ -395,23 +456,23 @@ new Chart(document.getElementById('monthlyChart'), {
             {
                 label: 'Sales',
                 data: {!! json_encode($monthlySales->values()) !!},
-                borderColor: teal, backgroundColor: 'rgba(20,184,166,0.1)',
+                borderColor: teal, backgroundColor: 'rgba(20,184,166,0.15)',
                 borderWidth: 2.5, fill: true, tension: 0.4, pointBackgroundColor: teal, pointRadius: 4
             },
             {
                 label: 'Purchase',
                 data: {!! json_encode($monthlyPurchase->values()) !!},
-                borderColor: blue, backgroundColor: 'rgba(59,130,246,0.08)',
+                borderColor: blue, backgroundColor: 'rgba(59,130,246,0.1)',
                 borderWidth: 2.5, fill: true, tension: 0.4, pointBackgroundColor: blue, pointRadius: 4
             }
         ]
     },
     options: {
         responsive: true,
-        plugins: { legend: { position: 'top', labels: { boxWidth: 10, font: { size: 11 } } } },
+        plugins: { legend: { position: 'top', labels: { boxWidth: 10, font: { size: 11 }, color: tickColor } } },
         scales: {
-            y: { beginAtZero: true, grid: { color: '#f1f5f9' }, ticks: { callback: v => '৳'+v.toLocaleString() } },
-            x: { grid: { display: false } }
+            y: { beginAtZero: true, grid: { color: gridColor }, ticks: { color: tickColor, callback: v => '৳'+v.toLocaleString() } },
+            x: { grid: { display: false }, ticks: { color: tickColor } }
         }
     }
 });
@@ -436,3 +497,4 @@ new Chart(document.getElementById('orderStatusChart'), {
 });
 </script>
 @endpush
+

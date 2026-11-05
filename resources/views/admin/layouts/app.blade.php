@@ -107,7 +107,7 @@
     @stack('styles')
 </head>
 
-<body class="bg-slate-100 antialiased" x-data="{ sidebarOpen: true, dropdownOpen: false }">
+<body class="antialiased" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 40%, #134e4a 80%, #0f172a 100%); background-attachment: fixed; min-height: 100vh;" x-data="{ sidebarOpen: true, dropdownOpen: false }">
 
     <div class="flex h-screen overflow-hidden">
 
@@ -649,7 +649,7 @@
             </header>
 
             <!-- PAGE CONTENT -->
-            <main class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
+            <main class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8" style="background: transparent;">
                 @yield('content')
             </main>
         </div>
