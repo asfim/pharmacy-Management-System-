@@ -280,12 +280,12 @@
                                             </a>
                                             <div class="p-2.5 sm:p-4 flex-1 flex flex-col">
                                                 <div
-                                                    class="text-[10px] font-bold text-teal-100 uppercase tracking-wide mb-1">
+                                                    class="text-[10px] font-bold uppercase tracking-wide mb-1" style="color: #ffffff;">
                                                     {{ $product->manufacturer->name ?? ($product->brand->name ?? '') }}
                                                 </div>
                                                 <a href="{{ route('product.detail', $product->id) }}"
-                                                    class="font-bold text-white text-sm line-clamp-1 mb-1 hover:text-teal-200 transition-colors">{{ $product->name }}</a>
-                                                <div class="text-xs text-white/85 mb-3 line-clamp-1">
+                                                    class="font-bold text-sm line-clamp-1 mb-1 hover:underline transition-colors" style="color: #ffffff;">{{ $product->name }}</a>
+                                                <div class="text-xs font-medium mb-3 line-clamp-1" style="color: #ffffff;">
                                                     {{ $product->generic->name ?? '' }} {{ $product->strength ?? '' }}
                                                 </div>
                                                 <div
