@@ -219,7 +219,7 @@
 @endpush
 
 @section('content')
-<section class="bg-white py-4">
+<section class="py-4" style="background-color: #E0EBE9;">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {{-- Breadcrumb --}}

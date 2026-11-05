@@ -104,7 +104,7 @@
     </div>
 </div>
 
-<section class="py-10 bg-slate-50 min-h-screen">
+<section class="py-10 min-h-screen" style="background-color: #E0EBE9;">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex flex-col lg:flex-row gap-8">
             

@@ -26,11 +26,14 @@
     @stack('styles')
 
     <style>
+        body, html, main {
+            background-color: #E0EBE9 !important;
+        }
         body { font-family: 'Inter', sans-serif; }
         h1, h2, h3, h4, h5, h6 { font-family: 'Outfit', 'Inter', sans-serif; }
     </style>
 </head>
-<body class="antialiased text-slate-800 bg-white overflow-x-hidden">
+<body class="antialiased text-slate-800 overflow-x-hidden" style="background-color: #E0EBE9;">
     
     <!-- Top Announcement & Header & Navbar Wrapper (Sticky) -->
     <div class="sticky top-0 z-[60]">
@@ -41,7 +44,7 @@
     </div>
 
     <!-- Main Content -->
-    <main class="min-h-screen">
+    <main class="min-h-screen" style="background-color: #E0EBE9;">
         @yield('content')
     </main>
 

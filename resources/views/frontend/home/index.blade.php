@@ -110,7 +110,7 @@
     <!-- ============================================
          FEATURES STRIP — Glassmorphic Cards
          ============================================ -->
-    <section class="py-14 bg-white relative -mt-1">
+    <section class="py-14 relative -mt-1" style="background-color: #E0EBE9;">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
                 @foreach ($cmsFeatures as $i => $f)
@@ -131,7 +131,7 @@
     <!-- ============================================
          CATEGORIES GRID
          ============================================ -->
-    <section class="py-16 bg-gradient-to-b from-white to-slate-50">
+    <section class="py-16" style="background-color: #E0EBE9;">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12 reveal">
                 <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 section-title-line inline-block">Shop by
@@ -182,7 +182,7 @@
     <!-- ============================================
          FLASH SALE BANNER — With Countdown Timer
          ============================================ -->
-    <section class="py-12 relative overflow-hidden">
+    <section class="py-12 relative overflow-hidden" style="background-color: #E0EBE9;">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div
                 class="rounded-3xl p-8 md:p-12 relative overflow-hidden border border-white/20 shadow-2xl shadow-[#0C9389]/30 reveal"
@@ -346,7 +346,7 @@
          ============================================ -->
     @foreach ($categories as $category)
         @if (isset($category->home_products) && $category->home_products->count() > 0)
-            <section class="py-12 {{ $loop->iteration % 2 == 0 ? 'bg-white' : 'bg-slate-50' }}">
+            <section class="py-12" style="background-color: #E0EBE9;">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="flex justify-between items-end mb-8 reveal">
                         <div>
@@ -393,7 +393,7 @@
     <!-- ============================================
          WHY CHOOSE US — Infographic Style
          ============================================ -->
-    <section class="py-20 bg-white relative overflow-hidden">
+    <section class="py-20 relative overflow-hidden" style="background-color: #E0EBE9;">
         <!-- Background Pattern -->
         <div class="absolute inset-0 opacity-[0.02]"
             style="background-image: radial-gradient(circle at 1px 1px, #059669 1px, transparent 0); background-size: 30px 30px;">
@@ -511,7 +511,7 @@
     <!-- ============================================
          CUSTOMER TESTIMONIALS
          ============================================ -->
-    <section class="py-20 bg-gradient-to-b from-slate-50 to-white">
+    <section class="py-20" style="background-color: #E0EBE9;">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-14 reveal">
                 <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 section-title-line inline-block">What Our
@@ -565,7 +565,7 @@
     <!-- ============================================
          BRAND PARTNERS
          ============================================ -->
-    <section class="py-16 bg-white">
+    <section class="py-16" style="background-color: #E0EBE9;">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-10 reveal">
                 <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900">Trusted Pharma Partners</h2>

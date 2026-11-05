@@ -4,7 +4,7 @@
 <style>
 .co-wrap {
     padding: 60px 0;
-    background: #f8fafc;
+    background: #E0EBE9;
 }
 .co-grid {
     display: grid;

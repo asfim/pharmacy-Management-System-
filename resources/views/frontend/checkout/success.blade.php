@@ -1,7 +1,7 @@
 @extends('frontend.layouts.app')
 
 @section('content')
-<div class="py-20 bg-slate-50 min-h-screen flex items-center justify-center">
+<div class="py-20 min-h-screen flex items-center justify-center" style="background-color: #E0EBE9;">
     <div class="max-w-md w-full mx-auto px-4">
         <div class="bg-white rounded-3xl p-8 text-center border border-slate-100 shadow-xl shadow-slate-200/50">
             

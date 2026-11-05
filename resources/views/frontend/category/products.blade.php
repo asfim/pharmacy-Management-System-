@@ -183,12 +183,12 @@
         </div>
     </div>
     <div class="absolute bottom-0 left-0 right-0">
-        <svg viewBox="0 0 1200 80" preserveAspectRatio="none" class="fill-slate-50 w-full" style="height:40px"><path d="M0,40 C300,80 900,0 1200,40 L1200,80 L0,80Z"></path></svg>
+        <svg viewBox="0 0 1200 80" preserveAspectRatio="none" class="w-full" style="height:40px; fill: #E0EBE9;"><path d="M0,40 C300,80 900,0 1200,40 L1200,80 L0,80Z"></path></svg>
     </div>
 </div>
 
 {{-- PRODUCTS --}}
-<section class="py-10 bg-slate-50">
+<section class="py-10" style="background-color: #E0EBE9;">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="cp-results-bar">
             <span class="text-sm text-slate-600" id="resultCount">

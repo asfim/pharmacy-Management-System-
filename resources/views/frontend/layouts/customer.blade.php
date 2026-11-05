@@ -29,7 +29,7 @@
 .cd-wrapper {
     display: flex;
     min-height: 100vh;
-    background: #f1f5f9;
+    background: #E0EBE9;
 }
 
 /* ─── SIDEBAR ─────────────────────────────── */
