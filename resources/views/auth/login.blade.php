@@ -127,55 +127,19 @@
             <!-- Login Form Card -->
             <div class="bg-white rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 p-8">
 
-                <!-- Demo Admin Account / Quick Access -->
-                <div class="mb-6 p-4 rounded-2xl bg-gradient-to-br from-emerald-50/90 via-teal-50/60 to-slate-50 border border-emerald-200/80 shadow-sm">
-                    <div class="flex items-center justify-between mb-3">
-                        <div class="flex items-center space-x-2">
-                            <span class="flex h-2.5 w-2.5 relative">
-                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
-                            </span>
-                            <span class="text-xs font-bold uppercase tracking-wider text-emerald-950">Demo Admin Access / ডেমো এডমিন</span>
-                        </div>
-                        <span class="text-[10px] font-semibold text-emerald-700 bg-emerald-100/90 px-2.5 py-0.5 rounded-full border border-emerald-200">1-Click Fast Login</span>
-                    </div>
-
-                    <!-- Admin Demo Card -->
-                    <div class="p-3.5 rounded-xl bg-white border border-emerald-200/90 hover:border-emerald-500 shadow-sm transition-all duration-200">
-                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                            <div>
-                                <div class="flex items-center space-x-1.5 mb-1">
-                                    <div class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center">
-                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
-                                    </div>
-                                    <span class="text-xs font-bold text-slate-800">Admin Account</span>
-                                    <span class="text-[10px] font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200/60">Super Admin</span>
-                                </div>
-                                <div class="flex items-center gap-2 text-xs">
-                                    <span class="text-slate-600 font-mono">admin@pharmacy.com</span>
-                                    <span class="text-slate-300">|</span>
-                                    <span class="text-slate-400">Pass: <code class="text-emerald-700 font-mono font-semibold">password</code></span>
-                                </div>
-                            </div>
-                            <div class="flex items-center gap-1.5 shrink-0">
-                                <button type="button" onclick="fillCredentials('admin@pharmacy.com', 'password', true)"
-                                    class="py-2 px-3.5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white text-xs font-semibold rounded-xl shadow-sm hover:shadow-emerald-500/20 transition text-center flex items-center justify-center space-x-1.5 cursor-pointer">
-                                    <span>⚡ 1-Click Login</span>
-                                </button>
-                                <button type="button" onclick="fillCredentials('admin@pharmacy.com', 'password', false)"
-                                    title="Auto-fill inputs only"
-                                    class="py-2 px-3 bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-medium rounded-xl transition cursor-pointer">
-                                    Fill
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                <!-- Demo Login Button -->
+                <div class="mb-6">
+                    <button type="button" onclick="fillCredentials('admin@pharmacy.com', 'password', true)"
+                        class="w-full py-3 px-4 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 hover:border-emerald-300 text-emerald-700 font-semibold rounded-2xl text-sm flex items-center justify-center space-x-2 transition-all duration-200 cursor-pointer shadow-sm">
+                        <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        <span>Demo Log In</span>
+                    </button>
                 </div>
 
                 <!-- Divider -->
                 <div class="relative flex items-center mb-6">
                     <div class="flex-grow border-t border-slate-200"></div>
-                    <span class="flex-shrink mx-3 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Or Login with Credentials</span>
+                    <span class="flex-shrink mx-3 text-xs text-slate-400 font-medium">or</span>
                     <div class="flex-grow border-t border-slate-200"></div>
                 </div>
 
