@@ -185,11 +185,14 @@
     <section class="py-12 relative overflow-hidden">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div
-                class="bg-gradient-to-r from-rose-600 via-pink-600 to-fuchsia-600 rounded-3xl p-8 md:p-12 relative overflow-hidden reveal">
+                class="bg-gradient-to-r from-emerald-700 via-teal-700 to-cyan-800 rounded-3xl p-8 md:p-12 relative overflow-hidden border border-emerald-400/25 shadow-2xl shadow-teal-950/20 reveal">
                 <!-- Background decoration -->
                 <div class="absolute inset-0 pointer-events-none overflow-hidden">
-                    <div class="absolute -top-20 -right-20 w-60 h-60 bg-white/10 rounded-full blur-2xl"></div>
-                    <div class="absolute -bottom-20 -left-20 w-60 h-60 bg-white/10 rounded-full blur-2xl"></div>
+                    <div class="absolute -top-20 -right-20 w-72 h-72 bg-emerald-400/15 rounded-full blur-3xl animate-blob"></div>
+                    <div class="absolute -bottom-20 -left-20 w-72 h-72 bg-cyan-400/15 rounded-full blur-3xl animate-blob delay-500"></div>
+                    <div class="absolute inset-0 opacity-10"
+                        style="background-image: radial-gradient(circle at 1px 1px, white 1px, transparent 0); background-size: 32px 32px;">
+                    </div>
                     <div class="absolute top-10 right-[20%] text-6xl opacity-10 animate-float">⚡</div>
                     <div class="absolute bottom-5 left-[15%] text-4xl opacity-10 animate-float-reverse">🔥</div>
                 </div>
@@ -197,7 +200,7 @@
                 <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
                     <div class="text-white text-center md:text-left">
                         <div
-                            class="inline-flex items-center space-x-2 bg-white/15 rounded-full px-4 py-1.5 text-sm font-medium mb-4 backdrop-blur-sm">
+                            class="inline-flex items-center space-x-2 bg-white/15 border border-white/20 rounded-full px-4 py-1.5 text-sm font-medium mb-4 backdrop-blur-sm">
                             <svg class="w-4 h-4 animate-pulse text-amber-300" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd"
                                     d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z"
@@ -207,32 +210,32 @@
                         </div>
                         <h2 class="text-3xl md:text-4xl font-extrabold mb-2">Flash Sale — Up to {{ (int) $maxDiscount }}%
                             OFF!</h2>
-                        <p class="text-rose-100 text-lg">Get incredible deals on top medicines & health products.</p>
+                        <p class="text-emerald-100/90 text-lg">Get incredible deals on top medicines & health products.</p>
                     </div>
 
                     <!-- Countdown Timer -->
                     <div class="flex items-center space-x-3" id="flashCountdown">
                         <div class="countdown-box">
                             <div class="text-2xl md:text-3xl font-extrabold text-white" id="countHours">12</div>
-                            <div class="text-[10px] text-rose-200 font-medium uppercase tracking-wider mt-1">Hours</div>
+                            <div class="text-[10px] text-emerald-200 font-semibold uppercase tracking-wider mt-1">Hours</div>
                         </div>
-                        <span class="text-white text-2xl font-bold animate-pulse">:</span>
+                        <span class="text-emerald-300 text-2xl font-bold animate-pulse">:</span>
                         <div class="countdown-box">
                             <div class="text-2xl md:text-3xl font-extrabold text-white" id="countMinutes">45</div>
-                            <div class="text-[10px] text-rose-200 font-medium uppercase tracking-wider mt-1">Mins</div>
+                            <div class="text-[10px] text-emerald-200 font-semibold uppercase tracking-wider mt-1">Mins</div>
                         </div>
-                        <span class="text-white text-2xl font-bold animate-pulse">:</span>
+                        <span class="text-emerald-300 text-2xl font-bold animate-pulse">:</span>
                         <div class="countdown-box">
                             <div class="text-2xl md:text-3xl font-extrabold text-white" id="countSeconds">30</div>
-                            <div class="text-[10px] text-rose-200 font-medium uppercase tracking-wider mt-1">Secs</div>
+                            <div class="text-[10px] text-emerald-200 font-semibold uppercase tracking-wider mt-1">Secs</div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Shop Now CTA -->
                 <div class="relative z-10 mt-8 text-center md:text-left">
-                    <a href="#"
-                        class="inline-flex items-center space-x-2 bg-white text-rose-600 font-bold py-3 px-8 rounded-full shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 text-sm">
+                    <a href="{{ route('products') }}"
+                        class="inline-flex items-center space-x-2 bg-white text-emerald-700 hover:text-emerald-800 font-bold py-3.5 px-8 rounded-full shadow-xl shadow-teal-950/20 hover:shadow-2xl hover:scale-105 transition-all duration-300 text-sm">
                         <span>Shop Flash Sale</span>
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -254,9 +257,9 @@
                                     @endphp
                                     <div class="swiper-slide h-auto">
                                         <div
-                                            class="bg-white/20 backdrop-blur-xl border border-white/40 rounded-2xl overflow-hidden flex flex-col h-full shadow-[0_8px_32px_0_rgba(31,38,135,0.15)] hover:shadow-[0_8px_32px_0_rgba(31,38,135,0.25)] transition-all duration-300 transform hover:-translate-y-1">
+                                            class="bg-white/15 backdrop-blur-xl border border-white/30 rounded-2xl overflow-hidden flex flex-col h-full shadow-[0_8px_32px_0_rgba(6,78,59,0.25)] hover:shadow-[0_12px_36px_0_rgba(6,78,59,0.35)] hover:border-white/50 transition-all duration-300 transform hover:-translate-y-1">
                                             <a href="{{ route('product.detail', $product->id) }}"
-                                                class="block relative h-32 sm:h-48 bg-white/50 flex items-center justify-center p-2">
+                                                class="block relative h-32 sm:h-48 bg-white/70 backdrop-blur-sm flex items-center justify-center p-2">
                                                 @if ($primaryImage && $primaryImage->image_url)
                                                     <img src="{{ asset('storage/' . $primaryImage->image_url) }}"
                                                         alt="{{ $product->name }}"
@@ -271,7 +274,7 @@
                                                     </svg>
                                                 @endif
                                                 <div
-                                                    class="absolute top-2 left-2 bg-gradient-to-br from-rose-500 to-pink-500 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-md shadow-sm">
+                                                    class="absolute top-2 left-2 bg-gradient-to-br from-amber-500 to-rose-500 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-md shadow-sm">
                                                     -{{ (int) $product->discount }}%</div>
                                             </a>
                                             <div class="p-2.5 sm:p-4 flex-1 flex flex-col">
@@ -280,7 +283,7 @@
                                                     {{ $product->manufacturer->name ?? ($product->brand->name ?? '') }}
                                                 </div>
                                                 <a href="{{ route('product.detail', $product->id) }}"
-                                                    class="font-bold text-white text-sm line-clamp-1 mb-1 hover:text-rose-200 transition-colors">{{ $product->name }}</a>
+                                                    class="font-bold text-white text-sm line-clamp-1 mb-1 hover:text-emerald-200 transition-colors">{{ $product->name }}</a>
                                                 <div class="text-xs text-white/80 mb-3 line-clamp-1">
                                                     {{ $product->generic->name ?? '' }} {{ $product->strength ?? '' }}
                                                 </div>
@@ -308,7 +311,7 @@
                                                         @endif
                                                     </div>
                                                     <a href="{{ route('product.detail', $product->id) }}"
-                                                        class="w-8 h-8 rounded-lg bg-white/20 text-white hover:bg-white hover:text-rose-600 flex items-center justify-center transition-colors">
+                                                        class="w-8 h-8 rounded-lg bg-white/20 text-white hover:bg-white hover:text-emerald-700 flex items-center justify-center transition-colors">
                                                         <svg class="w-4 h-4" fill="none" stroke="currentColor"
                                                             viewBox="0 0 24 24">
                                                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -324,10 +327,10 @@
 
                             <!-- Flash Sale Navigation Arrows -->
                             <div
-                                class="swiper-button-prev flash-prev !text-rose-600 !bg-white/90 backdrop-blur-sm !w-10 !h-10 !rounded-full shadow-lg hover:shadow-xl after:!text-sm border border-white/50 flex !-left-2">
+                                class="swiper-button-prev flash-prev !text-emerald-700 !bg-white/95 hover:!bg-white backdrop-blur-sm !w-10 !h-10 !rounded-full shadow-lg hover:shadow-xl after:!text-sm border border-emerald-100 flex !-left-2">
                             </div>
                             <div
-                                class="swiper-button-next flash-next !text-rose-600 !bg-white/90 backdrop-blur-sm !w-10 !h-10 !rounded-full shadow-lg hover:shadow-xl after:!text-sm border border-white/50 flex !-right-2">
+                                class="swiper-button-next flash-next !text-emerald-700 !bg-white/95 hover:!bg-white backdrop-blur-sm !w-10 !h-10 !rounded-full shadow-lg hover:shadow-xl after:!text-sm border border-emerald-100 flex !-right-2">
                             </div>
                         </div>
                     </div>
