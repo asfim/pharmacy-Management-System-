@@ -307,7 +307,8 @@
                                                             ৳{{ number_format($finalPrice, 2) }}</div>
                                                         @if ($originalPrice > $finalPrice)
                                                             <div
-                                                                class="text-[10px] sm:text-xs text-teal-100/70 line-through mt-0.5 sm:mt-0">
+                                                                class="text-[10px] sm:text-xs line-through font-semibold mt-0.5 sm:mt-0"
+                                                                style="color: #ff5252; text-decoration: line-through; text-decoration-color: #ff5252;">
                                                                 ৳{{ number_format($originalPrice, 2) }}</div>
                                                         @endif
                                                     </div>
