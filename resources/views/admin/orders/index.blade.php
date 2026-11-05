@@ -45,25 +45,25 @@
                     <td class="px-5 py-3.5 text-slate-500 text-xs">{{ $o->created_at->format('d M Y, h:i A') }}</td>
                     <td class="px-5 py-3.5 text-right font-bold text-slate-800">৳{{ number_format($o->total, 2) }}</td>
                     <td class="px-5 py-3.5 text-center">
-                        @if($o->prescription_required)
-                            @php
-                                $prescription = $o->order_prescriptions->first()?->prescription;
-                            @endphp
-                            @if($prescription)
-                                <a href="{{ asset('storage/' . $prescription->image_file) }}" target="_blank" class="block hover:opacity-80 transition" title="View Prescription">
-                                    @if($prescription->verification_status == 'verified')
-                                        <span class="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-100">
-                                            <i class="fas fa-check-circle"></i> Match
-                                        </span>
-                                    @else
-                                        <span class="inline-flex items-center gap-1 text-[11px] font-bold text-rose-600 bg-rose-50 px-2.5 py-1 rounded-full border border-rose-100">
-                                            <i class="fas fa-times-circle"></i> Not Match
-                                        </span>
-                                    @endif
-                                </a>
-                            @else
-                                <span class="text-xs text-slate-400">Missing</span>
-                            @endif
+                        @php
+                            $prescription = $o->order_prescriptions->first()?->prescription;
+                        @endphp
+                        @if($prescription)
+                            <a href="{{ asset('storage/' . $prescription->image_file) }}" target="_blank" class="inline-block hover:opacity-85 transition group" title="{{ $prescription->notes }}">
+                                @if($prescription->verification_status == 'verified')
+                                    <span class="inline-flex items-center gap-1.5 text-[11px] font-bold text-emerald-700 bg-emerald-100/90 px-3 py-1 rounded-full border border-emerald-200 shadow-2xs group-hover:bg-emerald-200 transition">
+                                        <i class="fas fa-check-circle text-emerald-600"></i> Match
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center gap-1.5 text-[11px] font-bold text-rose-700 bg-rose-100/90 px-3 py-1 rounded-full border border-rose-200 shadow-2xs group-hover:bg-rose-200 transition">
+                                        <i class="fas fa-times-circle text-rose-600"></i> Not Match
+                                    </span>
+                                @endif
+                            </a>
+                        @elseif($o->prescription_required)
+                            <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-700 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200">
+                                <i class="fas fa-exclamation-circle text-amber-500"></i> Missing
+                            </span>
                         @else
                             <span class="text-xs text-slate-300">-</span>
                         @endif

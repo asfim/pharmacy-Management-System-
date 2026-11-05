@@ -244,6 +244,7 @@ class CartController extends Controller
             'prescription_required' => $prescriptionRequired,
         ]);
 
+        $orderedProducts = [];
         $orderedProductNames = [];
 
         // Create Order Items
@@ -255,12 +256,24 @@ class CartController extends Controller
                 'unit_price' => $item['price'],
                 'total'      => $item['price'] * $item['quantity'],
             ]);
+
+            $product = \App\Models\Product::with('generic')->find($id);
+            $orderedProducts[] = [
+                'id'       => $id,
+                'name'     => $item['name'] ?? ($product ? $product->name : ''),
+                'generic'  => $product && $product->generic ? $product->generic->name : '',
+                'strength' => $product ? $product->strength : '',
+            ];
             $orderedProductNames[] = $item['name'];
         }
 
         // Handle Prescription Upload
-        if ($prescriptionRequired && $request->hasFile('prescription_file')) {
-            $path = $request->file('prescription_file')->store('prescriptions', 'public');
+        if ($request->hasFile('prescription_file')) {
+            $order->update(['prescription_required' => true]);
+
+            $file = $request->file('prescription_file');
+            $originalName = $file->getClientOriginalName();
+            $path = $file->store('prescriptions', 'public');
             
             $prescription = \App\Models\Prescription::create([
                 'prescription_no'     => 'RX-' . strtoupper(uniqid()),
@@ -268,16 +281,16 @@ class CartController extends Controller
                 'prescription_date'   => now(),
                 'image_file'          => $path,
                 'verification_status' => 'pending',
-                'notes'               => 'Pending AI analysis...',
+                'notes'               => 'Processing AI OCR analysis...',
             ]);
 
             \App\Models\OrderPrescription::create([
-                'order_id' => $order->id,
+                'order_id'        => $order->id,
                 'prescription_id' => $prescription->id,
             ]);
 
-            // Run AI OCR Service (Simulated)
-            \App\Services\PrescriptionAIService::process($prescription, $orderedProductNames);
+            // Run AI OCR Service & Matching
+            \App\Services\PrescriptionAIService::process($prescription, $orderedProducts, $originalName);
         }
 
         // Clear respective cart
