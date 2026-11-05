@@ -20,6 +20,19 @@
             Dashboard
         </a>
 
+        <!-- Pharma AI Assistant -->
+        <a href="{{ route('admin.ai.index') }}" class="flex items-center justify-between px-4 py-2.5 text-sm font-semibold rounded-lg hover:bg-teal-600 hover:text-white mb-2 transition-all {{ request()->routeIs('admin.ai*') ? 'bg-gradient-to-r from-teal-600 to-emerald-600 text-white shadow-md' : 'text-teal-300 bg-teal-950/40 border border-teal-500/30' }}">
+            <div class="flex items-center">
+                <svg class="w-5 h-5 mr-3 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+                <span>Pharma AI</span>
+            </div>
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-teal-500/30 text-teal-200 border border-teal-400/30 animate-pulse">
+                LIVE
+            </span>
+        </a>
+
         <!-- PRODUCTS -->
         <div class="pt-4 pb-1">
             <p class="px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Products</p>

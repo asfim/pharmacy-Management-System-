@@ -762,6 +762,17 @@
         });
     </script>
 
+    <!-- Global Floating AI Assistant Shortcut -->
+    <a href="{{ route('admin.ai.index') }}"
+       title="Open Pharma AI Assistant"
+       class="fixed bottom-6 right-6 z-40 bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-500 hover:to-emerald-500 text-white font-bold py-2.5 px-4 rounded-full shadow-xl shadow-teal-900/30 hover:shadow-2xl hover:scale-105 transition-all flex items-center gap-2 group border border-teal-400/30">
+        <span class="w-2 h-2 rounded-full bg-emerald-300 animate-ping"></span>
+        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+        <span class="text-xs font-bold tracking-wide hidden sm:inline">Ask Pharma AI</span>
+    </a>
+
     @stack('scripts')
 </body>
 

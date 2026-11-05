@@ -49,6 +49,10 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     // ==================== DASHBOARD ====================
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    // ==================== PHARMA AI ASSISTANT ====================
+    Route::get('ai-assistant', [\App\Http\Controllers\Admin\AIAssistantController::class, 'index'])->name('ai.index');
+    Route::post('ai-assistant/ask', [\App\Http\Controllers\Admin\AIAssistantController::class, 'ask'])->name('ai.ask');
+
     // ==================== PRODUCTS ====================
     Route::get('categories/sample-csv', [CategoryController::class, 'sampleCsv'])->name('categories.sample-csv');
     Route::post('categories/bulk-delete', [CategoryController::class, 'bulkDelete'])->name('categories.bulk-delete');
