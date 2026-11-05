@@ -75,8 +75,18 @@ class DashboardController extends Controller
         // Top 5 selling medicines
         $topMedicines = DB::table('sale_items')
             ->join('products', 'sale_items.product_id', '=', 'products.id')
-            ->select('products.name', DB::raw('SUM(sale_items.quantity) as total_qty'), DB::raw('SUM(sale_items.total) as total_revenue'))
-            ->groupBy('products.id', 'products.name')
+            ->leftJoin('product_images', function ($join) {
+                $join->on('products.id', '=', 'product_images.product_id')
+                     ->where('product_images.is_primary', '=', 1);
+            })
+            ->select(
+                'products.id',
+                'products.name',
+                'product_images.image_url',
+                DB::raw('SUM(sale_items.quantity) as total_qty'),
+                DB::raw('SUM(sale_items.total) as total_revenue')
+            )
+            ->groupBy('products.id', 'products.name', 'product_images.image_url')
             ->orderByDesc('total_qty')
             ->limit(5)
             ->get();

@@ -263,9 +263,16 @@
         @forelse($topMedicines as $medicine)
         <div class="flex items-center justify-between py-2.5 border-b border-slate-50 last:border-0">
             <div class="flex items-center gap-3">
-                <span class="w-7 h-7 bg-teal-50 text-teal-700 rounded-lg flex items-center justify-center text-xs font-bold shrink-0">
-                    {{ $loop->iteration }}
-                </span>
+                @php
+                    $medImg = !empty($medicine->image_url) ? (str_starts_with($medicine->image_url, 'http') ? $medicine->image_url : asset('storage/' . $medicine->image_url)) : null;
+                @endphp
+                @if($medImg)
+                    <img src="{{ $medImg }}" class="w-8 h-8 rounded-lg object-cover border border-slate-200/80 shrink-0" alt="{{ $medicine->name }}" onerror="this.style.display='none';">
+                @else
+                    <span class="w-7 h-7 bg-teal-50 text-teal-700 rounded-lg flex items-center justify-center text-xs font-bold shrink-0">
+                        {{ $loop->iteration }}
+                    </span>
+                @endif
                 <span class="text-sm font-medium text-slate-700 truncate max-w-[120px]">{{ $medicine->name }}</span>
             </div>
             <div class="text-right">

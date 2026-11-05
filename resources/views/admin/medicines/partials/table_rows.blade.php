@@ -8,13 +8,11 @@
     </td>
     <td class="px-4 py-3">
         @php
-            $imgUrl = $item->product_images->first()->image_url ?? $item->image ?? null;
-            if ($imgUrl) {
-                if (str_starts_with($imgUrl, 'http')) {
-                    $imgUrl = $imgUrl;
-                } else {
-                    $imgUrl = asset('storage/' . $imgUrl);
-                }
+            $primaryImg = $item->product_images->where('is_primary', true)->first() ?? $item->product_images->first();
+            $rawImg = $primaryImg->image_url ?? $item->image ?? null;
+            $imgUrl = null;
+            if ($rawImg) {
+                $imgUrl = str_starts_with($rawImg, 'http') ? $rawImg : asset('storage/' . $rawImg);
             }
         @endphp
         @if($imgUrl)
@@ -22,14 +20,19 @@
                  onclick="openImagePreview('{{ $imgUrl }}', '{{ addslashes($item->name) }} @if($item->strength)({{ addslashes($item->strength) }})@endif')">
                 <img src="{{ $imgUrl }}" 
                      alt="{{ $item->name }}" 
+                     loading="lazy"
                      title="Click to view large image"
+                     onerror="this.style.display='none'; this.parentElement.nextElementSibling.classList.remove('hidden');"
                      class="w-12 h-12 object-cover rounded-xl border border-slate-200 shadow-xs group-hover:scale-105 group-hover:ring-2 group-hover:ring-teal-500 transition-all duration-200">
                 <div class="absolute inset-0 bg-slate-900/40 rounded-xl opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-200">
                     <i class="fas fa-magnifying-glass-plus text-white text-xs"></i>
                 </div>
             </div>
+            <div class="w-12 h-12 rounded-xl bg-teal-50 text-teal-600 hidden items-center justify-center font-bold text-xs border border-teal-100 flex-shrink-0">
+                {{ strtoupper(substr($item->name, 0, 2)) }}
+            </div>
         @else
-            <div class="w-12 h-12 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center font-bold text-xs border border-teal-100">
+            <div class="w-12 h-12 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center font-bold text-xs border border-teal-100 flex-shrink-0">
                 {{ strtoupper(substr($item->name, 0, 2)) }}
             </div>
         @endif

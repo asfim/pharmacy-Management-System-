@@ -165,11 +165,15 @@
             <div
                 class="flex items-center justify-between h-16 px-4 bg-slate-950 border-b border-slate-800 flex-shrink-0">
                 <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 bg-teal-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <i class="fas fa-pills text-white" style="font-size:14px;"></i>
-                    </div>
-                    <span class="text-white font-bold text-base tracking-wide">Pharma<span
-                            class="text-teal-400">Sys</span></span>
+                    @if(!empty($siteSettings['site_logo']))
+                        <img src="{{ asset('storage/' . $siteSettings['site_logo']) }}" class="h-9 w-auto max-w-[150px] object-contain rounded" alt="Site Logo">
+                    @else
+                        <div class="w-8 h-8 bg-teal-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-pills text-white" style="font-size:14px;"></i>
+                        </div>
+                        <span class="text-white font-bold text-base tracking-wide">{{ $siteSettings['site_title'] ?? 'Pharma' }}<span
+                                class="text-teal-400">Sys</span></span>
+                    @endif
                 </a>
             </div>
 

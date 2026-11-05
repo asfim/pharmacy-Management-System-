@@ -295,8 +295,18 @@
             <!-- Product Image & Meta -->
             <div class="bg-white p-6 rounded-3xl border-2 border border-slate-200 shadow-md hover:shadow-xl transition-shadow space-y-5">
                 <div class="text-center">
-                    @if($medicine->image)
-                        <img src="{{ asset('storage/' . $medicine->image) }}" alt="{{ $medicine->name }}" class="w-32 h-32 object-cover mx-auto rounded-2xl border border-slate-200 shadow-sm mb-3">
+                    @php
+                        $primaryImg = $medicine->product_images->where('is_primary', true)->first() ?? $medicine->product_images->first();
+                        $rawImg = $primaryImg->image_url ?? $medicine->image ?? null;
+                        $showImg = null;
+                        if ($rawImg) {
+                            $showImg = str_starts_with($rawImg, 'http') ? $rawImg : asset('storage/' . $rawImg);
+                        }
+                    @endphp
+                    @if($showImg)
+                        <img src="{{ $showImg }}" alt="{{ $medicine->name }}" 
+                             onclick="openImagePreview('{{ $showImg }}', '{{ addslashes($medicine->name) }} @if($medicine->strength)({{ addslashes($medicine->strength) }})@endif')"
+                             class="w-32 h-32 object-cover mx-auto rounded-2xl border border-slate-200 shadow-sm mb-3 cursor-pointer hover:opacity-90 hover:scale-105 transition-all">
                     @else
                         <div class="w-32 h-32 mx-auto rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center text-4xl mb-3">
                             <i class="fas fa-pills"></i>
