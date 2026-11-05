@@ -52,3 +52,4 @@ class AIAssistantController extends Controller
         ]);
     }
 }
+
