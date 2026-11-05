@@ -102,6 +102,51 @@
             letter-spacing: 0.1em;
             color: #475569;
         }
+
+        /* =============================================
+           GLOBAL GLASSMORPHISM — All site cards
+           ============================================= */
+
+        /* Target every common card container */
+        .bg-white.rounded-2xl,
+        .bg-white.rounded-xl,
+        .bg-white.rounded-3xl,
+        .bg-white.rounded-lg {
+            background: rgba(255, 255, 255, 0.62) !important;
+            backdrop-filter: blur(18px) !important;
+            -webkit-backdrop-filter: blur(18px) !important;
+            border-color: rgba(255, 255, 255, 0.80) !important;
+        }
+
+        /* Hover lift */
+        .bg-white.rounded-2xl:hover,
+        .bg-white.rounded-xl:hover {
+            background: rgba(255, 255, 255, 0.76) !important;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.09) !important;
+        }
+
+        /* Table header inside glass cards */
+        .bg-white.rounded-2xl thead.bg-slate-50,
+        .bg-white.rounded-xl thead.bg-slate-50,
+        .bg-white.rounded-xl .bg-slate-50 {
+            background: rgba(248, 250, 252, 0.70) !important;
+        }
+
+        /* Inner white boxes (pagination, tabs) stay readable */
+        .inline-flex.rounded-lg.bg-white,
+        .inline-flex.rounded-xl.bg-white {
+            background: rgba(255, 255, 255, 0.70) !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+        }
+
+        /* Scrollbar subtle update for light bg */
+        ::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.05);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0,0,0,0.18);
+        }
     </style>
 
     @stack('styles')
